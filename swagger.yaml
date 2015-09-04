@@ -1,0 +1,93 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: Search API
+  
+basePath: /1
+
+paths:
+  /indexes:
+    get:
+      description: |
+        List all `Index` objects.
+      responses:
+        200:
+          description: An array of indexes
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Index'
+              
+  /indexes/{name}:
+    get:
+      description: |
+        Get an `Index` object by name.
+      responses:
+        200:
+          description: An index
+          schema:
+            $ref: '#/definitions/Index'
+    parameters:
+      - name: name
+        in: path
+        description: Name of the index to fetch
+        required: true
+        type: string
+        
+  /indexes/{name}/query:
+    post:
+      description: |
+        Performs a search on an index
+      responses:
+        200:
+          description: Search results
+          schema:
+            type: array
+            items:
+              type: object
+    parameters:
+      - name: name
+        in: path
+        description: Name of the index to query
+        required: true
+        type: string
+      - name: params
+        in: body
+        description: The search query
+        required: true
+        schema:
+          $ref: '#/definitions/SearchQuery'
+      
+definitions:
+  Index:
+   properties:
+      name:
+        type: string
+        description: Unique index name
+      createdAt:
+        type: string
+        description: An ISO 8061 formatted date string for when the index was created
+      updatedAt:
+        type: string
+        description: An ISO 8061 formatted date string for when the index was last updated
+      entries:
+        type: integer
+        format: int32
+        description: Number of records contained within the index
+      pendingTask:
+        type: boolean
+        description: An update task is currently running
+      lastBuildTimeS:
+        type: integer
+        format: int32
+        description: Time taken to build the index
+      dataSize:
+        type: integer
+        format: int32
+        description: Size of the data held within the index
+  SearchQuery:
+    properties:
+      query:
+        type: string
+        description: Search keywords
