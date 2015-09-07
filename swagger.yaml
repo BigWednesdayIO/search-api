@@ -48,10 +48,9 @@ paths:
         Add an object to the index and automatically assign an identifier.
       responses:
         201:
-          description: Object created
+          description: Indexing task created
           schema:
-            type: object
-            description: The indexed object with an automatically generated identifier
+            $ref: '#/definitions/Task'
     parameters:
       - name: name
         in: path
@@ -87,10 +86,9 @@ paths:
         Add an object with the identifier, or replace when it already exists
       responses:
         200:
-          description: Object added/replaced
+          description: Indexing task created
           schema:
-            type: object
-            description: The object added/replaced
+            $ref: '#/definitions/Task'
     parameters:
       - name: name
         in: path
@@ -146,6 +144,35 @@ paths:
         schema:
           $ref: '#/definitions/SearchQuery'
       
+  /indexes/{indexName}/task/{taskID}:
+    get:
+      description: |
+        Get details of an indexing task.
+      responses:
+        200:
+          description: Task found
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: The status of the task (published or notPublished)
+              pendingTask:
+                type: boolean
+                description: Indicates whether the index has remaining tasks running
+    parameters:
+      - name: indexName
+        in: path
+        description: Name of the index containing the task
+        required: true
+        type: string
+      - name: taskID
+        in: path
+        description: The identifier of the task
+        type: integer
+        format: int32
+        required: true
+    
 definitions:
   Index:
    properties:
@@ -178,3 +205,15 @@ definitions:
       query:
         type: string
         description: Search keywords
+  Task:
+    properties:
+      createdAt:
+        type: string
+        description: An ISO 8061 formatted date string
+      taskID:
+        type: integer
+        format: int32
+        description: Identifier of the indexing task
+      objectID:
+        type: string
+        description: The identifier of the object being indexed
