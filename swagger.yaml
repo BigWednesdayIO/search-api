@@ -17,7 +17,32 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Index'
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Unique index name
+                createdAt:
+                  type: string
+                  description: An ISO 8061 formatted date string for when the index was created
+                updatedAt:
+                  type: string
+                  description: An ISO 8061 formatted date string for when the index was last updated
+                entries:
+                  type: integer
+                  format: int32
+                  description: Number of records contained within the index
+                pendingTask:
+                  type: boolean
+                  description: An update task is currently running
+                lastBuildTimeS:
+                  type: integer
+                  format: int32
+                  description: Time taken to build the index
+                dataSize:
+                  type: integer
+                  format: int32
+                  description: Size of the data held within the index
               
   /indexes/{name}:
     get:
@@ -142,7 +167,11 @@ paths:
         description: The search query
         required: true
         schema:
-          $ref: '#/definitions/SearchQuery'
+          type: object
+          properties:
+            query:
+              type: string
+              description: Search keywords
       
   /indexes/{indexName}/task/{taskID}:
     get:
@@ -174,38 +203,8 @@ paths:
         required: true
     
 definitions:
-  Index:
-   properties:
-      name:
-        type: string
-        description: Unique index name
-      createdAt:
-        type: string
-        description: An ISO 8061 formatted date string for when the index was created
-      updatedAt:
-        type: string
-        description: An ISO 8061 formatted date string for when the index was last updated
-      entries:
-        type: integer
-        format: int32
-        description: Number of records contained within the index
-      pendingTask:
-        type: boolean
-        description: An update task is currently running
-      lastBuildTimeS:
-        type: integer
-        format: int32
-        description: Time taken to build the index
-      dataSize:
-        type: integer
-        format: int32
-        description: Size of the data held within the index
-  SearchQuery:
-    properties:
-      query:
-        type: string
-        description: Search keywords
   Task:
+    type: object
     properties:
       createdAt:
         type: string
