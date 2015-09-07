@@ -4,7 +4,8 @@
   "description": "bigwednesday.io search api",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "grunt test"
   },
   "repository": {
     "type": "git",
@@ -18,7 +19,8 @@
   },
   "homepage": "https://github.com/BigWednesdayIO/search-api",
   "dependencies": {
-    "hapi": "^9.3.0"
+    "hapi": "^9.3.0",
+    "swaggerize-hapi": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^3.2.0",
