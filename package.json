@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/BigWednesdayIO/search-api/issues"
   },
-  "homepage": "https://github.com/BigWednesdayIO/search-api"
+  "homepage": "https://github.com/BigWednesdayIO/search-api",
+  "dependencies": {
+    "hapi": "^9.3.0"
+  }
 }
