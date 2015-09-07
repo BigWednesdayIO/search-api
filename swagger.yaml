@@ -22,16 +22,23 @@ paths:
   /indexes/{name}:
     get:
       description: |
-        Get an `Index` object by name.
+        Query an index.
       responses:
         200:
-          description: An index
+          description: Search results
           schema:
-            $ref: '#/definitions/Index'
+            type: array
+            items:
+              type: object
     parameters:
       - name: name
         in: path
-        description: Name of the index to fetch
+        description: Name of the index to query
+        required: true
+        type: string
+      - name: query
+        in: query
+        description: Search keywords
         required: true
         type: string
         
