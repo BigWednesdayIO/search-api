@@ -41,7 +41,87 @@ paths:
         description: Search keywords
         required: true
         type: string
+    
+  /indexes/{name}:
+    post:
+      description: |
+        Add an object to the index and automatically assign an identifier.
+      responses:
+        201:
+          description: Object created
+          schema:
+            type: object
+            description: The indexed object with an automatically generated identifier
+    parameters:
+      - name: name
+        in: path
+        description: Name of the index in which to create the object
+        required: true
+        type: string
         
+  /indexes/{name}/{objectID}:
+    get:
+      description: |
+        Retrieve an object from the index by it's identifier.
+      responses:
+        200:
+          description: Object with identifier found
+          schema:
+            type: object
+            description: The object with the given identifier
+    parameters:
+      - name: name
+        in: path
+        description: Name of the index to search
+        required: true
+        type: string
+      - name: objectID
+        in: path
+        description: The identifier of the object to retrieve
+        required: true
+        type: string
+        
+  /indexes/{name}/{objectID}:
+    put:
+      description: |
+        Add an object with the identifier, or replace when it already exists
+      responses:
+        200:
+          description: Object added/replaced
+          schema:
+            type: object
+            description: The object added/replaced
+    parameters:
+      - name: name
+        in: path
+        description: Name of the index to search
+        required: true
+        type: string
+      - name: objectID
+        in: path
+        description: The identifier of the object to add/replace
+        required: true
+        type: string
+  
+  /indexes/{name}/{objectID}:
+    delete:
+      description: |
+        Delete an object by it's identifier.
+      responses:
+        204:
+          description: Object deleted
+    parameters:
+      - name: name
+        in: path
+        description: Name of the index to search
+        required: true
+        type: string
+      - name: objectID
+        in: path
+        description: The identifier of the object to delete
+        required: true
+        type: string
+  
   /indexes/{name}/query:
     post:
       description: |
