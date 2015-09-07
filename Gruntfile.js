@@ -6,8 +6,18 @@ module.exports = function (grunt) {
   grunt.initConfig({
     eslint: {
       target: ['./*.js', './lib/**/*.js']
+    },
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec',
+          clearRequireCache: false
+        },
+        src: ['test/**/*.js']
+      }
     }
   });
 
-  grunt.registerTask('default', ['eslint']);
+  grunt.registerTask('test', ['mochaTest']);
+  grunt.registerTask('default', ['eslint', 'mochaTest']);
 };
