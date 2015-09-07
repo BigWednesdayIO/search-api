@@ -4,8 +4,9 @@ module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
 
   grunt.initConfig({
+    jsFiles: ['./*.js', './lib/**/*.js', './test/**/*.js'],
     eslint: {
-      target: ['./*.js', './lib/**/*.js']
+      target: ['<%= jsFiles %>']
     },
     mochaTest: {
       test: {
@@ -13,11 +14,18 @@ module.exports = function (grunt) {
           reporter: 'spec',
           clearRequireCache: false
         },
-        src: ['test/**/*.js']
+        src: ['test/*.js']
+      }
+    },
+    watch: {
+      js: {
+        files: ['<%= jsFiles %>'],
+        tasks: ['lint', 'test']
       }
     }
   });
 
-  grunt.registerTask('test', ['mochaTest']);
-  grunt.registerTask('default', ['eslint', 'mochaTest']);
+  grunt.registerTask('lint', 'eslint');
+  grunt.registerTask('test', 'mochaTest');
+  grunt.registerTask('default', ['lint', 'test']);
 };
