@@ -20,12 +20,12 @@ module.exports = function (grunt) {
     watch: {
       js: {
         files: ['<%= jsFiles %>'],
-        tasks: ['lint', 'test']
+        tasks: ['test', 'lint']
       }
     }
   });
 
   grunt.registerTask('lint', 'eslint');
   grunt.registerTask('test', 'mochaTest');
-  grunt.registerTask('default', ['lint', 'test']);
+  grunt.registerTask('default', ['test', 'lint']);
 };
