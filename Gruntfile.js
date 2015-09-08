@@ -22,10 +22,14 @@ module.exports = function (grunt) {
         files: ['<%= jsFiles %>'],
         tasks: ['test', 'lint']
       }
+    },
+    retire: {
+      node: ['node']
     }
   });
 
   grunt.registerTask('lint', 'eslint');
   grunt.registerTask('test', 'mochaTest');
+  grunt.registerTask('ci', ['retire', 'test', 'lint']);
   grunt.registerTask('default', ['test', 'lint']);
 };
