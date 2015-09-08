@@ -10,12 +10,16 @@ describe('Index', function () {
     var elasticStub;
     var indexedObject;
     var index;
+    var indexName;
+    var testIndexName = 'my-index-name';
+    var testObject = {name: 'an object'};
 
-    before(function () {
+    beforeEach(function () {
       elasticStub = sinon.stub(elasticsearch, 'Client', function () {
         return {
           index: function (args) {
             indexedObject = args.body;
+            indexName = args.index;
 
             return new Promise(function (resolve) {
               resolve();
@@ -24,18 +28,26 @@ describe('Index', function () {
         };
       });
 
-      index = require('../../lib/index');
+      var Index = require('../../lib/index');
+      index = new Index(testIndexName);
     });
 
-    after(function () {
+    afterEach(function () {
       elasticStub.restore();
+      indexedObject = undefined;
+      indexName = undefined;
     });
 
-    it('adds the object', function (done) {
-      var object = {name: 'an object'};
+    it('adds the object to elasticsearch', function (done) {
+      index.insert(testObject).then(function () {
+        expect(indexedObject).to.be.equal(testObject);
+        done();
+      }, done);
+    });
 
-      index.insert(object).then(function () {
-        expect(indexedObject).to.be.equal(object);
+    it('writes to the named index', function (done) {
+      index.insert(testObject).then(function () {
+        expect(indexName).to.be.equal(testIndexName);
         done();
       }, done);
     });
