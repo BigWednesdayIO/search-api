@@ -14,7 +14,7 @@ module.exports = function (grunt) {
           reporter: 'spec',
           clearRequireCache: false
         },
-        src: ['test/*.js']
+        src: ['test/**/*.js']
       }
     },
     watch: {

@@ -7,7 +7,7 @@
   "ecmaFeatures": {
     "arrowFunctions": false,
     "blockBindings": true,
-    "classes": false,
+    "classes": true,
     "defaultParams": false,
     "destructuring": false,
     "forOf": true,
