@@ -1,3 +1,12 @@
 machine:
   services:
     - docker
+
+dependencies:
+  override:
+    - docker info
+    - docker build -t search-api .
+
+test:
+  override:
+    - docker run -w "/src" search-api /bin/bash -c "grunt ci"; 
