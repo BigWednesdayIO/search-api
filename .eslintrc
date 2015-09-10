@@ -5,7 +5,7 @@
     "no-var": 1
   },
   "ecmaFeatures": {
-    "arrowFunctions": false,
+    "arrowFunctions": true,
     "blockBindings": true,
     "classes": true,
     "defaultParams": false,
