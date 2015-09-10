@@ -65,17 +65,24 @@
                             "$ref": "#/definitions/Task"
                         }
                     }
-                }
-            },
-            "parameters": [
-                {
-                    "name": "name",
-                    "in": "path",
-                    "description": "Name of the index in which to create the object",
-                    "required": true,
-                    "type": "string"
-                }
-            ]
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "Name of the index in which to create the object",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "payload",
+                        "in": "body",
+                        "description": "Object to index",
+                        "required": true,
+                        "type": "object"
+                    }
+                ]
+            }
         },
         "/indexes/{name}/{objectID}": {
             "delete": {
@@ -84,24 +91,24 @@
                     "204": {
                         "description": "Object deleted"
                     }
-                }
-            },
-            "parameters": [
-                {
-                    "name": "name",
-                    "in": "path",
-                    "description": "Name of the index to search",
-                    "required": true,
-                    "type": "string"
                 },
-                {
-                    "name": "objectID",
-                    "in": "path",
-                    "description": "The identifier of the object to delete",
-                    "required": true,
-                    "type": "string"
-                }
-            ]
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "Name of the index to search",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "objectID",
+                        "in": "path",
+                        "description": "The identifier of the object to delete",
+                        "required": true,
+                        "type": "string"
+                    }
+                ]
+            }
         },
         "/indexes/{name}/query": {
             "post": {
@@ -116,32 +123,32 @@
                             }
                         }
                     }
-                }
-            },
-            "parameters": [
-                {
-                    "name": "name",
-                    "in": "path",
-                    "description": "Name of the index to query",
-                    "required": true,
-                    "type": "string"
                 },
-                {
-                    "name": "params",
-                    "in": "body",
-                    "description": "The search query",
-                    "required": true,
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "query": {
-                                "type": "string",
-                                "description": "Search keywords"
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "Name of the index to query",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "params",
+                        "in": "body",
+                        "description": "The search query",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "query": {
+                                    "type": "string",
+                                    "description": "Search keywords"
+                                }
                             }
                         }
                     }
-                }
-            ]
+                ]
+            }
         },
         "/indexes/{indexName}/task/{taskID}": {
             "get": {
@@ -163,25 +170,25 @@
                             }
                         }
                     }
-                }
-            },
-            "parameters": [
-                {
-                    "name": "indexName",
-                    "in": "path",
-                    "description": "Name of the index containing the task",
-                    "required": true,
-                    "type": "string"
                 },
-                {
-                    "name": "taskID",
-                    "in": "path",
-                    "description": "The identifier of the task",
-                    "type": "integer",
-                    "format": "int32",
-                    "required": true
-                }
-            ]
+                "parameters": [
+                    {
+                        "name": "indexName",
+                        "in": "path",
+                        "description": "Name of the index containing the task",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "taskID",
+                        "in": "path",
+                        "description": "The identifier of the task",
+                        "type": "integer",
+                        "format": "int32",
+                        "required": true
+                    }
+                ]
+            }
         }
     },
     "definitions": {
