@@ -59,7 +59,7 @@
             "post": {
                 "description": "Add an object to the index and automatically assign an identifier.\n",
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Indexing task created",
                         "schema": {
                             "$ref": "#/definitions/Task"
@@ -73,13 +73,6 @@
                         "description": "Name of the index in which to create the object",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "payload",
-                        "in": "body",
-                        "description": "Object to index",
-                        "required": true,
-                        "type": "object"
                     }
                 ]
             }
