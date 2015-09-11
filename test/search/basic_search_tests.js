@@ -1,7 +1,6 @@
 'use strict';
 
-const _ = require('lodash');
-const elasticsearch = require('elasticsearch');
+const elasticsearchClient = require('../../lib/elasticsearchClient');
 const sinon = require('sinon');
 const expect = require('chai').expect;
 
@@ -10,16 +9,14 @@ describe('Search', function () {
   let searchArgs;
   let elasticStub;
   const indexName = 'test-index';
-  const testDocuments = [{_id: '1', _source: {name: 'test-item'}}];
+  const testDocument = {name: 'test-item'};
 
   beforeEach(function () {
-    elasticStub = sinon.stub(elasticsearch, 'Client', function () {
-      return {
-        search(args) {
-          searchArgs = args;
-          return Promise.resolve(testDocuments);
-        }
-      };
+    elasticStub = sinon.stub(elasticsearchClient, 'search', function (args) {
+      searchArgs = args;
+      return Promise.resolve({
+        hits: {hits: [{_id: '1', _source: testDocument}]}
+      });
     });
 
     const Search = require('../../lib/search');
@@ -39,16 +36,16 @@ describe('Search', function () {
       }
     };
 
-    return search.query(indexName, {keywords: 'some-keyword'})
+    return search.query(indexName, {query: 'some-keyword'})
       .then(() => {
         expect(searchArgs).to.deep.equal(expected);
       });
   });
 
-  it('returns documents', function () {
-    return search.query(indexName, {keywords: 'some-keyword'})
+  it('returns document source', function () {
+    return search.query(indexName, {query: 'some-keyword'})
       .then(results => {
-        expect(results).to.deep.equal(_.pluck(testDocuments, '_source'));
+        expect(results).to.deep.equal([testDocument]);
       });
   });
 });

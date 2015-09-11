@@ -1,6 +1,6 @@
 'use strict';
 
-const elasticsearch = require('elasticsearch');
+const elasticsearchClient = require('../../lib/elasticsearchClient');
 const sinon = require('sinon');
 
 const expect = require('chai').expect;
@@ -16,17 +16,13 @@ describe('Index', function () {
     let indexName;
 
     beforeEach(function () {
-      elasticStub = sinon.stub(elasticsearch, 'Client', function () {
-        return {
-          index(args) {
-            indexedObject = args.body;
-            indexName = args.index;
+      elasticStub = sinon.stub(elasticsearchClient, 'index', function (args) {
+        indexedObject = args.body;
+        indexName = args.index;
 
-            return new Promise(function (resolve) {
-              resolve();
-            });
-          }
-        };
+        return new Promise(function (resolve) {
+          resolve();
+        });
       });
 
       const Index = require('../../lib/index');
