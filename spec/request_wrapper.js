@@ -1,5 +1,6 @@
 'use strict';
 
+const enjoi = require('enjoi');
 const server = require('../lib/server');
 const swagger = require('../swagger.json');
 
@@ -32,7 +33,15 @@ module.exports = function (options) {
         return reject(new Error(`${response.statusCode} result for ${method} of route ${route} is undocumented. Please add to swagger.json.`));
       }
 
-      return resolve(response);
+      const validator = enjoi(swaggerResponse.schema, {subSchemas: {'#': swagger}});
+
+      validator.validate(response.payload, function (err) {
+        if (err) {
+          return reject(new Error(`Response does not match the documented schema: ${err}`));
+        }
+
+        resolve(response);
+      });
     });
   });
 };
