@@ -29,11 +29,11 @@ module.exports = function (grunt) {
     watch: {
       default: {
         files: ['<%= app %>', '<%= tests %>'],
-        tasks: ['test', 'lint']
+        tasks: ['lint', 'test']
       },
       specs: {
         files: ['<%= specs %>'],
-        tasks: ['spec', 'lint']
+        tasks: ['lint', 'spec']
       }
     },
     retire: {
@@ -44,6 +44,6 @@ module.exports = function (grunt) {
   grunt.registerTask('lint', 'eslint');
   grunt.registerTask('test', 'mochaTest:test');
   grunt.registerTask('spec', 'mochaTest:spec');
-  grunt.registerTask('ci', ['retire', 'test', 'spec', 'lint']);
-  grunt.registerTask('default', ['test', 'spec', 'lint']);
+  grunt.registerTask('ci', ['retire', 'default']);
+  grunt.registerTask('default', ['lint', 'test', 'spec']);
 };
