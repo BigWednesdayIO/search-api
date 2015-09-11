@@ -59,7 +59,7 @@
             "post": {
                 "description": "Add an object to the index and automatically assign an identifier.\n",
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Indexing task created",
                         "schema": {
                             "$ref": "#/definitions/Task"
