@@ -6,24 +6,27 @@ const proxyquire = require('proxyquire');
 
 const expect = require('chai').expect;
 
-class DynamoDBStub {
+class DynamoDocumentClientStub {
   constructor() {
     this._items = [];
   }
 
-  putItem(itemParams, callback) {
-    this._items.push(itemParams);
-    callback();
+  put(item, callback) {
+    this._items.push(item);
+    callback(null, item);
   }
 
-  getItem(query, callback) {
+  get(query, callback) {
     const item = this._items.find(function (i) {
-      return i.Item.id.S === query.Key.id.S;
+      return i.Item.id === query.Key.id;
     });
 
     callback(null, item);
   }
 }
+
+class DynamoDBStub {}
+DynamoDBStub.DocumentClient = DynamoDocumentClientStub;
 
 const indexingTask = proxyquire('../lib/indexing_task', {'aws-sdk': {DynamoDB: DynamoDBStub}});
 
