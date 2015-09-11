@@ -4,15 +4,15 @@ const elasticsearchClient = require('../../lib/elasticsearchClient');
 const sinon = require('sinon');
 const expect = require('chai').expect;
 
-describe('Search', function () {
+describe('Search', () => {
   let search;
   let searchArgs;
   let elasticStub;
   const indexName = 'test-index';
   const testDocument = {name: 'test-item'};
 
-  beforeEach(function () {
-    elasticStub = sinon.stub(elasticsearchClient, 'search', function (args) {
+  beforeEach(() => {
+    elasticStub = sinon.stub(elasticsearchClient, 'search', args => {
       searchArgs = args;
       return Promise.resolve({
         hits: {hits: [{_id: '1', _source: testDocument}]}
@@ -23,12 +23,12 @@ describe('Search', function () {
     search = new Search(indexName);
   });
 
-  afterEach(function () {
+  afterEach(() => {
     elasticStub.restore();
     searchArgs = undefined;
   });
 
-  it('builds a keyword query', function () {
+  it('builds a keyword query', () => {
     const expected = {
       index: indexName,
       body: {
@@ -37,15 +37,11 @@ describe('Search', function () {
     };
 
     return search.query(indexName, {query: 'some-keyword'})
-      .then(() => {
-        expect(searchArgs).to.deep.equal(expected);
-      });
+      .then(() => expect(searchArgs).to.deep.equal(expected));
   });
 
-  it('returns document source', function () {
+  it('returns document source', () => {
     return search.query(indexName, {query: 'some-keyword'})
-      .then(results => {
-        expect(results).to.deep.equal([testDocument]);
-      });
+      .then(results => expect(results).to.deep.equal([testDocument]));
   });
 });
