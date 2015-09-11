@@ -7,6 +7,14 @@ module.exports = function (grunt) {
     app: ['./*.js', './lib/**/*.js'],
     tests: ['./test/**/*.js'],
     specs: ['./spec/**/*.js'],
+    env: {
+      test: {
+        AWS_REGION: 'eu-west-1',
+        AWS_ACCESS_KEY_ID: 'dummy',
+        AWS_SECRET_ACCESS_KEY: 'dummy',
+        AWS_ENDPOINT: 'http://localhost:8000'
+      }
+    },
     eslint: {
       target: ['<%= app %>', '<%= tests %>', '<%= specs %>']
     },
@@ -26,6 +34,11 @@ module.exports = function (grunt) {
         src: ['<%= specs %>']
       }
     },
+    shell: {
+      dynamodb: {
+        command: './stopStartDynamoDb.sh && sleep 2'
+      }
+    },
     watch: {
       default: {
         files: ['<%= app %>', '<%= tests %>'],
@@ -43,7 +56,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('lint', 'eslint');
   grunt.registerTask('test', 'mochaTest:test');
-  grunt.registerTask('spec', 'mochaTest:spec');
+  grunt.registerTask('spec', ['env:test', 'shell:dynamodb', 'mochaTest:spec']);
   grunt.registerTask('ci', ['retire', 'default']);
   grunt.registerTask('default', ['lint', 'test', 'spec']);
 };
