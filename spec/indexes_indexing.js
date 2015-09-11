@@ -2,7 +2,7 @@
 
 const cuid = require('cuid');
 
-const elasticsearchClient = require('../lib/elasticsearchClient');
+const elasticsearchClient = require('../lib/elasticsearchClient')();
 const specRequest = require('./spec_request');
 
 const expect = require('chai').expect;
