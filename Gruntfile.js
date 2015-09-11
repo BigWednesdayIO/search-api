@@ -14,14 +14,14 @@ module.exports = function (grunt) {
       test: {
         options: {
           reporter: 'spec',
-          clearRequireCache: false
+          clearRequireCache: true
         },
         src: ['<%= tests %>']
       },
       spec: {
         options: {
           reporter: 'spec',
-          clearRequireCache: false
+          clearRequireCache: true
         },
         src: ['<%= specs %>']
       }
