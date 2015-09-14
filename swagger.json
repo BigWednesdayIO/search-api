@@ -153,6 +153,23 @@
                                 "query": {
                                     "type": "string",
                                     "description": "Search keywords"
+                                },
+                                "filters": {
+                                    "type": "array",
+                                    "description": "An array of search filter objects",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "field": {
+                                                "type": "string",
+                                                "description": "The field to filter by"
+                                            },
+                                            "term": {
+                                                "type": "string",
+                                                "description": "The filter term"
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
