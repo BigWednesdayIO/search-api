@@ -176,8 +176,7 @@
                         "name": "taskID",
                         "in": "path",
                         "description": "The identifier of the task",
-                        "type": "integer",
-                        "format": "int32",
+                        "type": "string",
                         "required": true
                     }
                 ]
@@ -193,8 +192,7 @@
                     "description": "An ISO 8061 formatted date string"
                 },
                 "taskID": {
-                    "type": "integer",
-                    "format": "int32",
+                    "type": "string",
                     "description": "Identifier of the indexing task"
                 },
                 "objectID": {
