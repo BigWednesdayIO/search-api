@@ -35,4 +35,14 @@ describe('/indexes/{name}/query', () => {
         });
     });
   });
+
+  it('filters results', () => {
+    const payload = {filters: [{field: 'sku', term: '12345'}]};
+
+    return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload: payload})
+      .then(response => {
+        expect(response.result).to.be.deep.equal([testDocument]);
+        expect(response.statusCode).to.equal(200);
+      });
+  });
 });

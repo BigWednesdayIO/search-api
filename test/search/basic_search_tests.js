@@ -28,6 +28,16 @@ describe('Search', () => {
     searchArgs = undefined;
   });
 
+  it('builds a default match all query when no search is supplied', () => {
+    const expected = {
+      index: indexName,
+      body: {query: {filtered: {}}}
+    };
+
+    return search.query(indexName, {})
+      .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
   it('builds a keyword query', () => {
     const expected = {
       index: indexName,
@@ -38,14 +48,22 @@ describe('Search', () => {
       .then(() => expect(searchArgs).to.deep.equal(expected));
   });
 
-  it('builds an match_all query when keyword is not supplied', () => {
+  it('builds a filtered query', () => {
     const expected = {
       index: indexName,
-      body: {query: {filtered: {}}}
+      body: {
+        query: {
+          filtered: {
+            filter: {and: [{term: {field1: 'term1'}}, {term: {field2: 'term2'}}]}
+          }
+        }
+      }
     };
 
-    return search.query(indexName, {})
-      .then(() => expect(searchArgs).to.deep.equal(expected));
+    return search.query(indexName, {
+      filters: [{field: 'field1', term: 'term1'}, {field: 'field2', term: 'term2'}]
+    })
+    .then(() => expect(searchArgs).to.deep.equal(expected));
   });
 
   it('returns document source', () => {
