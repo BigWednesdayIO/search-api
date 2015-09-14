@@ -36,7 +36,7 @@ module.exports = function (grunt) {
     },
     shell: {
       dynamodb: {
-        command: './dev/stopStartDynamoDb.sh && sleep 3 && node ./dev/bootstrap_dynamodb.js'
+        command: './dev/start_dynamodb.sh && sleep 3 && node ./dev/bootstrap_dynamodb.js'
       }
     },
     watch: {
