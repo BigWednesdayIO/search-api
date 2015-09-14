@@ -12,7 +12,7 @@ module.exports = function (options) {
 
       server.inject(options, function (response) {
         if (!response.request.route || response.request.route.path === '/{p*}') {
-          return reject(new Error(`Undefined route {$options.url}`));
+          return reject(new Error(`Undefined route ${options.url}`));
         }
 
         const apiBasePath = swagger.basePath || '';
