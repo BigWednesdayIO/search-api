@@ -2,6 +2,50 @@
   "name": "search-api",
   "version": "0.0.1",
   "dependencies": {
+    "aws-sdk": {
+      "version": "2.2.0",
+      "from": "aws-sdk@*",
+      "resolved": "https://registry.npmjs.org/aws-sdk/-/aws-sdk-2.2.0.tgz",
+      "dependencies": {
+        "sax": {
+          "version": "0.5.3",
+          "from": "sax@0.5.3",
+          "resolved": "https://registry.npmjs.org/sax/-/sax-0.5.3.tgz"
+        },
+        "xml2js": {
+          "version": "0.2.8",
+          "from": "xml2js@0.2.8",
+          "resolved": "https://registry.npmjs.org/xml2js/-/xml2js-0.2.8.tgz"
+        },
+        "xmlbuilder": {
+          "version": "0.4.2",
+          "from": "xmlbuilder@0.4.2",
+          "resolved": "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-0.4.2.tgz"
+        }
+      }
+    },
+    "cuid": {
+      "version": "1.3.8",
+      "from": "cuid@*",
+      "resolved": "https://registry.npmjs.org/cuid/-/cuid-1.3.8.tgz",
+      "dependencies": {
+        "browser-fingerprint": {
+          "version": "0.0.1",
+          "from": "browser-fingerprint@0.0.1",
+          "resolved": "https://registry.npmjs.org/browser-fingerprint/-/browser-fingerprint-0.0.1.tgz"
+        },
+        "core-js": {
+          "version": "1.1.4",
+          "from": "core-js@>=1.1.1 <2.0.0",
+          "resolved": "https://registry.npmjs.org/core-js/-/core-js-1.1.4.tgz"
+        },
+        "node-fingerprint": {
+          "version": "0.0.2",
+          "from": "node-fingerprint@0.0.2",
+          "resolved": "https://registry.npmjs.org/node-fingerprint/-/node-fingerprint-0.0.2.tgz"
+        }
+      }
+    },
     "elasticsearch": {
       "version": "8.0.1",
       "from": "https://registry.npmjs.org/elasticsearch/-/elasticsearch-8.0.1.tgz",
