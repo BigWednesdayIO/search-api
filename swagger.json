@@ -62,7 +62,22 @@
                     "201": {
                         "description": "Indexing task created",
                         "schema": {
-                            "$ref": "#/definitions/Task"
+                            "type": "object",
+                            "properties": {
+                                "taskID": {
+                                    "description": "The identifier of the indexing task",
+                                    "type": "string"
+                                },
+                                "objectID": {
+                                    "description": "The identifier of the object that will be created or replaced",
+                                    "type": "string"
+                                },
+                                "createdAt": {
+                                    "description": "Date the task was created",
+                                    "type": "string",
+                                    "format": "date-time"
+                                }
+                            }
                         }
                     }
                 },
@@ -143,37 +158,27 @@
                 ]
             }
         },
-        "/indexes/{indexName}/task/{taskID}": {
+        "/indexes/{name}/tasks/{id}": {
             "get": {
                 "description": "Get details of an indexing task.\n",
                 "responses": {
                     "200": {
                         "description": "Task found",
                         "schema": {
-                            "type": "object",
-                            "properties": {
-                                "status": {
-                                    "type": "string",
-                                    "description": "The status of the task (published or notPublished)"
-                                },
-                                "pendingTask": {
-                                    "type": "boolean",
-                                    "description": "Indicates whether the index has remaining tasks running"
-                                }
-                            }
+                            "$ref": "#/definitions/Task"
                         }
                     }
                 },
                 "parameters": [
                     {
-                        "name": "indexName",
+                        "name": "name",
                         "in": "path",
                         "description": "Name of the index containing the task",
                         "required": true,
                         "type": "string"
                     },
                     {
-                        "name": "taskID",
+                        "name": "id",
                         "in": "path",
                         "description": "The identifier of the task",
                         "type": "string",
@@ -187,17 +192,21 @@
         "Task": {
             "type": "object",
             "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Identifier of the indexing task"
+                },
                 "createdAt": {
                     "type": "string",
                     "description": "An ISO 8061 formatted date string"
                 },
-                "taskID": {
-                    "type": "string",
-                    "description": "Identifier of the indexing task"
-                },
                 "objectID": {
                     "type": "string",
                     "description": "The identifier of the object being indexed"
+                },
+                "complete": {
+                    "type": "boolean",
+                    "description": "Indicates if the indexing task has completed"
                 }
             }
         }
