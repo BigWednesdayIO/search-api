@@ -13,7 +13,7 @@ class DynamoDocumentClientStub {
 
   put(item, callback) {
     this._items.push(item);
-    callback(null, item);
+    callback(null, {});
   }
 
   get(query, callback) {
@@ -25,10 +25,14 @@ class DynamoDocumentClientStub {
   }
 }
 
-class DynamoDBStub {}
-DynamoDBStub.DocumentClient = DynamoDocumentClientStub;
+const dynamoDbStub = {
+  documentClient: function () {
+    return new DynamoDocumentClientStub();
+  },
+  tables: require('../lib/dynamodb').tables
+};
 
-const indexingTask = proxyquire('../lib/indexing_task', {'aws-sdk': {DynamoDB: DynamoDBStub}});
+const indexingTask = proxyquire('../lib/indexing_task', {'./dynamodb': dynamoDbStub});
 
 describe('Indexing task', function () {
   let clock;
