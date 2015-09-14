@@ -6,26 +6,26 @@ const specRequest = require('./spec_request');
 
 const expect = require('chai').expect;
 
-describe('Indexes', function () {
+describe('Indexes', () => {
   const payload = {name: 'object', field: 'value'};
   const testIndexName = 'test_index_' + cuid();
   let createResponse;
 
-  before(function () {
+  before(() => {
     return specRequest({url: '/1/indexes/' + testIndexName, method: 'post', payload: payload})
-      .then(function (response) {
+      .then(response => {
         createResponse = response;
       });
   });
 
-  it('accepts a new object', function () {
+  it('accepts a new object', () => {
     expect(createResponse.statusCode).to.equal(201);
   });
 
-  describe('indexing tasks', function () {
-    it('can be retrieved', function () {
+  describe('indexing tasks', () => {
+    it('can be retrieved', () => {
       return specRequest({url: createResponse.headers.location})
-        .then(function (response) {
+        .then(response => {
           expect(response.statusCode).to.equal(200);
           expect(response.id).to.equal(createResponse.taskID);
           expect(response.objectID).to.equal(createResponse.objectID);

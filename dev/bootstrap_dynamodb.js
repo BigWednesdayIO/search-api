@@ -18,7 +18,7 @@ dynamoDb.createTable({
     ReadCapacityUnits: 1,
     WriteCapacityUnits: 1
   },
-}, function(err) {
+}, err => {
   if (err) {
     console.error(`Failed to create table ${indexingTasksTable}. ${err}`);
     throw err;

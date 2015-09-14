@@ -3,14 +3,14 @@
 const enjoi = require('enjoi');
 const swagger = require('../swagger.json');
 
-module.exports = function (options) {
-  return new Promise(function (resolve, reject) {
-    require('../lib/server')(function (err, server) {
+module.exports = options => {
+  return new Promise((resolve, reject) => {
+    require('../lib/server')((err, server) => {
       if (err) {
         return reject(err);
       }
 
-      server.inject(options, function (response) {
+      server.inject(options, response => {
         if (!response.request.route || response.request.route.path === '/{p*}') {
           return reject(new Error(`Undefined route ${options.url}`));
         }
@@ -39,7 +39,7 @@ module.exports = function (options) {
 
         const validator = enjoi(swaggerResponse.schema, {subSchemas: {'#': swagger}});
 
-        validator.validate(response.payload, function (err) {
+        validator.validate(response.payload, err => {
           if (err) {
             return reject(new Error(`Response does not match the documented schema: ${err}`));
           }

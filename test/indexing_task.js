@@ -17,7 +17,7 @@ class DynamoDocumentClientStub {
   }
 
   get(query, callback) {
-    const item = this._items.find(function (i) {
+    const item = this._items.find(i => {
       return i.Item.id === query.Key.id;
     });
 
@@ -26,7 +26,7 @@ class DynamoDocumentClientStub {
 }
 
 const dynamoDbStub = {
-  documentClient: function () {
+  documentClient: () => {
     return new DynamoDocumentClientStub();
   },
   tables: require('../lib/dynamodb').tables
@@ -34,35 +34,35 @@ const dynamoDbStub = {
 
 const indexingTask = proxyquire('../lib/indexing_task', {'./dynamodb': dynamoDbStub});
 
-describe('Indexing task', function () {
+describe('Indexing task', () => {
   let clock;
   const testDate = new Date();
 
-  before(function () {
+  before(() => {
     clock = sinon.useFakeTimers(testDate.getTime(), 'Date');
   });
 
-  after(function () {
+  after(() => {
     clock.restore();
   });
 
-  describe('create', function () {
-    it('assigns an id', function (done) {
-      indexingTask.create({name: 'an object'}).then(function (task) {
+  describe('create', () => {
+    it('assigns an id', done => {
+      indexingTask.create({name: 'an object'}).then(task => {
         expect(task).to.have.property('id');
         done();
       }, done);
     });
 
-    it('assigns unique ids', function (done) {
+    it('assigns unique ids', done => {
       const indexingTasks = [];
 
       for (let i = 0, len = 1000; i < len; i++) {
         indexingTasks.push(indexingTask.create({number: i}));
       }
 
-      Promise.all(indexingTasks).then(function (tasks) {
-        const uniqueIDs = _.uniq(tasks, function (t) {
+      Promise.all(indexingTasks).then(tasks => {
+        const uniqueIDs = _.uniq(tasks, t => {
           return t.id;
         });
 
@@ -71,36 +71,36 @@ describe('Indexing task', function () {
       }, done);
     });
 
-    it('assigns createdAt date', function (done) {
-      indexingTask.create({name: 'an object'}).then(function (task) {
+    it('assigns createdAt date', done => {
+      indexingTask.create({name: 'an object'}).then(task => {
         expect(task).to.have.property('createdAt');
         done();
       }, done);
     });
 
-    it('createdDate is an ISO format date string', function (done) {
-      indexingTask.create({name: 'an object'}).then(function (task) {
+    it('createdDate is an ISO format date string', done => {
+      indexingTask.create({name: 'an object'}).then(task => {
         expect(task).to.have.property('createdAt', testDate.toISOString());
         done();
       }, done);
     });
 
-    it('assigns an objectID', function (done) {
-      indexingTask.create({name: 'an object'}).then(function (task) {
+    it('assigns an objectID', done => {
+      indexingTask.create({name: 'an object'}).then(task => {
         expect(task).to.have.property('objectID');
         done();
       }, done);
     });
 
-    it('assigns unique objectIDs', function (done) {
+    it('assigns unique objectIDs', done => {
       const indexingTasks = [];
 
       for (let i = 0, len = 1000; i < len; i++) {
         indexingTasks.push(indexingTask.create({number: i}));
       }
 
-      Promise.all(indexingTasks).then(function (tasks) {
-        const uniqueIDs = _.uniq(tasks, function (t) {
+      Promise.all(indexingTasks).then(tasks => {
+        const uniqueIDs = _.uniq(tasks, t => {
           return t.objectID;
         });
 
@@ -110,18 +110,18 @@ describe('Indexing task', function () {
     });
   });
 
-  describe('get', function () {
+  describe('get', () => {
     let createdTask;
 
-    before(function (done) {
-      indexingTask.create({name: 'an object'}).then(function (task) {
+    before(done => {
+      indexingTask.create({name: 'an object'}).then(task => {
         createdTask = task;
         done();
       }, done);
     });
 
-    it('retrieves task information by id', function (done) {
-      indexingTask.get(createdTask.id).then(function (task) {
+    it('retrieves task information by id', done => {
+      indexingTask.get(createdTask.id).then(task => {
         expect(task).to.be.eql(createdTask);
         done();
       }, done);
