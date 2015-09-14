@@ -31,12 +31,20 @@ describe('Search', () => {
   it('builds a keyword query', () => {
     const expected = {
       index: indexName,
-      body: {
-        query: {match: {_all: 'some-keyword'}}
-      }
+      body: {query: {filtered: {query: {match: {_all: 'some-keyword'}}}}}
     };
 
     return search.query(indexName, {query: 'some-keyword'})
+      .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
+  it('builds an match_all query when keyword is not supplied', () => {
+    const expected = {
+      index: indexName,
+      body: {query: {filtered: {}}}
+    };
+
+    return search.query(indexName, {})
       .then(() => expect(searchArgs).to.deep.equal(expected));
   });
 
