@@ -48,7 +48,7 @@ describe('Search', () => {
       .then(() => expect(searchArgs).to.deep.equal(expected));
   });
 
-  it('builds a filtered query', () => {
+  it('builds a term filtered query', () => {
     const expected = {
       index: indexName,
       body: {
@@ -62,6 +62,24 @@ describe('Search', () => {
 
     return search.query(indexName, {
       filters: [{field: 'field1', term: 'term1'}, {field: 'field2', term: 'term2'}]
+    })
+    .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
+  it('builds a range filtered query', () => {
+    const expected = {
+      index: indexName,
+      body: {
+        query: {
+          filtered: {
+            filter: {and: [{range: {field1: {gte: 1, lte: 2}}}]}
+          }
+        }
+      }
+    };
+
+    return search.query(indexName, {
+      filters: [{field: 'field1', range: {from: 1, to: 2}}]
     })
     .then(() => expect(searchArgs).to.deep.equal(expected));
   });

@@ -167,6 +167,20 @@
                                             "term": {
                                                 "type": "string",
                                                 "description": "The filter term"
+                                            },
+                                            "range": {
+                                                "type": "object",
+                                                "description": "The filter range",
+                                                "properties": {
+                                                    "from": {
+                                                        "type": "number",
+                                                        "description": "The range's lower bound"
+                                                    },
+                                                    "to": {
+                                                        "type": "number",
+                                                        "description": "The range's upper bound"
+                                                    }
+                                                }
                                             }
                                         }
                                     }
