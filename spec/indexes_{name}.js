@@ -27,8 +27,8 @@ describe('Indexes', () => {
       return specRequest({url: createResponse.headers.location})
         .then(response => {
           expect(response.statusCode).to.equal(200);
-          expect(response.id).to.equal(createResponse.taskID);
-          expect(response.objectID).to.equal(createResponse.objectID);
+          expect(response.result.id).to.equal(createResponse.result.taskID);
+          expect(response.result.objectID).to.equal(createResponse.result.objectID);
         });
     });
   });
