@@ -21,5 +21,6 @@ dynamoDb.createTable({
 }, function(err) {
   if (err) {
     console.error(`Failed to create table ${indexingTasksTable}. ${err}`);
+    throw err;
   }
 });
