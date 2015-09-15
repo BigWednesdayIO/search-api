@@ -101,6 +101,17 @@
                         "type": "string"
                     }
                 ]
+            },
+            "get": {
+                "description": "Get an object by it's identifier.\n",
+                "responses": {
+                    "200": {
+                        "description": "The identified object",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
             }
         },
         "/indexes/{name}/query": {
