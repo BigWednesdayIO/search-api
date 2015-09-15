@@ -15,12 +15,12 @@ describe('Indexes', function () {
       return elasticsearchClient.indices.delete({index: testIndexName});
     });
 
-    it.skip('accepts a new object', function () {
+    it('accepts a new object', function () {
       const payload = {name: 'object', field: 'value'};
 
       return specRequest({url: '/1/indexes/' + testIndexName, method: 'post', payload: payload})
         .then(function (response) {
-          expect(response.statusCode).to.equal(200);
+          expect(response.statusCode).to.equal(201);
         });
     });
   });
