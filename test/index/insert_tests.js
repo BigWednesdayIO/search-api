@@ -22,9 +22,7 @@ describe('Index', () => {
         indexedObject = args.body;
         indexName = args.index;
 
-        return new Promise(resolve => {
-          resolve({_id: '123'});
-        });
+        return Promise.resolve({_id: '123'});
       });
 
       const Index = require('../../lib/index');

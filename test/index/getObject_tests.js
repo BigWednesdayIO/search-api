@@ -28,26 +28,45 @@ const indexData = [{
 
 describe('Index', () => {
   describe('getObject', () => {
+    let Index;
+    let index;
     let elasticStub;
     let retrievedObject;
 
     before(() => {
       elasticStub = sinon.stub(elasticsearchClient, 'get', args => {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
           const index = _.find(indexData, {indexName: args.index});
 
           if (!index) {
-            throw new Error(`index ${args.index} not found in test data`);
+            const err = new Error('Missing index');
+            err.status = 404;
+            err.body = {
+              error: 'Missing index'
+            };
+
+            return reject(err);
           }
 
           const o = _.find(index.data, {_id: args.id});
+
+          if (!o) {
+            const err = new Error('Not found');
+            err.status = 404;
+            err.body = {
+              _index: index.indexName,
+              found: false
+            };
+
+            return reject(err);
+          }
 
           resolve(o);
         });
       });
 
-      const Index = require('../../lib/index');
-      const index = new Index('two');
+      Index = require('../../lib/index');
+      index = new Index('two');
 
       return index.getObject('3')
         .then(o => {
@@ -70,6 +89,29 @@ describe('Index', () => {
     it('returns the objectID', () => {
       const expectedId = indexData[1].data[2]._id;
       expect(retrievedObject).to.have.property('objectID', expectedId);
+    });
+
+    describe('errors', () => {
+      it('returns object not found errors', () => {
+        return index.getObject('a')
+          .then(() => {
+            throw new Error('expected object not found error');
+          }, err => {
+            expect(err).to.have.property('objectFound', false);
+            expect(err).to.have.property('indexFound', true);
+          });
+      });
+
+      it('returns index not found errors', () => {
+        const index = new Index('nonexistantindex');
+        return index.getObject('a')
+          .then(() => {
+            throw new Error('expected index not found error');
+          }, err => {
+            expect(err).to.have.property('objectFound', false);
+            expect(err).to.have.property('indexFound', false);
+          });
+      });
     });
   });
 });
