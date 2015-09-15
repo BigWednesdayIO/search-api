@@ -47,6 +47,15 @@ describe('Indexes', () => {
       return specRequest({url: '/1/indexes/' + testIndexName + '/12345'})
         .then(response => {
           expect(response.statusCode).to.equal(404);
+          expect(response.result.message).to.equal('Index does not contain object with identifier 12345');
+        });
+    });
+
+    it('returns a 404 when the index does not exist', () => {
+      return specRequest({url: '/1/indexes/nonexistantindex/12345'})
+        .then(response => {
+          expect(response.statusCode).to.equal(404);
+          expect(response.result.message).to.equal('Index nonexistantindex does not exist');
         });
     });
   });

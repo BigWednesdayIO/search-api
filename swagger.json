@@ -223,6 +223,10 @@
         "Error": {
             "type": "object",
             "properties": {
+                "message": {
+                    "type": "string",
+                    "description": "A message explaining the error"
+                },
                 "error": {
                     "type": "string",
                     "description": "An error message"
