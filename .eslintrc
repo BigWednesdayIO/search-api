@@ -2,7 +2,8 @@
   "extends": "xo-space",
   "rules": {
     "strict": [2, "global"],
-    "no-var": 1
+    "no-var": 2,
+    "prefer-arrow-callback": 2
   },
   "ecmaFeatures": {
     "arrowFunctions": true,
