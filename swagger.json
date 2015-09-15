@@ -173,6 +173,7 @@
                                             "range": {
                                                 "type": "object",
                                                 "description": "The filter range",
+                                                "minProperties": 1,
                                                 "properties": {
                                                     "from": {
                                                         "type": "number",
