@@ -156,7 +156,7 @@
                                 },
                                 "filters": {
                                     "type": "array",
-                                    "description": "An array of search filter objects",
+                                    "description": "An array of search filter objects. 'range' is ignored when 'term' is supplied",
                                     "items": {
                                         "type": "object",
                                         "properties": {
