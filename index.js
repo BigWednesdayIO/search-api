@@ -1,11 +1,11 @@
 'use strict';
 
-require('./lib/server')(function (err, server) {
+require('./lib/server')((err, server) => {
   if (err) {
     return console.error(err);
   }
 
-  server.start(function (err) {
+  server.start(err => {
     if (err) {
       return console.error(err);
     }

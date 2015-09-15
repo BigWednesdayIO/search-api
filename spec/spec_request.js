@@ -4,19 +4,19 @@ const enjoi = require('enjoi');
 const swagger = require('../swagger.json');
 
 module.exports = function (options) {
-  return new Promise(function (resolve, reject) {
-    require('../lib/server')(function (err, server) {
+  return new Promise((resolve, reject) => {
+    require('../lib/server')((err, server) => {
       if (err) {
         return reject(err);
       }
 
-      server.inject(options, function (response) {
+      server.inject(options, response => {
         if (!response.request.route || response.request.route.path === '/{p*}') {
           return reject(new Error(`Undefined route ${options.url}`));
         }
 
         const apiBasePath = swagger.basePath || '';
-        const route = response.request.route.path.replace(new RegExp('^' + apiBasePath), '');
+        const route = response.request.route.path.replace(new RegExp(`^${apiBasePath}`), '');
         const method = response.request.method;
 
         const swaggerPath = swagger.paths[route];
@@ -33,13 +33,17 @@ module.exports = function (options) {
 
         const swaggerResponse = swaggerMethod.responses[response.statusCode];
 
+        if (response.statusCode === 400) {
+          return resolve(response);
+        }
+
         if (response.statusCode !== 404 && !swaggerResponse) {
           return reject(new Error(`${response.statusCode} result for ${method} of route ${route} is undocumented. Please add to swagger.json.`));
         }
 
         const validator = enjoi(swaggerResponse.schema, {subSchemas: {'#': swagger}});
 
-        validator.validate(response.payload, function (err) {
+        validator.validate(response.payload, err => {
           if (err) {
             return reject(new Error(`Response does not match the documented schema: ${err}`));
           }

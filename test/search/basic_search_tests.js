@@ -28,16 +28,96 @@ describe('Search', () => {
     searchArgs = undefined;
   });
 
+  it('builds a default match all query when no search is supplied', () => {
+    const expected = {
+      index: indexName,
+      body: {query: {filtered: {}}}
+    };
+
+    return search.query(indexName, {})
+      .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
   it('builds a keyword query', () => {
     const expected = {
       index: indexName,
-      body: {
-        query: {match: {_all: 'some-keyword'}}
-      }
+      body: {query: {filtered: {query: {match: {_all: 'some-keyword'}}}}}
     };
 
     return search.query(indexName, {query: 'some-keyword'})
       .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
+  it('builds a term filtered query', () => {
+    const expected = {
+      index: indexName,
+      body: {
+        query: {
+          filtered: {
+            filter: {and: [{term: {field1: 'term1'}}, {term: {field2: 'term2'}}]}
+          }
+        }
+      }
+    };
+
+    return search.query(indexName, {
+      filters: [{field: 'field1', term: 'term1'}, {field: 'field2', term: 'term2'}]
+    })
+    .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
+  it('builds a range filtered query', () => {
+    const expected = {
+      index: indexName,
+      body: {
+        query: {
+          filtered: {
+            filter: {and: [{range: {field1: {gte: 1, lte: 2}}}]}
+          }
+        }
+      }
+    };
+
+    return search.query(indexName, {
+      filters: [{field: 'field1', range: {from: 1, to: 2}}]
+    })
+    .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
+  it('builds lower bound only range filtered query', () => {
+    const expected = {
+      index: indexName,
+      body: {
+        query: {
+          filtered: {
+            filter: {and: [{range: {field1: {gte: 1}}}]}
+          }
+        }
+      }
+    };
+
+    return search.query(indexName, {
+      filters: [{field: 'field1', range: {from: 1}}]
+    })
+    .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
+  it('builds upper bound only range filtered query', () => {
+    const expected = {
+      index: indexName,
+      body: {
+        query: {
+          filtered: {
+            filter: {and: [{range: {field1: {lte: 5}}}]}
+          }
+        }
+      }
+    };
+
+    return search.query(indexName, {
+      filters: [{field: 'field1', range: {to: 5}}]
+    })
+    .then(() => expect(searchArgs).to.deep.equal(expected));
   });
 
   it('returns document source', () => {
