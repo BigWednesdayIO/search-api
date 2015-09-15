@@ -135,7 +135,23 @@
                         }
                     }
                 }
-            }
+            },
+            "parameters": [
+                {
+                    "name": "name",
+                    "in": "path",
+                    "description": "Name of the index to search",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "objectID",
+                    "in": "path",
+                    "description": "The identifier of the object to delete",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
         },
         "/indexes/{name}/query": {
             "post": {
