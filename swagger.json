@@ -60,9 +60,9 @@
                 "description": "Add an object to the index and automatically assign an identifier.\n",
                 "responses": {
                     "201": {
-                        "description": "Indexing task created",
+                        "description": "The indexed document containing the automatically generated id and supplied fields",
                         "schema": {
-                            "$ref": "#/definitions/Task"
+                            "type": "object"
                         }
                     }
                 },
