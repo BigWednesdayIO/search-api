@@ -59,6 +59,16 @@ describe('/indexes/{name}/query', () => {
         });
     });
 
+    it('performs paging', () => {
+      const payload = {page: 2, hitsPerPage: 1};
+
+      return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload})
+        .then(response => {
+          expect(response.result.length).to.equal(1);
+          expect(response.statusCode).to.equal(200);
+        });
+    });
+
     describe('validation', () => {
       it('ensures query is a string', () => {
         const payload = {query: {}};

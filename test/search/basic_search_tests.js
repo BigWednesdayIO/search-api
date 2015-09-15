@@ -31,7 +31,7 @@ describe('Search', () => {
   it('builds a default match all query when no search is supplied', () => {
     const expected = {
       index: indexName,
-      body: {query: {filtered: {}}}
+      body: {query: {filtered: {}}, size: 10}
     };
 
     return search.query(indexName, {})
@@ -41,7 +41,10 @@ describe('Search', () => {
   it('builds a keyword query', () => {
     const expected = {
       index: indexName,
-      body: {query: {filtered: {query: {match: {_all: 'some-keyword'}}}}}
+      body: {
+        query: {filtered: {query: {match: {_all: 'some-keyword'}}}},
+        size: 10
+      }
     };
 
     return search.query(indexName, {query: 'some-keyword'})
@@ -56,7 +59,8 @@ describe('Search', () => {
           filtered: {
             filter: {and: [{term: {field1: 'term1'}}, {term: {field2: 'term2'}}]}
           }
-        }
+        },
+        size: 10
       }
     };
 
@@ -74,7 +78,8 @@ describe('Search', () => {
           filtered: {
             filter: {and: [{range: {field1: {gte: 1, lte: 2}}}]}
           }
-        }
+        },
+        size: 10
       }
     };
 
@@ -92,7 +97,8 @@ describe('Search', () => {
           filtered: {
             filter: {and: [{range: {field1: {gte: 1}}}]}
           }
-        }
+        },
+        size: 10
       }
     };
 
@@ -110,7 +116,8 @@ describe('Search', () => {
           filtered: {
             filter: {and: [{range: {field1: {lte: 5}}}]}
           }
-        }
+        },
+        size: 10
       }
     };
 
@@ -118,6 +125,65 @@ describe('Search', () => {
       filters: [{field: 'field1', range: {to: 5}}]
     })
     .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
+  it('builds upper bound only range filtered query', () => {
+    const expected = {
+      index: indexName,
+      body: {
+        query: {
+          filtered: {
+            filter: {and: [{range: {field1: {lte: 5}}}]}
+          }
+        },
+        size: 10
+      }
+    };
+
+    return search.query(indexName, {
+      filters: [{field: 'field1', range: {to: 5}}]
+    })
+    .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
+  it('defualts to page size of 10', () => {
+    const expected = {
+      index: indexName,
+      body: {
+        query: {filtered: {}},
+        size: 10
+      }
+    };
+
+    return search.query(indexName, {})
+      .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
+  it('builds query with modified page size', () => {
+    const expected = {
+      index: indexName,
+      body: {
+        query: {filtered: {}},
+        size: 50
+      }
+    };
+
+    return search.query(indexName, {hitsPerPage: 50})
+      .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
+  it('builds query with page number', () => {
+    const expected = {
+      index: indexName,
+      body: {
+        query: {filtered: {}},
+        size: 10,
+        from: 10
+      }
+    };
+
+    return search.query(indexName, {page: 2})
+      .then(() => expect(searchArgs).to.deep.equal(expected));
   });
 
   it('returns document source', () => {
