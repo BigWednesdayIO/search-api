@@ -10,13 +10,14 @@ const expect = require('chai').expect;
 
 describe('/indexes/{name}/{objectID}', () => {
   const testIndexName = `test_index_${cuid()}`;
+  const testObject = {name: 'an object', field1: 'some value', field2: false};
   let indexedObject;
 
   before(() => {
     return elasticsearchClient.index({
       index: testIndexName,
       type: 'object',
-      body: {name: 'an object'}
+      body: testObject
     })
     .then(o => {
       indexedObject = o;
@@ -35,7 +36,7 @@ describe('/indexes/{name}/{objectID}', () => {
           expect(response.statusCode).to.equal(200);
           expect(response.result.objectID).to.equal(indexedObject._id);
 
-          _.forOwn(indexedObject._source, (value, property) => {
+          _.forOwn(testObject, (value, property) => {
             expect(response.result).to.have.property(property, value);
           });
         });
@@ -54,6 +55,44 @@ describe('/indexes/{name}/{objectID}', () => {
         .then(response => {
           expect(response.statusCode).to.equal(404);
           expect(response.result.message).to.equal('Index nonexistantindex does not exist');
+        });
+    });
+  });
+
+  describe('put', () => {
+    it('indexes new objects into an index', () => {
+      return specRequest({url: `/1/indexes/${testIndexName}/12345`, method: 'put', payload: testObject})
+        .then(response => {
+          expect(response.statusCode).to.equal(201);
+          expect(response.headers.location).to.equal(`/1/indexes/${testIndexName}/12345`);
+        })
+        .then(() => {
+          // TODO: replace once async indexing is in place
+          return elasticsearchClient.get({
+            index: testIndexName,
+            type: 'object',
+            id: '12345'
+          }).then(o => {
+            expect(o._source).to.be.deep.equal(testObject);
+          });
+        });
+    });
+
+    it('updates existing objects in an index', () => {
+      const update = {name: 'another object', aField: 'value'};
+      return specRequest({url: `/1/indexes/${testIndexName}/${indexedObject._id}`, method: 'put', payload: update})
+        .then(response => {
+          expect(response.statusCode).to.equal(200);
+        })
+        .then(() => {
+          // TODO: replace once async indexing is in place
+          return elasticsearchClient.get({
+            index: testIndexName,
+            type: 'object',
+            id: indexedObject._id
+          }).then(o => {
+            expect(o._source).to.be.deep.equal(update);
+          });
         });
     });
   });
