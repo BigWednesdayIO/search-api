@@ -24,9 +24,18 @@ describe('/indexes/{name}', () => {
   });
 
   describe('post', () => {
-    it('accepts a new object', () => {
+    it('indexes a new object', () => {
       expect(createResponse.statusCode).to.equal(201);
       expect(createResponse.headers.location).to.equal(`/1/indexes/${testIndexName}/${createResponse.result.objectID}`);
+
+      // TODO: replace once async indexing is in place
+      return elasticsearchClient.get({
+        index: testIndexName,
+        type: 'object',
+        id: createResponse.result.objectID
+      }).then(o => {
+        expect(o._source).to.be.deep.equal(testObject);
+      });
     });
   });
 });
