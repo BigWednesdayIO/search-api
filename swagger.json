@@ -110,6 +110,12 @@
                         "schema": {
                             "type": "object"
                         }
+                    },
+                    "404": {
+                        "description": "The object was not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             }
@@ -211,6 +217,20 @@
                 "objectID": {
                     "type": "string",
                     "description": "The identifier of the object being indexed"
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "description": "An error message"
+                },
+                "statusCode": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "An HTTP status code"
                 }
             }
         }

@@ -9,26 +9,28 @@ const specRequest = require('./spec_request');
 const expect = require('chai').expect;
 
 describe('Indexes', () => {
+  const testIndexName = 'test_index_' + cuid();
+  const testObject = {name: 'object', field: 'value'};
+  let createResponse;
+
+  before(() => {
+    return specRequest({url: '/1/indexes/' + testIndexName, method: 'post', payload: testObject})
+      .then(response => {
+        createResponse = response;
+      });
+  });
+
+  after(() => {
+    return elasticsearchClient.indices.delete({index: testIndexName});
+  });
+
   describe('indexing', () => {
-    let createResponse;
-    const testObject = {name: 'object', field: 'value'};
-    const testIndexName = 'test_index_' + cuid();
-
-    before(() => {
-      return specRequest({url: '/1/indexes/' + testIndexName, method: 'post', payload: testObject})
-        .then(response => {
-          createResponse = response;
-        });
-    });
-
-    after(() => {
-      return elasticsearchClient.indices.delete({index: testIndexName});
-    });
-
     it('accepts a new object', () => {
       expect(createResponse.statusCode).to.equal(201);
     });
+  });
 
+  describe('retrieving objects', () => {
     it('allows indexed objects to be retrieved', () => {
       return specRequest({url: createResponse.headers.location})
         .then(response => {
@@ -38,6 +40,13 @@ describe('Indexes', () => {
           _.forOwn(testObject, (value, property) => {
             expect(response.result).to.have.property(property, value);
           });
+        });
+    });
+
+    it('returns a 404 when the index does not contain the identified object', () => {
+      return specRequest({url: '/1/indexes/' + testIndexName + '/12345'})
+        .then(response => {
+          expect(response.statusCode).to.equal(404);
         });
     });
   });
