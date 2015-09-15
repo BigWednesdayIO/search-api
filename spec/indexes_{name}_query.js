@@ -119,26 +119,26 @@ describe('/indexes/{name}/query', () => {
             expect(response.statusCode).to.equal(400);
           });
       });
-    });
 
-    it('ensures page is integer', () => {
-      const payload = {page: 1.5};
+      it('ensures page is integer', () => {
+        const payload = {page: 1.5};
 
-      return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
-        .then(response => {
-          expect(response.result.message).to.match(/"page" must be an integer/);
-          expect(response.statusCode).to.equal(400);
-        });
-    });
+        return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
+          .then(response => {
+            expect(response.result.message).to.match(/"page" must be an integer/);
+            expect(response.statusCode).to.equal(400);
+          });
+      });
 
-    it('ensures hitsPerPage is integer', () => {
-      const payload = {hitsPerPage: 25.5};
+      it('ensures hitsPerPage is integer', () => {
+        const payload = {hitsPerPage: 25.5};
 
-      return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
-        .then(response => {
-          expect(response.result.message).to.match(/"hitsPerPage" must be an integer/);
-          expect(response.statusCode).to.equal(400);
-        });
+        return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
+          .then(response => {
+            expect(response.result.message).to.match(/"hitsPerPage" must be an integer/);
+            expect(response.statusCode).to.equal(400);
+          });
+      });
     });
   });
 });
