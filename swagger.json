@@ -60,9 +60,9 @@
                 "description": "Add an object to the index and automatically assign an identifier.\n",
                 "responses": {
                     "201": {
-                        "description": "Indexing task created",
+                        "description": "The indexed document containing the automatically generated id and supplied fields",
                         "schema": {
-                            "$ref": "#/definitions/Task"
+                            "type": "object"
                         }
                     }
                 },
@@ -101,6 +101,23 @@
                         "type": "string"
                     }
                 ]
+            },
+            "get": {
+                "description": "Get an object by it's identifier.\n",
+                "responses": {
+                    "200": {
+                        "description": "The identified object",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "The object was not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
             }
         },
         "/indexes/{name}/query": {
@@ -200,6 +217,24 @@
                 "objectID": {
                     "type": "string",
                     "description": "The identifier of the object being indexed"
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "description": "A message explaining the error"
+                },
+                "error": {
+                    "type": "string",
+                    "description": "An error message"
+                },
+                "statusCode": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "An HTTP status code"
                 }
             }
         }

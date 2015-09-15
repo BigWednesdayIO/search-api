@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/BigWednesdayIO/search-api",
   "dependencies": {
+    "boom": "^2.8.0",
     "elasticsearch": "^8.0.1",
     "hapi": "^9.3.0",
     "lodash": "^3.10.1",
