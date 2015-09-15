@@ -118,6 +118,23 @@
                         }
                     }
                 }
+            },
+            "put": {
+                "description": "Create or replace an object in the index.\n",
+                "responses": {
+                    "201": {
+                        "description": "The object created in the index.",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "200": {
+                        "description": "The object that has replaced another in the index.",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
             }
         },
         "/indexes/{name}/query": {
