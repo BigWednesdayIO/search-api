@@ -13,7 +13,7 @@ describe('/indexes/{name}/query', () => {
   const document1 = {sku: '12345', price: 1};
   const document2 = {sku: '98765', price: 5};
 
-  beforeEach(() => {
+  before(() => {
     return elasticsearchClient.bulk({
       body: [
         {index: {_index: testIndexName, _type: testIndexType, _id: 1}},
@@ -24,7 +24,7 @@ describe('/indexes/{name}/query', () => {
     }).then(() => elasticsearchClient.indices.refresh({index: testIndexName}));
   });
 
-  afterEach(() => {
+  after(() => {
     return elasticsearchClient.indices.delete({index: testIndexName});
   });
 
