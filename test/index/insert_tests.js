@@ -23,7 +23,7 @@ describe('Index', () => {
         indexName = args.index;
 
         return new Promise(resolve => {
-          resolve({_id: '123', _source: indexedObject});
+          resolve({_id: '123'});
         });
       });
 
