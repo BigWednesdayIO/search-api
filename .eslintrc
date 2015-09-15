@@ -1,9 +1,7 @@
 {
-  "extends": "xo-space",
+  "extends": "xo-space/esnext",
   "rules": {
-    "strict": [2, "global"],
-    "no-var": 2,
-    "prefer-arrow-callback": 2
+    "strict": [2, "global"]
   },
   "ecmaFeatures": {
     "arrowFunctions": true,

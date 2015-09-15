@@ -16,7 +16,7 @@ module.exports = function (options) {
         }
 
         const apiBasePath = swagger.basePath || '';
-        const route = response.request.route.path.replace(new RegExp('^' + apiBasePath), '');
+        const route = response.request.route.path.replace(new RegExp(`^${apiBasePath}`), '');
         const method = response.request.method;
 
         const swaggerPath = swagger.paths[route];

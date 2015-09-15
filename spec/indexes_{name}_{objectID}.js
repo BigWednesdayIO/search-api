@@ -9,7 +9,7 @@ const specRequest = require('./spec_request');
 const expect = require('chai').expect;
 
 describe('/indexes/{name}/{objectID}', () => {
-  const testIndexName = 'test_index_' + cuid();
+  const testIndexName = `test_index_${cuid()}`;
   let indexedObject;
 
   before(() => {
@@ -42,7 +42,7 @@ describe('/indexes/{name}/{objectID}', () => {
     });
 
     it('returns a 404 when the index does not contain the identified object', () => {
-      return specRequest({url: '/1/indexes/' + testIndexName + '/12345'})
+      return specRequest({url: `/1/indexes/${testIndexName}/12345`})
         .then(response => {
           expect(response.statusCode).to.equal(404);
           expect(response.result.message).to.equal('Index does not contain object with identifier 12345');
