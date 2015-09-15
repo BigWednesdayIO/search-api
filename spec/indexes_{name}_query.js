@@ -111,6 +111,16 @@ describe('/indexes/{name}/query', () => {
           });
       });
 
+      it('ensures filter has only 1 of term or range', () => {
+        const payload = {filters: [{field: 'sku', term: '12345', range: {from: 1}}]};
+
+        return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
+          .then(response => {
+            expect(response.result.message).to.match(/"0" must have less than or equal to 2 children/);
+            expect(response.statusCode).to.equal(400);
+          });
+      });
+
       it('ensures range filter has at least 1 bound', () => {
         const payload = {filters: [{field: 'sku', range: {}}]};
 
