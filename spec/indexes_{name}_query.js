@@ -7,7 +7,7 @@ const specRequest = require('./spec_request');
 
 const expect = require('chai').expect;
 
-describe('Basic search', () => {
+describe('/indexes/{name}/query', () => {
   const testIndexName = 'test_index_' + cuid();
   const testDocument = {sku: '12345'};
 
@@ -24,13 +24,15 @@ describe('Basic search', () => {
     return elasticsearchClient.indices.delete({index: testIndexName});
   });
 
-  it('queries by keyword', () => {
-    const payload = {query: '12345'};
+  describe('post', () => {
+    it('queries by keyword', () => {
+      const payload = {query: '12345'};
 
-    return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload: payload})
-      .then(response => {
-        expect(response.result).to.be.deep.equal([testDocument]);
-        expect(response.statusCode).to.equal(200);
-      });
+      return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload: payload})
+        .then(response => {
+          expect(response.result).to.be.deep.equal([testDocument]);
+          expect(response.statusCode).to.equal(200);
+        });
+    });
   });
 });
