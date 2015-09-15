@@ -33,6 +33,10 @@ module.exports = function (options) {
 
         const swaggerResponse = swaggerMethod.responses[response.statusCode];
 
+        if (response.statusCode === 400) {
+          return resolve(response);
+        }
+
         if (response.statusCode !== 404 && !swaggerResponse) {
           return reject(new Error(`${response.statusCode} result for ${method} of route ${route} is undocumented. Please add to swagger.json.`));
         }

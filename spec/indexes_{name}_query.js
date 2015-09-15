@@ -59,4 +59,57 @@ describe('/indexes/{name}/query', () => {
         });
     });
   });
+
+  describe('validation', () => {
+    it('ensures query is a string', () => {
+      const payload = {query: {}};
+
+      return specRequest({url: `/1/indexes/test-index/query`, method: 'post', payload: payload})
+        .then(response => {
+          expect(response.result.message).to.match(/"query" must be a string]/);
+          expect(response.statusCode).to.equal(400);
+        });
+    });
+
+    it('ensures filters is an array', () => {
+      const payload = {filters: {}};
+
+      return specRequest({url: `/1/indexes/test-index/query`, method: 'post', payload: payload})
+        .then(response => {
+          expect(response.result.message).to.match(/"filters" must be an array]/);
+          expect(response.statusCode).to.equal(400);
+        });
+    });
+
+    it('ensures filter has field', () => {
+      const payload = {filters: [{term: '12345'}]};
+
+      return specRequest({url: `/1/indexes/test-index/query`, method: 'post', payload: payload})
+        .then(response => {
+          expect(response.result.message).to.match(/"field" is required]/);
+          expect(response.statusCode).to.equal(400);
+        });
+    });
+
+    it('ensures filter has term or range', () => {
+      const payload = {filters: [{field: 'sku'}]};
+
+      return specRequest({url: `/1/indexes/test-index/query`, method: 'post', payload: payload})
+        .then(response => {
+          expect(response.result.message).to.match(/"0" must have at least 2 children/);
+          expect(response.statusCode).to.equal(400);
+        });
+    });
+
+    it('ensures range filter has at least 1 bound', () => {
+      const payload = {filters: [{field: 'sku', range: {}}]};
+
+      return specRequest({url: `/1/indexes/test-index/query`, method: 'post', payload: payload})
+        .then(response => {
+          expect(response.result.message).to.match(/"range" must have at least 1 children/);
+          expect(response.statusCode).to.equal(400);
+        });
+    });
+  });
 });
+
