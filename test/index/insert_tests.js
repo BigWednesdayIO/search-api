@@ -49,7 +49,7 @@ describe('Index', () => {
       });
     });
 
-    it ('returns the fields from the indexed object', () => {
+    it('returns the fields from the indexed object', () => {
       return index.insert(testObject).then(o => {
         _.forOwn(testObject, (value, property) => {
           expect(o).to.have.property(property, value);
@@ -60,7 +60,7 @@ describe('Index', () => {
     it('returns the generated objectID', () => {
       return index.insert(testObject).then(o => {
         expect(o.objectID).to.be.equal('123');
-      })
+      });
     });
   });
 });
