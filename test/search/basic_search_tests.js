@@ -84,6 +84,42 @@ describe('Search', () => {
     .then(() => expect(searchArgs).to.deep.equal(expected));
   });
 
+  it('builds lower bound only range filtered query', () => {
+    const expected = {
+      index: indexName,
+      body: {
+        query: {
+          filtered: {
+            filter: {and: [{range: {field1: {gte: 1}}}]}
+          }
+        }
+      }
+    };
+
+    return search.query(indexName, {
+      filters: [{field: 'field1', range: {from: 1}}]
+    })
+    .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
+  it('builds upper bound only range filtered query', () => {
+    const expected = {
+      index: indexName,
+      body: {
+        query: {
+          filtered: {
+            filter: {and: [{range: {field1: {lte: 5}}}]}
+          }
+        }
+      }
+    };
+
+    return search.query(indexName, {
+      filters: [{field: 'field1', range: {to: 5}}]
+    })
+    .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
   it('returns document source', () => {
     return search.query(indexName, {query: 'some-keyword'})
       .then(results => expect(results[0]).to.deep.equal(testDocument));

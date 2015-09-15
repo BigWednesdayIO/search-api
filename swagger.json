@@ -156,9 +156,11 @@
                                 },
                                 "filters": {
                                     "type": "array",
-                                    "description": "An array of search filter objects. 'range' is ignored when 'term' is supplied",
+                                    "description": "An array of search filter objects. Either 'term' or 'range' is required",
                                     "items": {
                                         "type": "object",
+                                        "minProperties": 2,
+                                        "required": ["field"],
                                         "properties": {
                                             "field": {
                                                 "type": "string",
