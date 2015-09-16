@@ -70,6 +70,28 @@ describe('/indexes/{name}/query', () => {
         });
     });
 
+    it('sorts results with default order', () => {
+      const payload = {sort: [{field: 'price'}]};
+
+      return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload})
+        .then(response => {
+          expect(response.result[0].price).to.equal(1);
+          expect(response.result[1].price).to.equal(5);
+          expect(response.statusCode).to.equal(200);
+        });
+    });
+
+    it('sorts results with specified order', () => {
+      const payload = {sort: [{field: 'price', direction: 'desc'}]};
+
+      return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload})
+        .then(response => {
+          expect(response.result[0].price).to.equal(5);
+          expect(response.result[1].price).to.equal(1);
+          expect(response.statusCode).to.equal(200);
+        });
+    });
+
     describe('validation', () => {
       it('ensures query is a string', () => {
         const payload = {query: {}};
@@ -111,6 +133,16 @@ describe('/indexes/{name}/query', () => {
           });
       });
 
+      it('ensures filter has only 1 of term or range', () => {
+        const payload = {filters: [{field: 'sku', term: '12345', range: {from: 1}}]};
+
+        return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
+          .then(response => {
+            expect(response.result.message).to.match(/"0" must have less than or equal to 2 children/);
+            expect(response.statusCode).to.equal(400);
+          });
+      });
+
       it('ensures range filter has at least 1 bound', () => {
         const payload = {filters: [{field: 'sku', range: {}}]};
 
@@ -137,6 +169,36 @@ describe('/indexes/{name}/query', () => {
         return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
           .then(response => {
             expect(response.result.message).to.match(/"hitsPerPage" must be an integer/);
+            expect(response.statusCode).to.equal(400);
+          });
+      });
+
+      it('ensures sort is array', () => {
+        const payload = {sort: 'sku'};
+
+        return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
+          .then(response => {
+            expect(response.result.message).to.match(/"sort" must be an array/);
+            expect(response.statusCode).to.equal(400);
+          });
+      });
+
+      it('ensures sort field is present', () => {
+        const payload = {sort: [{}]};
+
+        return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
+          .then(response => {
+            expect(response.result.message).to.match(/"field" is required]/);
+            expect(response.statusCode).to.equal(400);
+          });
+      });
+
+      it('ensures sort direction is "asc" or "desc"', () => {
+        const payload = {sort: [{field: 'sku', direction: 'upwards'}]};
+
+        return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
+          .then(response => {
+            expect(response.result.message).to.match(/"direction" must be one of \[asc, desc\]/);
             expect(response.statusCode).to.equal(400);
           });
       });

@@ -186,6 +186,34 @@ describe('Search', () => {
       .then(() => expect(searchArgs).to.deep.equal(expected));
   });
 
+  it('builds sorted query with default order', () => {
+    const expected = {
+      index: indexName,
+      body: {
+        query: {filtered: {}},
+        size: 10,
+        sort: ['field1']
+      }
+    };
+
+    return search.query(indexName, {sort: [{field: 'field1'}]})
+      .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
+  it('builds sorted query with explicit order', () => {
+    const expected = {
+      index: indexName,
+      body: {
+        query: {filtered: {}},
+        size: 10,
+        sort: [{field1: {order: 'asc'}}]
+      }
+    };
+
+    return search.query(indexName, {sort: [{field: 'field1', direction: 'asc'}]})
+      .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
   it('returns document source', () => {
     return search.query(indexName, {query: 'some-keyword'})
       .then(results => expect(results[0]).to.deep.equal(testDocument));

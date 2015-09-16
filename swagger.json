@@ -177,6 +177,7 @@
                                     "items": {
                                         "type": "object",
                                         "minProperties": 2,
+                                        "maxProperties": 2,
                                         "required": ["field"],
                                         "properties": {
                                             "field": {
@@ -212,6 +213,26 @@
                                 "hitsPerPage": {
                                     "type": "integer",
                                     "description": "Number of hits per page"
+                                },
+                                "sort": {
+                                    "type": "array",
+                                    "description": "An array of sort options",
+                                    "items": {
+                                        "type": "object",
+                                        "description": "A sort object. If direction is emitted it defaults to asc",
+                                        "required": ["field"],
+                                        "properties": {
+                                            "field": {
+                                                "type": "string",
+                                                "description": "Field to sort on"
+                                            },
+                                            "direction": {
+                                                "type": "string",
+                                                "description": "Sort direction",
+                                                "enum": ["asc", "desc"]
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

@@ -22,6 +22,7 @@
     "boom": "^2.8.0",
     "elasticsearch": "^8.0.1",
     "hapi": "^9.3.0",
+    "joi": "^6.7.0",
     "lodash": "^3.10.1",
     "swaggerize-hapi": "^1.0.0"
   },
