@@ -150,6 +150,36 @@ describe('/indexes/{name}/query', () => {
             expect(response.statusCode).to.equal(400);
           });
       });
+
+      it('ensures sort is array', () => {
+        const payload = {sort: 'sku'};
+
+        return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
+          .then(response => {
+            expect(response.result.message).to.match(/"sort" must be an array/);
+            expect(response.statusCode).to.equal(400);
+          });
+      });
+
+      it('ensures sort field is present', () => {
+        const payload = {sort: [{}]};
+
+        return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
+          .then(response => {
+            expect(response.result.message).to.match(/"field" is required]/);
+            expect(response.statusCode).to.equal(400);
+          });
+      });
+
+      it('ensures sort direction is "asc" or "desc"', () => {
+        const payload = {sort: [{field: 'sku', direction: 'upwards'}]};
+
+        return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
+          .then(response => {
+            expect(response.result.message).to.match(/"direction" must be one of \[asc, desc\]/);
+            expect(response.statusCode).to.equal(400);
+          });
+      });
     });
   });
 });

@@ -28,11 +28,11 @@ module.exports = function (grunt) {
     },
     watch: {
       default: {
-        files: ['<%= app %>', '<%= tests %>'],
+        files: ['swagger.json', '<%= app %>', '<%= tests %>'],
         tasks: ['lint', 'test']
       },
       specs: {
-        files: ['<%= specs %>'],
+        files: ['swagger.json', '<%= specs %>'],
         tasks: ['lint', 'spec']
       }
     },
