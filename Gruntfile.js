@@ -26,14 +26,23 @@ module.exports = function (grunt) {
         src: ['<%= specs %>']
       }
     },
+    shell: {
+      validateSwagger: {
+        command: 'swagger-tools validate swagger.json'
+      }
+    },
     watch: {
       default: {
-        files: ['swagger.json', '<%= app %>', '<%= tests %>'],
+        files: ['<%= app %>', '<%= tests %>'],
         tasks: ['lint', 'test']
       },
       specs: {
-        files: ['swagger.json', '<%= specs %>'],
+        files: ['<%= specs %>'],
         tasks: ['lint', 'spec']
+      },
+      swagger: {
+        files: ['swagger.json'],
+        tasks: ['lint', 'shell:validateSwagger', 'test', 'spec']
       }
     },
     retire: {
@@ -45,5 +54,5 @@ module.exports = function (grunt) {
   grunt.registerTask('test', 'mochaTest:test');
   grunt.registerTask('spec', 'mochaTest:spec');
   grunt.registerTask('ci', ['retire', 'default']);
-  grunt.registerTask('default', ['lint', 'test', 'spec']);
+  grunt.registerTask('default', ['lint', 'test', 'shell:validateSwagger', 'spec']);
 };
