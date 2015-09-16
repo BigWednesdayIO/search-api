@@ -59,6 +59,16 @@ describe('/indexes/{name}/query', () => {
         });
     });
 
+    it('performs paging', () => {
+      const payload = {page: 2, hitsPerPage: 1};
+
+      return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload})
+        .then(response => {
+          expect(response.result.length).to.equal(1);
+          expect(response.statusCode).to.equal(200);
+        });
+    });
+
     describe('validation', () => {
       it('ensures query is a string', () => {
         const payload = {query: {}};
@@ -106,6 +116,26 @@ describe('/indexes/{name}/query', () => {
         return specRequest({url: `/1/indexes/test-index/query`, method: 'post', payload})
           .then(response => {
             expect(response.result.message).to.match(/"range" must have at least 1 children/);
+            expect(response.statusCode).to.equal(400);
+          });
+      });
+
+      it('ensures page is integer', () => {
+        const payload = {page: 1.5};
+
+        return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
+          .then(response => {
+            expect(response.result.message).to.match(/"page" must be an integer/);
+            expect(response.statusCode).to.equal(400);
+          });
+      });
+
+      it('ensures hitsPerPage is integer', () => {
+        const payload = {hitsPerPage: 25.5};
+
+        return specRequest({url: '/1/indexes/test-index/query', method: 'post', payload})
+          .then(response => {
+            expect(response.result.message).to.match(/"hitsPerPage" must be an integer/);
             expect(response.statusCode).to.equal(400);
           });
       });
