@@ -41,6 +41,13 @@ module.exports = function (options) {
           return reject(new Error(`${response.statusCode} result for ${method} of route ${route} is undocumented. Please add to swagger.json.`));
         }
 
+        if (!swaggerResponse.schema && response.payload.length) {
+          return reject(new Error(`Returned undocumented payload for ${response.statusCode} result for ${method} of route ${route}.`));
+        } else if (!swaggerResponse.schema) {
+          // no swagger schema and empty result
+          return resolve(response);
+        }
+
         const validator = enjoi(swaggerResponse.schema, {subSchemas: {'#': swagger}});
 
         validator.validate(response.payload, err => {
