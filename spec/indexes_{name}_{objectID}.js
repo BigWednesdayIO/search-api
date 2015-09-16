@@ -17,11 +17,11 @@ describe('/indexes/{name}/{objectID}', () => {
     return elasticsearchClient.index({
       index: testIndexName,
       type: 'object',
-      body: testObject
+      body: testObject,
+      refresh: true
     })
     .then(o => {
       indexedObject = o;
-      elasticsearchClient.indices.refresh({index: testIndexName});
     });
   });
 
