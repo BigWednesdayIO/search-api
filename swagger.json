@@ -77,6 +77,25 @@
                 ]
             }
         },
+        "/indexes/{name}/settings": {
+            "put": {
+                "description": "Replace the settings for an index.\n",
+                "responses": {
+                    "200": {
+                        "description": "Settings saved"
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "name": "name",
+                    "in": "path",
+                    "description": "Name of the index to replace settings on",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
         "/indexes/{name}/{objectID}": {
             "delete": {
                 "description": "Delete an object by it's identifier.\n",
