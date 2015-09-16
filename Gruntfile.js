@@ -42,7 +42,7 @@ module.exports = function (grunt) {
       },
       swagger: {
         files: ['swagger.json'],
-        tasks: ['lint', 'shell:validateSwagger', 'spec']
+        tasks: ['shell:validateSwagger', 'spec']
       }
     },
     retire: {
