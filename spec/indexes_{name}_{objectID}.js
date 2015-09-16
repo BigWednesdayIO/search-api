@@ -96,4 +96,24 @@ describe('/indexes/{name}/{objectID}', () => {
         });
     });
   });
+
+  describe('delete', () => {
+    it('removes the object from the index', () => {
+      return specRequest({url: `/1/indexes/${testIndexName}/${indexedObject._id}`, method: 'delete'})
+        .then(response => {
+          expect(response.statusCode).to.equal(204);
+
+          // TODO: replace once async indexing is in place
+          return elasticsearchClient.get({
+            index: testIndexName,
+            type: 'object',
+            id: indexedObject._id
+          }).then(() => {
+            throw new Error('Object not removed from index');
+          }, err => {
+            expect(err).to.have.deep.property('body.found', false);
+          });
+        });
+    });
+  });
 });
