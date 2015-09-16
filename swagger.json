@@ -84,23 +84,7 @@
                     "204": {
                         "description": "Object deleted"
                     }
-                },
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "description": "Name of the index to search",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "objectID",
-                        "in": "path",
-                        "description": "The identifier of the object to delete",
-                        "required": true,
-                        "type": "string"
-                    }
-                ]
+                }
             },
             "get": {
                 "description": "Get an object by it's identifier.\n",
@@ -118,7 +102,40 @@
                         }
                     }
                 }
-            }
+            },
+            "put": {
+                "description": "Create or replace an object in the index.\n",
+                "responses": {
+                    "201": {
+                        "description": "The object created in the index.",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "200": {
+                        "description": "The object that has replaced another in the index.",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "name": "name",
+                    "in": "path",
+                    "description": "Name of the index to search",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "objectID",
+                    "in": "path",
+                    "description": "The identifier of the object to delete",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
         },
         "/indexes/{name}/query": {
             "post": {
