@@ -70,6 +70,28 @@ describe('/indexes/{name}/query', () => {
         });
     });
 
+    it('sorts results with default order', () => {
+      const payload = {sort: [{field: 'price'}]};
+
+      return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload})
+        .then(response => {
+          expect(response.result[0].price).to.equal(1);
+          expect(response.result[1].price).to.equal(5);
+          expect(response.statusCode).to.equal(200);
+        });
+    });
+
+    it('sorts results with specified order', () => {
+      const payload = {sort: [{field: 'price', direction: 'desc'}]};
+
+      return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload})
+        .then(response => {
+          expect(response.result[0].price).to.equal(5);
+          expect(response.result[1].price).to.equal(1);
+          expect(response.statusCode).to.equal(200);
+        });
+    });
+
     describe('validation', () => {
       it('ensures query is a string', () => {
         const payload = {query: {}};
