@@ -146,7 +146,7 @@ describe('Search', () => {
     .then(() => expect(searchArgs).to.deep.equal(expected));
   });
 
-  it('defualts to page size of 10', () => {
+  it('defaults to page size of 10', () => {
     const expected = {
       index: indexName,
       body: {
