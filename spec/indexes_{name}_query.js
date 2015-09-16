@@ -15,13 +15,14 @@ describe('/indexes/{name}/query', () => {
 
   before(() => {
     return elasticsearchClient.bulk({
+      refresh: true,
       body: [
         {index: {_index: testIndexName, _type: testIndexType, _id: 1}},
         document1,
         {index: {_index: testIndexName, _type: testIndexType, _id: 2}},
         document2
       ]
-    }).then(() => elasticsearchClient.indices.refresh({index: testIndexName}));
+    });
   });
 
   after(() => {
