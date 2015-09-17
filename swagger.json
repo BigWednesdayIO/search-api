@@ -65,17 +65,25 @@
                             "type": "object"
                         }
                     }
-                },
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "description": "Name of the index in which to create the object",
-                        "required": true,
-                        "type": "string"
+                }
+            },
+            "delete": {
+                "description": "Deletes an index.\n",
+                "responses": {
+                    "204": {
+                        "description": "Index deleted"
                     }
-                ]
-            }
+                }
+            },
+            "parameters": [
+                {
+                    "name": "name",
+                    "in": "path",
+                    "description": "Name of the index in which to create the object",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
         },
         "/indexes/{name}/settings": {
             "put": {
