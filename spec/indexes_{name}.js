@@ -40,13 +40,19 @@ describe('/indexes/{name}', () => {
   });
 
   describe('delete', () => {
+    const deleteIndexName = `test_index_${cuid()}`;
+
+    before(() => {
+      return specRequest({url: `/1/indexes/${deleteIndexName}`, method: 'post', payload: testObject});
+    });
+
     it('deletes the index', () => {
-      return specRequest({url: `/1/indexes/${testIndexName}`, method: 'delete'})
+      return specRequest({url: `/1/indexes/${deleteIndexName}`, method: 'delete'})
         .then(response => {
           expect(response.statusCode).to.equal(204);
 
           // TODO: replace once async indexing is in place
-          return elasticsearchClient.indices.get({index: testIndexName})
+          return elasticsearchClient.indices.get({index: deleteIndexName})
             .then(() => {
               throw new Error('Expected index to not exist');
             }, err => {
