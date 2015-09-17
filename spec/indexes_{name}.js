@@ -38,4 +38,21 @@ describe('/indexes/{name}', () => {
       });
     });
   });
+
+  describe('delete', () => {
+    it('deletes the index', () => {
+      return specRequest({url: `/1/indexes/${testIndexName}`, method: 'delete'})
+        .then(response => {
+          expect(response.statusCode).to.equal(204);
+
+          // TODO: replace once async indexing is in place
+          return elasticsearchClient.indices.get({index: testIndexName})
+            .then(() => {
+              throw new Error('Expected index to not exist');
+            }, err => {
+              expect(err.status).to.equal(404);
+            });
+        });
+    });
+  });
 });
