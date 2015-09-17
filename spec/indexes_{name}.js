@@ -60,5 +60,13 @@ describe('/indexes/{name}', () => {
             });
         });
     });
+
+    it('returns a 404 when the index does not exist', () => {
+      return specRequest({url: `/1/indexes/nonexistantindex`, method: 'delete'})
+        .then(response => {
+          expect(response.statusCode).to.equal(404);
+          expect(response.result.message).to.equal('Index nonexistantindex does not exist');
+        });
+    });
   });
 });
