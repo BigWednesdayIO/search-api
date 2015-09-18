@@ -38,4 +38,35 @@ describe('/indexes/{name}', () => {
       });
     });
   });
+
+  describe('delete', () => {
+    const deleteIndexName = `test_index_${cuid()}`;
+
+    before(() => {
+      return specRequest({url: `/1/indexes/${deleteIndexName}`, method: 'post', payload: testObject});
+    });
+
+    it('deletes the index', () => {
+      return specRequest({url: `/1/indexes/${deleteIndexName}`, method: 'delete'})
+        .then(response => {
+          expect(response.statusCode).to.equal(204);
+
+          // TODO: replace once async indexing is in place
+          return elasticsearchClient.indices.get({index: deleteIndexName})
+            .then(() => {
+              throw new Error('Expected index to not exist');
+            }, err => {
+              expect(err.status).to.equal(404);
+            });
+        });
+    });
+
+    it('returns a 404 when the index does not exist', () => {
+      return specRequest({url: `/1/indexes/nonexistantindex`, method: 'delete'})
+        .then(response => {
+          expect(response.statusCode).to.equal(404);
+          expect(response.result.message).to.equal('Index nonexistantindex does not exist');
+        });
+    });
+  });
 });
