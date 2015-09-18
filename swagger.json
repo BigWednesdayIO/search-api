@@ -58,6 +58,11 @@
         "/indexes/{name}": {
             "post": {
                 "description": "Add an object to the index and automatically assign an identifier.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "201": {
                         "description": "The indexed document containing the automatically generated id and supplied fields",
@@ -88,6 +93,11 @@
         "/indexes/{name}/settings": {
             "put": {
                 "description": "Replace the settings for an index.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "200": {
                         "description": "Settings saved",
@@ -121,6 +131,11 @@
         "/indexes/{name}/{objectID}": {
             "delete": {
                 "description": "Delete an object by it's identifier.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "204": {
                         "description": "Object deleted"
@@ -146,6 +161,11 @@
             },
             "put": {
                 "description": "Create or replace an object in the index.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "201": {
                         "description": "The object created in the index.",
@@ -284,6 +304,11 @@
         "/indexes/{indexName}/task/{taskID}": {
             "get": {
                 "description": "Get details of an indexing task.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "200": {
                         "description": "Task found",
@@ -320,6 +345,13 @@
                     }
                 ]
             }
+        }
+    },
+    "securityDefinitions": {
+        "api_key": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     },
     "definitions": {
