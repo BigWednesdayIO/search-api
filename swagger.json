@@ -107,6 +107,54 @@
                 }
             ]
         },
+        "/indexes/{name}/batch": {
+            "post": {
+                "description": "Perform batch operations on the index",
+                "responses": {
+                    "200": {
+                        "description": "Operations performed",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "objectIDs": {
+                                    "description": "Identifiers of any created objects",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "name": "name",
+                    "in": "path",
+                    "description": "Name of the index to operate on",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "operations",
+                    "in": "body",
+                    "description": "The operations to perform",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "requests": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/BatchOperation"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
         "/indexes/{name}/settings": {
             "put": {
                 "description": "Replace the settings for an index.\n",
@@ -412,6 +460,26 @@
         }
     },
     "definitions": {
+        "BatchOperation": {
+            "type": "object",
+            "required": [
+                "action",
+                "body"
+            ],
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "addObject"
+                    ],
+                    "description": "The action to perform on an index"
+                },
+                "body": {
+                    "type": "object",
+                    "description": "For addObject, the object to add to the index"
+                }
+            }
+        },
         "Task": {
             "type": "object",
             "properties": {
