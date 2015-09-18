@@ -32,7 +32,7 @@ module.exports = function (grunt) {
       }
     },
     watch: {
-      default: {
+      app: {
         files: ['<%= app %>', '<%= tests %>'],
         tasks: ['lint', 'test']
       },
