@@ -7,7 +7,7 @@ const elasticsearchClient = require('../lib/elasticsearchClient');
 
 const expect = require('chai').expect;
 
-describe('/indexes/{name}/bulk', () => {
+describe('/indexes/{name}/batch', () => {
   const testIndexName = `test_index_${cuid()}`;
 
   describe('post', () => {

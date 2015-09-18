@@ -7,17 +7,17 @@ const elasticsearchClient = require('../../lib/elasticsearchClient');
 const expect = require('chai').expect;
 
 describe('Index', () => {
-  describe('bulk', () => {
+  describe('batchOperation', () => {
     const testIndexName = 'an-index';
 
-    const bulkOperations = {
+    const batchOperations = {
       insert: [{name: 'an object'}, {name: 'another object'}]
     };
 
     const ids = ['id1', 'id2'];
 
     let bulkStub;
-    let bulkResult;
+    let batchResult;
 
     before(() => {
       bulkStub = sinon.stub(elasticsearchClient, 'bulk', () => {
@@ -35,9 +35,9 @@ describe('Index', () => {
       const Index = require('../../lib/index');
       const index = new Index(testIndexName);
 
-      return index.bulk(bulkOperations)
+      return index.batchOperation(batchOperations)
         .then(result => {
-          bulkResult = result;
+          batchResult = result;
         });
     });
 
@@ -49,9 +49,9 @@ describe('Index', () => {
       const expectedBulkArgs = {
         body: [{
           index: {_index: testIndexName, _type: 'object'}
-        }, bulkOperations.insert[0], {
+        }, batchOperations.insert[0], {
           index: {_index: testIndexName, _type: 'object'}
-        }, bulkOperations.insert[1]]
+        }, batchOperations.insert[1]]
       };
 
       sinon.assert.calledOnce(bulkStub);
@@ -59,7 +59,7 @@ describe('Index', () => {
     });
 
     it('returns the ids of inserted objects', () => {
-      expect(bulkResult.inserted).to.deep.equal(ids);
+      expect(batchResult.inserted).to.deep.equal(ids);
     });
   });
 });
