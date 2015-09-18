@@ -94,6 +94,14 @@
                     }
                 }
             },
+            "get": {
+                "description": "Get settings from the index.\n",
+                "responses": {
+                    "200": {
+                        "description": "Settings"
+                    }
+                }
+            },
             "parameters": [
                 {
                     "name": "name",

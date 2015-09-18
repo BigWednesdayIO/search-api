@@ -12,5 +12,12 @@ describe('/indexes/{name}/settings', () => {
           expect(response.statusCode).to.equal(200);
         });
     });
+
+    it('returns settings', () => {
+      return specRequest({url: '/1/indexes/test-index/settings'})
+        .then(response => {
+          expect(response.statusCode).to.equal(200);
+        });
+    });
   });
 });
