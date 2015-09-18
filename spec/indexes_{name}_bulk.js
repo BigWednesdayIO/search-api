@@ -11,6 +11,10 @@ describe('/indexes/{name}/bulk', () => {
   const testIndexName = `test_index_${cuid()}`;
 
   describe('post', () => {
+    after(() => {
+      return elasticsearchClient.indices.delete({index: testIndexName});
+    });
+
     describe('addObject operation', () => {
       it('adds multiple objects to the index', () => {
         const payload = {
