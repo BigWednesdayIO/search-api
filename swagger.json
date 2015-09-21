@@ -74,6 +74,11 @@
             },
             "delete": {
                 "description": "Deletes an index.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "204": {
                         "description": "Index deleted"
@@ -109,6 +114,11 @@
             },
             "get": {
                 "description": "Get settings from the index.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "200": {
                         "description": "Settings",
