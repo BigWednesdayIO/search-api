@@ -58,9 +58,20 @@
         "/indexes/{name}": {
             "post": {
                 "description": "Add an object to the index and automatically assign an identifier.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "201": {
                         "description": "The indexed document containing the automatically generated id and supplied fields",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
                         "schema": {
                             "type": "object"
                         }
@@ -69,9 +80,20 @@
             },
             "delete": {
                 "description": "Deletes an index.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "204": {
                         "description": "Index deleted"
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             },
@@ -88,9 +110,20 @@
         "/indexes/{name}/settings": {
             "put": {
                 "description": "Replace the settings for an index.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "200": {
                         "description": "Settings saved",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
                         "schema": {
                             "type": "object"
                         }
@@ -99,9 +132,20 @@
             },
             "get": {
                 "description": "Get settings from the index.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "200": {
                         "description": "Settings",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
                         "schema": {
                             "type": "object"
                         }
@@ -121,9 +165,20 @@
         "/indexes/{name}/{objectID}": {
             "delete": {
                 "description": "Delete an object by it's identifier.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "204": {
                         "description": "Object deleted"
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             },
@@ -146,6 +201,11 @@
             },
             "put": {
                 "description": "Create or replace an object in the index.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "201": {
                         "description": "The object created in the index.",
@@ -155,6 +215,12 @@
                     },
                     "200": {
                         "description": "The object that has replaced another in the index.",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
                         "schema": {
                             "type": "object"
                         }
@@ -284,6 +350,11 @@
         "/indexes/{indexName}/task/{taskID}": {
             "get": {
                 "description": "Get details of an indexing task.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "200": {
                         "description": "Task found",
@@ -299,6 +370,12 @@
                                     "description": "Indicates whether the index has remaining tasks running"
                                 }
                             }
+                        }
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
+                        "schema": {
+                            "type": "object"
                         }
                     }
                 },
@@ -320,6 +397,13 @@
                     }
                 ]
             }
+        }
+    },
+    "securityDefinitions": {
+        "api_key": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     },
     "definitions": {

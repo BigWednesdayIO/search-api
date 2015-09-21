@@ -31,7 +31,10 @@ describe('/indexes/{name}/{objectID}', () => {
 
   describe('get', () => {
     it('indexed objects can be retrieved', () => {
-      return specRequest({url: `/1/indexes/${testIndexName}/${indexedObject._id}`})
+      return specRequest({
+        url: `/1/indexes/${testIndexName}/${indexedObject._id}`,
+        headers: {Authorization: 'Bearer 12345'}
+      })
         .then(response => {
           expect(response.statusCode).to.equal(200);
           expect(response.result.objectID).to.equal(indexedObject._id);
@@ -43,7 +46,10 @@ describe('/indexes/{name}/{objectID}', () => {
     });
 
     it('returns a 404 when the index does not contain the identified object', () => {
-      return specRequest({url: `/1/indexes/${testIndexName}/12345`})
+      return specRequest({
+        url: `/1/indexes/${testIndexName}/12345`,
+        headers: {Authorization: 'Bearer 12345'}
+      })
         .then(response => {
           expect(response.statusCode).to.equal(404);
           expect(response.result.message).to.equal('Index does not contain object with identifier 12345');
@@ -51,7 +57,10 @@ describe('/indexes/{name}/{objectID}', () => {
     });
 
     it('returns a 404 when the index does not exist', () => {
-      return specRequest({url: '/1/indexes/nonexistantindex/12345'})
+      return specRequest({
+        url: '/1/indexes/nonexistantindex/12345',
+        headers: {Authorization: 'Bearer 12345'}
+      })
         .then(response => {
           expect(response.statusCode).to.equal(404);
           expect(response.result.message).to.equal('Index nonexistantindex does not exist');
@@ -61,7 +70,12 @@ describe('/indexes/{name}/{objectID}', () => {
 
   describe('put', () => {
     it('indexes new objects into an index', () => {
-      return specRequest({url: `/1/indexes/${testIndexName}/12345`, method: 'put', payload: testObject})
+      return specRequest({
+        url: `/1/indexes/${testIndexName}/12345`,
+        method: 'put',
+        payload: testObject,
+        headers: {Authorization: 'Bearer 12345'}
+      })
         .then(response => {
           expect(response.statusCode).to.equal(201);
           expect(response.headers.location).to.equal(`/1/indexes/${testIndexName}/12345`);
@@ -80,7 +94,12 @@ describe('/indexes/{name}/{objectID}', () => {
 
     it('updates existing objects in an index', () => {
       const update = {name: 'another object', aField: 'value'};
-      return specRequest({url: `/1/indexes/${testIndexName}/${indexedObject._id}`, method: 'put', payload: update})
+      return specRequest({
+        url: `/1/indexes/${testIndexName}/${indexedObject._id}`,
+        method: 'put',
+        payload: update,
+        headers: {Authorization: 'Bearer 12345'}
+      })
         .then(response => {
           expect(response.statusCode).to.equal(200);
         })
@@ -99,7 +118,11 @@ describe('/indexes/{name}/{objectID}', () => {
 
   describe('delete', () => {
     it('removes the object from the index', () => {
-      return specRequest({url: `/1/indexes/${testIndexName}/${indexedObject._id}`, method: 'delete'})
+      return specRequest({
+        url: `/1/indexes/${testIndexName}/${indexedObject._id}`,
+        method: 'delete',
+        headers: {Authorization: 'Bearer 12345'}
+      })
         .then(response => {
           expect(response.statusCode).to.equal(204);
 
@@ -117,7 +140,11 @@ describe('/indexes/{name}/{objectID}', () => {
     });
 
     it('returns a 404 when the index does not exist', () => {
-      return specRequest({url: '/1/indexes/nonexistantindex/12345', method: 'delete'})
+      return specRequest({
+        url: '/1/indexes/nonexistantindex/12345',
+        method: 'delete',
+        headers: {Authorization: 'Bearer 12345'}
+      })
         .then(response => {
           expect(response.statusCode).to.equal(404);
           expect(response.result.message).to.equal('Index nonexistantindex does not exist');

@@ -13,7 +13,12 @@ describe('/indexes/{name}', () => {
   let createResponse;
 
   before(() => {
-    return specRequest({url: `/1/indexes/${testIndexName}`, method: 'post', payload: testObject})
+    return specRequest({
+      url: `/1/indexes/${testIndexName}`,
+      method: 'post',
+      payload: testObject,
+      headers: {Authorization: 'Bearer 12345'}
+    })
       .then(response => {
         createResponse = response;
       });
@@ -43,11 +48,20 @@ describe('/indexes/{name}', () => {
     const deleteIndexName = `test_index_${cuid()}`;
 
     before(() => {
-      return specRequest({url: `/1/indexes/${deleteIndexName}`, method: 'post', payload: testObject});
+      return specRequest({
+        url: `/1/indexes/${deleteIndexName}`,
+        method: 'post',
+        payload: testObject,
+        headers: {Authorization: 'Bearer 12345'}
+      });
     });
 
     it('deletes the index', () => {
-      return specRequest({url: `/1/indexes/${deleteIndexName}`, method: 'delete'})
+      return specRequest({
+        url: `/1/indexes/${deleteIndexName}`,
+        method: 'delete',
+        headers: {Authorization: 'Bearer 12345'}
+      })
         .then(response => {
           expect(response.statusCode).to.equal(204);
 
@@ -62,7 +76,11 @@ describe('/indexes/{name}', () => {
     });
 
     it('returns a 404 when the index does not exist', () => {
-      return specRequest({url: `/1/indexes/nonexistantindex`, method: 'delete'})
+      return specRequest({
+        url: `/1/indexes/nonexistantindex`,
+        method: 'delete',
+        headers: {Authorization: 'Bearer 12345'}
+      })
         .then(response => {
           expect(response.statusCode).to.equal(404);
           expect(response.result.message).to.equal('Index nonexistantindex does not exist');
