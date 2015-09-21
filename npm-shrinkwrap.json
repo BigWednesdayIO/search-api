@@ -132,7 +132,7 @@
                 },
                 "moment": {
                   "version": "2.10.6",
-                  "from": "moment@2.10.6",
+                  "from": "moment@>=2.0.0 <3.0.0",
                   "resolved": "https://registry.npmjs.org/moment/-/moment-2.10.6.tgz"
                 }
               }
@@ -287,8 +287,8 @@
     },
     "swaggerize-hapi": {
       "version": "1.0.0",
-      "from": "bigwednesdayio/swaggerize-hapi#feature/token_auth",
-      "resolved": "git://github.com/bigwednesdayio/swaggerize-hapi.git#66edd22fb9690c8f3f65f8759063f0c1e3cda945",
+      "from": "bigwednesdayio/swaggerize-hapi",
+      "resolved": "git://github.com/bigwednesdayio/swaggerize-hapi.git#d3f861f7225524d93cbc4910f104b9e2f9e08026",
       "dependencies": {
         "core-util-is": {
           "version": "1.0.1",
@@ -331,6 +331,7 @@
             "h2o2": {
               "version": "4.0.1",
               "from": "h2o2@4.0.1",
+              "resolved": "https://registry.npmjs.org/h2o2/-/h2o2-4.0.1.tgz",
               "dependencies": {
                 "wreck": {
                   "version": "5.6.1",
@@ -369,6 +370,7 @@
             "inert": {
               "version": "2.1.6",
               "from": "inert@2.1.6",
+              "resolved": "https://registry.npmjs.org/inert/-/inert-2.1.6.tgz",
               "dependencies": {
                 "lru-cache": {
                   "version": "2.6.5",
