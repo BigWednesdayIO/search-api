@@ -9,11 +9,19 @@ describe('Search', () => {
   let searchArgs;
   let elasticStub;
   const indexName = 'test-index';
+  const nonExistantIndexName = 'non-existant-index';
   const testDocument = {name: 'test-item'};
 
   beforeEach(() => {
     elasticStub = sinon.stub(elasticsearchClient, 'search', args => {
       searchArgs = args;
+
+      if (args.index === nonExistantIndexName) {
+        const err = new Error('IndexMissingException');
+        err.status = 404;
+        return Promise.reject(err);
+      }
+
       return Promise.resolve({
         hits: {hits: [{_id: '1', _source: testDocument}]}
       });
@@ -26,6 +34,15 @@ describe('Search', () => {
   afterEach(() => {
     elasticStub.restore();
     searchArgs = undefined;
+  });
+
+  it('returns index not found for unknown index', () => {
+    return search.query(nonExistantIndexName, {})
+      .then(() => {
+        throw new Error('Expected index not found error');
+      }, err => {
+        expect(err).to.have.property('indexFound', false);
+      });
   });
 
   it('builds a default match all query when no search is supplied', () => {
