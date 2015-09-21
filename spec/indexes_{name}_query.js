@@ -35,7 +35,7 @@ describe('/indexes/{name}/query', () => {
 
       return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload})
         .then(response => {
-          expect(response.result).to.be.deep.equal([document1]);
+          expect(response.result.hits).to.be.deep.equal([document1]);
           expect(response.statusCode).to.equal(200);
         });
     });
@@ -45,7 +45,7 @@ describe('/indexes/{name}/query', () => {
 
       return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload})
         .then(response => {
-          expect(response.result).to.be.deep.equal([document1]);
+          expect(response.result.hits).to.be.deep.equal([document1]);
           expect(response.statusCode).to.equal(200);
         });
     });
@@ -55,7 +55,7 @@ describe('/indexes/{name}/query', () => {
 
       return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload})
         .then(response => {
-          expect(response.result).to.be.deep.equal([document2]);
+          expect(response.result.hits).to.be.deep.equal([document2]);
           expect(response.statusCode).to.equal(200);
         });
     });
@@ -65,7 +65,7 @@ describe('/indexes/{name}/query', () => {
 
       return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload})
         .then(response => {
-          expect(response.result.length).to.equal(1);
+          expect(response.result.hits.length).to.equal(1);
           expect(response.statusCode).to.equal(200);
         });
     });
@@ -75,8 +75,8 @@ describe('/indexes/{name}/query', () => {
 
       return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload})
         .then(response => {
-          expect(response.result[0].price).to.equal(1);
-          expect(response.result[1].price).to.equal(5);
+          expect(response.result.hits[0].price).to.equal(1);
+          expect(response.result.hits[1].price).to.equal(5);
           expect(response.statusCode).to.equal(200);
         });
     });
@@ -86,8 +86,8 @@ describe('/indexes/{name}/query', () => {
 
       return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload})
         .then(response => {
-          expect(response.result[0].price).to.equal(5);
-          expect(response.result[1].price).to.equal(1);
+          expect(response.result.hits[0].price).to.equal(5);
+          expect(response.result.hits[1].price).to.equal(1);
           expect(response.statusCode).to.equal(200);
         });
     });

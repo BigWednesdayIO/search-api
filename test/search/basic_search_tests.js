@@ -233,6 +233,6 @@ describe('Search', () => {
 
   it('returns document source', () => {
     return search.query(indexName, {query: 'some-keyword'})
-      .then(results => expect(results[0]).to.deep.equal(testDocument));
+      .then(results => expect(results.hits[0]).to.deep.equal(testDocument));
   });
 });
