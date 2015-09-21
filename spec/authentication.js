@@ -1,53 +1,24 @@
 'use strict';
 
-const _ = require('lodash');
 const expect = require('chai').expect;
-const api = require('../swagger.json');
-const serverFactory = require('../lib/server');
+const specRequest = require('./spec_request');
 
 describe('endpoint authentcation', () => {
-  const hasSecurity = function (route) {
-    return route.security && route.security.length;
-  };
-  const handlerDefined = function (handlerPath, method) {
-    try {
-      const routes = require(`../lib/handlers${handlerPath}.js`);
-      return Boolean(routes[method]);
-    } catch (e) {
-      return false;
-    }
-  };
-  const buildUrl = function (base, path) {
-    return `${base}${path}`;
-  };
-  const tests = [];
-
-  _.forOwn(api.paths, (path, pathName) => {
-    _.forOwn(path, (route, method) => {
-      if (hasSecurity(route) && handlerDefined(pathName, method)) {
-        tests.push({method, url: buildUrl(api.basePath, pathName)});
-      }
-    });
-  });
-
-  let server;
-
-  before(done => {
-    serverFactory((err, s) => {
-      if (err) {
-        return console.error(err);
-      }
-      server = s;
-      done();
-    });
-  });
+  const tests = [
+    {routeName: '/1/indexes/{name}', method: 'POST', url: '/1/indexes/some-index'},
+    {routeName: '/1/indexes/{name}', method: 'DELETE', url: '/1/indexes/some-index'},
+    {routeName: '/1/indexes/{name}/settings', method: 'PUT', url: '/1/indexes/some-index/settings'},
+    {routeName: '/1/indexes/{name}/settings', method: 'GET', url: '/1/indexes/some-index/settings'},
+    {routeName: '/1/indexes/{name}/{objectID}', method: 'DELETE', url: '/1/indexes/some-index/1}'},
+    {routeName: '/1/indexes/{name}/{objectID}', method: 'PUT', url: '/1/indexes/some-index/1'}
+  ];
 
   tests.forEach(test => {
-    it(`${test.method} on ${test.url} requires api key`, done => {
-      server.inject(test, err => {
-        expect(err.result.statusCode).to.equal(401);
-        done();
-      });
+    it(`requires api key for ${test.method} on ${test.routeName}`, () => {
+      return specRequest({url: test.url, method: test.method})
+        .then(result => {
+          expect(result.statusCode).to.equal(401);
+        });
     });
   });
 });

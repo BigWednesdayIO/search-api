@@ -69,6 +69,12 @@
                         "schema": {
                             "type": "object"
                         }
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             },
@@ -82,6 +88,12 @@
                 "responses": {
                     "204": {
                         "description": "Index deleted"
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             },
@@ -109,6 +121,12 @@
                         "schema": {
                             "type": "object"
                         }
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             },
@@ -122,6 +140,12 @@
                 "responses": {
                     "200": {
                         "description": "Settings",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
                         "schema": {
                             "type": "object"
                         }
@@ -149,6 +173,12 @@
                 "responses": {
                     "204": {
                         "description": "Object deleted"
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             },
@@ -185,6 +215,12 @@
                     },
                     "200": {
                         "description": "The object that has replaced another in the index.",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
                         "schema": {
                             "type": "object"
                         }
@@ -334,6 +370,12 @@
                                     "description": "Indicates whether the index has remaining tasks running"
                                 }
                             }
+                        }
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
+                        "schema": {
+                            "type": "object"
                         }
                     }
                 },
