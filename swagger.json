@@ -90,7 +90,21 @@
                 "description": "Replace the settings for an index.\n",
                 "responses": {
                     "200": {
-                        "description": "Settings saved"
+                        "description": "Settings saved",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "description": "Get settings from the index.\n",
+                "responses": {
+                    "200": {
+                        "description": "Settings",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             },
