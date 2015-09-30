@@ -55,16 +55,29 @@ describe('Search', () => {
       .then(() => expect(searchArgs).to.deep.equal(expected));
   });
 
-  it('builds a keyword query', () => {
+  it('builds a fuzzy keyword query', () => {
     const expected = {
       index: indexName,
       body: {
-        query: {filtered: {query: {match: {_all: 'some-keyword'}}}},
+        query: {filtered: {query: {simple_query_string: {query: 'some-keyword~1'}}}},
         size: 10
       }
     };
 
     return search.query(indexName, {query: 'some-keyword'})
+      .then(() => expect(searchArgs).to.deep.equal(expected));
+  });
+
+  it('builds a fuzzy multi keyword query', () => {
+    const expected = {
+      index: indexName,
+      body: {
+        query: {filtered: {query: {simple_query_string: {query: 'keyword1~1 keyword2~1'}}}},
+        size: 10
+      }
+    };
+
+    return search.query(indexName, {query: 'keyword1 keyword2'})
       .then(() => expect(searchArgs).to.deep.equal(expected));
   });
 
