@@ -50,9 +50,7 @@ module.exports = function (grunt) {
     },
     env: {
       test: {
-        API_KEYS: '{"12345": "test-user"}',
-        LOGSTASH_HOST: '0.0.0.0',
-        LOGSTASH_PORT: '9999'
+        API_KEYS: '{"12345": "test-user"}'
       }
     }
   });

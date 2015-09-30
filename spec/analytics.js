@@ -1,24 +1,68 @@
 'use strict';
 
 const expect = require('chai').expect;
+const cuid = require('cuid');
 const specRequest = require('./spec_request');
-const dgram = require('dgram');
-const udpServer = dgram.createSocket('udp4');
+const elasticsearchClient = require('../lib/elasticsearchClient');
+const generateOpsIndexName = require('../lib/analytics_logger').generateIndexName;
 
 describe('analytics', () => {
-  afterEach(done => {
-    udpServer.close(done);
+  const testIndexName = `test_index_${cuid()}`;
+
+  before(() => {
+    return elasticsearchClient.create({
+      index: testIndexName,
+      type: 'test_type',
+      body: {},
+      refresh: true
+    });
   });
 
-  it('records analytics', done => {
-    udpServer.on('message', message => {
-      const analyticsRecord = JSON.parse(message);
-      expect(analyticsRecord.route).to.equal('/1/indexes/{name}/query');
-      done();
-    });
+  after(() => {
+    return elasticsearchClient.indices.delete({index: testIndexName});
+  });
 
-    udpServer.bind(9999, '0.0.0.0', () => {
-      specRequest({url: `/1/indexes/some-index/query`, method: 'post', payload: {}});
-    });
+  it('records analytics for successful operation', () => {
+    const opsIndexName = generateOpsIndexName();
+    let opsRecordId;
+
+    return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload: {}})
+      .then(resp => {
+        opsRecordId = resp.request.id;
+        return elasticsearchClient.indices.refresh({index: opsIndexName});
+      })
+      .then(() => {
+        return elasticsearchClient.exists({
+          index: opsIndexName,
+          type: 'SearchOperationEvent',
+          id: opsRecordId,
+          realtime: true
+        });
+      })
+      .then(result => {
+        return expect(result).to.equal(true);
+      });
+  });
+
+  it('does not record analytics for unsuccessful operation', () => {
+    const opsIndexName = generateOpsIndexName();
+    let opsRecordId;
+
+    return specRequest({url: '/1/indexes/some-index/query', method: 'post', payload: {}})
+      .then(resp => {
+        opsRecordId = resp.request.id;
+        return elasticsearchClient.indices.refresh({index: opsIndexName});
+      })
+      .then(() => {
+        return elasticsearchClient.exists({
+          index: opsIndexName,
+          type: 'SearchOperationEvent',
+          id: opsRecordId,
+          realtime: true
+        });
+      })
+      .then(result => {
+        return expect(result).to.equal(false);
+      });
   });
 });
