@@ -18,7 +18,13 @@ describe('SearchOperationEvent', () => {
     query: {},
     method: 'post',
     route: {path: '/1/indexes/{name}/query'},
-    info: {received: requestTime.getTime()},
+    info: {
+      received: requestTime.getTime(),
+      remoteAddress: '1.2.3.4'
+    },
+    headers: {
+      'user-agent': 'Chrome567'
+    },
     raw: {res: {statusCode: 200}}
   };
 
@@ -67,5 +73,13 @@ describe('SearchOperationEvent', () => {
 
   it('has requestTime', () => {
     expect(searchOpEvent.responseTime).to.equal(80);
+  });
+
+  it('has sourceIp', () => {
+    expect(searchOpEvent.sourceIp).to.equal('1.2.3.4');
+  });
+
+  it('has userAgent', () => {
+    expect(searchOpEvent.userAgent).to.equal('Chrome567');
   });
 });
