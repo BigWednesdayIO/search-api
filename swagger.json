@@ -485,24 +485,6 @@
                 }
             }
         },
-        "Task": {
-            "type": "object",
-            "properties": {
-                "createdAt": {
-                    "type": "string",
-                    "description": "An ISO 8061 formatted date string"
-                },
-                "taskID": {
-                    "type": "integer",
-                    "format": "int32",
-                    "description": "Identifier of the indexing task"
-                },
-                "objectID": {
-                    "type": "string",
-                    "description": "The identifier of the object being indexed"
-                }
-            }
-        },
         "Error": {
             "type": "object",
             "properties": {
