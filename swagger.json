@@ -110,6 +110,11 @@
         "/indexes/{name}/batch": {
             "post": {
                 "description": "Perform batch operations on the index",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "200": {
                         "description": "Operations performed",
@@ -124,6 +129,12 @@
                                     }
                                 }
                             }
+                        }
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
+                        "schema": {
+                            "type": "object"
                         }
                     }
                 }

@@ -35,7 +35,12 @@ describe('/indexes/{name}/batch', () => {
           }]
         };
 
-        return specRequest({url: `/1/indexes/${testIndexName}/batch`, method: 'post', payload})
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/batch`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 12345'},
+          payload
+        })
           .then(response => {
             expect(response.statusCode).to.equal(200);
             expect(response.result).to.have.property('objectIDs');
@@ -67,7 +72,12 @@ describe('/indexes/{name}/batch', () => {
           }]
         };
 
-        return specRequest({url: `/1/indexes/${testIndexName}/batch`, method: 'post', payload})
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/batch`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 12345'},
+          payload
+        })
           .then(response => {
             expect(response.statusCode).to.equal(200);
             expect(response.result).to.have.property('objectIDs');
@@ -107,7 +117,12 @@ describe('/indexes/{name}/batch', () => {
 
         return elasticsearchClient.bulk(existingData)
           .then(() => {
-            return specRequest({url: `/1/indexes/${testIndexName}/batch`, method: 'post', payload})
+            return specRequest({
+              url: `/1/indexes/${testIndexName}/batch`,
+              method: 'post',
+              headers: {Authorization: 'Bearer 12345'},
+              payload
+            })
               .then(response => {
                 expect(response.statusCode).to.equal(200);
                 expect(response.result).to.have.property('objectIDs');
