@@ -8,10 +8,14 @@ const elasticsearchClient = require('../lib/elasticsearchClient');
 const expect = require('chai').expect;
 
 describe('/indexes/{name}/batch', () => {
-  const testIndexName = `test_index_${cuid()}`;
+  let testIndexName;
 
   describe('post', () => {
-    after(() => {
+    beforeEach(() => {
+      testIndexName = `test_index_${cuid()}`;
+    });
+
+    afterEach(() => {
       return elasticsearchClient.indices.delete({index: testIndexName});
     });
 
@@ -71,6 +75,48 @@ describe('/indexes/{name}/batch', () => {
             return elasticsearchClient.mget({index: testIndexName, body: {ids: response.result.objectIDs}})
               .then(result => {
                 expect(result.docs).to.have.length(2);
+              });
+          });
+      });
+
+      it('replaces existing objects in the index', () => {
+        const payload = {
+          requests: [{
+            action: 'upsert',
+            body: {
+              name: 'object 1 new name'
+            },
+            objectID: '1'
+          }, {
+            action: 'upsert',
+            body: {
+              name: 'object 2 new name'
+            },
+            objectID: '2'
+          }]
+        };
+
+        const existingData = {
+          body: [
+            {index: {_index: testIndexName, _type: 'object', _id: '1'}},
+            {name: 'object 1'},
+            {index: {_index: testIndexName, _type: 'object', _id: '2'}},
+            {name: 'object 2'}
+          ]
+        };
+
+        return elasticsearchClient.bulk(existingData)
+          .then(() => {
+            return specRequest({url: `/1/indexes/${testIndexName}/batch`, method: 'post', payload})
+              .then(response => {
+                expect(response.statusCode).to.equal(200);
+                expect(response.result).to.have.property('objectIDs');
+
+                return elasticsearchClient.mget({index: testIndexName, body: {ids: response.result.objectIDs}})
+                  .then(result => {
+                    expect(result.docs[0]._source).to.deep.equal(payload.requests[0].body);
+                    expect(result.docs[1]._source).to.deep.equal(payload.requests[1].body);
+                  });
               });
           });
       });
