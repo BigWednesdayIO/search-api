@@ -16,7 +16,7 @@ describe('/indexes/{name}/batch', () => {
     });
 
     afterEach(() => {
-      return elasticsearchClient.indices.delete({index: testIndexName});
+      return elasticsearchClient.indices.delete({index: testIndexName, ignore: 404});
     });
 
     describe('create operation', () => {
@@ -133,6 +133,29 @@ describe('/indexes/{name}/batch', () => {
                     expect(result.docs[1]._source).to.deep.equal(payload.requests[1].body);
                   });
               });
+          });
+      });
+    });
+
+    describe('validation', () => {
+      it('does not allow objectID to be sent for create operations', () => {
+        const payload = {
+          requests: [{
+            action: 'create',
+            body: {name: 'something'},
+            objectID: 'myid'
+          }]
+        };
+
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/batch`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 12345'},
+          payload
+        })
+          .then(response => {
+            expect(response.statusCode).to.equal(400);
+            expect(response.result.message).to.match(/"objectID" is not allowed]/);
           });
       });
     });
