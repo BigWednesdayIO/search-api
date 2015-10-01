@@ -44,5 +44,36 @@ describe('/indexes/{name}/batch', () => {
           });
       });
     });
+
+    describe('updateObject operation', () => {
+      it('adds multiple new objects to the index', () => {
+        const payload = {
+          requests: [{
+            action: 'updateObject',
+            body: {
+              name: 'object 1'
+            },
+            objectID: '1'
+          }, {
+            action: 'updateObject',
+            body: {
+              name: 'object 2'
+            },
+            objectID: '2'
+          }]
+        };
+
+        return specRequest({url: `/1/indexes/${testIndexName}/batch`, method: 'post', payload})
+          .then(response => {
+            expect(response.statusCode).to.equal(200);
+            expect(response.result).to.have.property('objectIDs');
+
+            return elasticsearchClient.mget({index: testIndexName, body: {ids: response.result.objectIDs}})
+              .then(result => {
+                expect(result.docs).to.have.length(2);
+              });
+          });
+      });
+    });
   });
 });
