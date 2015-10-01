@@ -15,16 +15,16 @@ describe('/indexes/{name}/batch', () => {
       return elasticsearchClient.indices.delete({index: testIndexName});
     });
 
-    describe('addObject operation', () => {
-      it('adds multiple objects to the index', () => {
+    describe('create operation', () => {
+      it('adds new objects to the index', () => {
         const payload = {
           requests: [{
-            action: 'addObject',
+            action: 'create',
             body: {
               name: 'object 1'
             }
           }, {
-            action: 'addObject',
+            action: 'create',
             body: {
               name: 'object 2'
             }
@@ -45,17 +45,17 @@ describe('/indexes/{name}/batch', () => {
       });
     });
 
-    describe('updateObject operation', () => {
-      it('adds multiple new objects to the index', () => {
+    describe('upsert operation', () => {
+      it('adds new objects to the index', () => {
         const payload = {
           requests: [{
-            action: 'updateObject',
+            action: 'upsert',
             body: {
               name: 'object 1'
             },
             objectID: '1'
           }, {
-            action: 'updateObject',
+            action: 'upsert',
             body: {
               name: 'object 2'
             },

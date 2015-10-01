@@ -13,7 +13,7 @@ describe('Index', () => {
     let bulkStub;
     let batchResult;
 
-    describe('addObjects', () => {
+    describe('insert', () => {
       const batchOperations = {
         insert: [{name: 'an object'}, {name: 'another object'}]
       };
@@ -64,11 +64,11 @@ describe('Index', () => {
       });
     });
 
-    describe('updateObjects', () => {
+    describe('upsert', () => {
       const ids = ['id1', 'id2'];
 
       const batchOperations = {
-        update: [{objectID: ids[0], data: {name: 'an object'}}, {objectID: ids[1], data: {name: 'another object'}}]
+        upsert: [{objectID: ids[0], data: {name: 'an object'}}, {objectID: ids[1], data: {name: 'another object'}}]
       };
 
       before(() => {
@@ -97,21 +97,21 @@ describe('Index', () => {
         bulkStub.restore();
       });
 
-      it('makes an index request for each updated object', () => {
+      it('makes an index request for each upserted object', () => {
         const expectedBulkArgs = {
           body: [{
             index: {_index: testIndexName, _type: 'object', _id: ids[0]}
-          }, batchOperations.update[0].data, {
+          }, batchOperations.upsert[0].data, {
             index: {_index: testIndexName, _type: 'object', _id: ids[1]}
-          }, batchOperations.update[1].data]
+          }, batchOperations.upsert[1].data]
         };
 
         sinon.assert.calledOnce(bulkStub);
         sinon.assert.calledWith(bulkStub, expectedBulkArgs);
       });
 
-      it('returns the ids of updated or inserted objects', () => {
-        expect(batchResult.updated).to.deep.equal(ids);
+      it('returns the ids of upserted objects', () => {
+        expect(batchResult.upserted).to.deep.equal(ids);
       });
     });
   });

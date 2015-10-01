@@ -470,18 +470,18 @@
                 "action": {
                     "type": "string",
                     "enum": [
-                        "addObject",
-                        "updateObject"
+                        "create",
+                        "upsert"
                     ],
                     "description": "The action to perform on an index"
                 },
                 "body": {
                     "type": "object",
-                    "description": "For addObject and updateObject, the object to the index"
+                    "description": "For create and upsert, the object to index"
                 },
                 "objectID": {
                     "type": "string",
-                    "description": "For updateObject, the identifier of the object to update or replace"
+                    "description": "For upsert, the identifier of the object to create or replace"
                 }
             }
         },
