@@ -50,7 +50,7 @@ module.exports = function (grunt) {
     },
     env: {
       test: {
-        API_KEYS: '{"12345": "test-user"}'
+        API_KEYS: '12345'
       }
     }
   });
