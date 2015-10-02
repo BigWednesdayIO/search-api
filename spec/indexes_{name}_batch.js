@@ -140,6 +140,47 @@ describe('/indexes/{name}/batch', () => {
       });
     });
 
+    describe('delete operation', () => {
+      it('removes objects from the index', () => {
+        const payload = {
+          requests: [{
+            action: 'delete',
+            objectID: '1'
+          }, {
+            action: 'delete',
+            objectID: '2'
+          }]
+        };
+
+        const existingData = {
+          body: [
+            {index: {_index: testIndexName, _type: 'object', _id: '1'}},
+            {name: 'object 1'},
+            {index: {_index: testIndexName, _type: 'object', _id: '2'}},
+            {name: 'object 2'}
+          ]
+        };
+
+        return elasticsearchClient.bulk(existingData)
+          .then(() => {
+            return specRequest({
+              url: `/1/indexes/${testIndexName}/batch`,
+              method: 'post',
+              headers: {Authorization: 'Bearer 12345'},
+              payload
+            })
+              .then(response => {
+                expect(response.statusCode).to.equal(200);
+
+                return elasticsearchClient.mget({index: testIndexName, body: {ids: ['1', '2']}})
+                  .then(result => {
+                    expect(_.every(result.docs, {found: false})).to.equal(true, 'Deleted documents still exist in index');
+                  });
+              });
+          });
+      });
+    });
+
     describe('validation', () => {
       it('does not allow objectID to be sent for create actions', () => {
         const payload = {

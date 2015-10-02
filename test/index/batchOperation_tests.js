@@ -116,5 +116,57 @@ describe('Index', () => {
         expect(batchResult.upserted).to.deep.equal(ids);
       });
     });
+
+    describe('delete', () => {
+      const ids = ['id1', 'id2'];
+
+      const batchOperations = [
+        {action: 'delete', objectID: ids[0]},
+        {action: 'delete', objectID: ids[1]}
+      ];
+
+      before(() => {
+        bulkStub = sinon.stub(elasticsearchClient, 'bulk', () => {
+          const result = {
+            items: [{
+              'delete': {_id: ids[0]}
+            }, {
+              'delete': {_id: ids[1]}
+            }]
+          };
+
+          return Promise.resolve(result);
+        });
+
+        const Index = require('../../lib/index');
+        const index = new Index(testIndexName);
+
+        return index.batchOperation(batchOperations)
+          .then(result => {
+            batchResult = result;
+          });
+      });
+
+      after(() => {
+        bulkStub.restore();
+      });
+
+      it('makes a delete request for each deleted object', () => {
+        const expectedBulkArgs = {
+          body: [{
+            'delete': {_index: testIndexName, _type: 'object', _id: ids[0]}
+          }, {
+            'delete': {_index: testIndexName, _type: 'object', _id: ids[1]}
+          }]
+        };
+
+        sinon.assert.calledOnce(bulkStub);
+        sinon.assert.calledWith(bulkStub, expectedBulkArgs);
+      });
+
+      it('returns the ids of deleted objects', () => {
+        expect(batchResult.deleted).to.deep.equal(ids);
+      });
+    });
   });
 });
