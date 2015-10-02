@@ -13,10 +13,11 @@ describe('Index', () => {
     let bulkStub;
     let batchResult;
 
-    describe('insert', () => {
-      const batchOperations = {
-        insert: [{name: 'an object'}, {name: 'another object'}]
-      };
+    describe('create', () => {
+      const batchOperations = [
+        {action: 'create', body: {name: 'an object'}},
+        {action: 'create', body: {name: 'another object'}}
+      ];
 
       const ids = ['id1', 'id2'];
 
@@ -46,13 +47,13 @@ describe('Index', () => {
         bulkStub.restore();
       });
 
-      it('makes an index request for each inserted object', () => {
+      it('makes an index request for each created object', () => {
         const expectedBulkArgs = {
           body: [{
             index: {_index: testIndexName, _type: 'object'}
-          }, batchOperations.insert[0], {
+          }, batchOperations[0].body, {
             index: {_index: testIndexName, _type: 'object'}
-          }, batchOperations.insert[1]]
+          }, batchOperations[1].body]
         };
 
         sinon.assert.calledOnce(bulkStub);
@@ -67,9 +68,10 @@ describe('Index', () => {
     describe('upsert', () => {
       const ids = ['id1', 'id2'];
 
-      const batchOperations = {
-        upsert: [{objectID: ids[0], data: {name: 'an object'}}, {objectID: ids[1], data: {name: 'another object'}}]
-      };
+      const batchOperations = [
+        {action: 'upsert', objectID: ids[0], body: {name: 'an object'}},
+        {action: 'upsert', objectID: ids[1], body: {name: 'another object'}}
+      ];
 
       before(() => {
         bulkStub = sinon.stub(elasticsearchClient, 'bulk', () => {
@@ -101,9 +103,9 @@ describe('Index', () => {
         const expectedBulkArgs = {
           body: [{
             index: {_index: testIndexName, _type: 'object', _id: ids[0]}
-          }, batchOperations.upsert[0].data, {
+          }, batchOperations[0].body, {
             index: {_index: testIndexName, _type: 'object', _id: ids[1]}
-          }, batchOperations.upsert[1].data]
+          }, batchOperations[1].body]
         };
 
         sinon.assert.calledOnce(bulkStub);
