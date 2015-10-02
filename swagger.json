@@ -107,6 +107,65 @@
                 }
             ]
         },
+        "/indexes/{name}/batch": {
+            "post": {
+                "description": "Perform batch operations on the index",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operations performed",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "objectIDs": {
+                                    "description": "Identifiers of any created objects",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "name": "name",
+                    "in": "path",
+                    "description": "Name of the index to operate on",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "operations",
+                    "in": "body",
+                    "description": "The operations to perform",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "requests": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/BatchOperation"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
         "/indexes/{name}/settings": {
             "put": {
                 "description": "Replace the settings for an index.\n",
@@ -412,21 +471,28 @@
         }
     },
     "definitions": {
-        "Task": {
+        "BatchOperation": {
             "type": "object",
+            "required": [
+                "action",
+                "body"
+            ],
             "properties": {
-                "createdAt": {
+                "action": {
                     "type": "string",
-                    "description": "An ISO 8061 formatted date string"
+                    "enum": [
+                        "create",
+                        "upsert"
+                    ],
+                    "description": "The action to perform on an index"
                 },
-                "taskID": {
-                    "type": "integer",
-                    "format": "int32",
-                    "description": "Identifier of the indexing task"
+                "body": {
+                    "type": "object",
+                    "description": "For create and upsert, the object to index"
                 },
                 "objectID": {
                     "type": "string",
-                    "description": "The identifier of the object being indexed"
+                    "description": "For upsert, the identifier of the object to create or replace"
                 }
             }
         },

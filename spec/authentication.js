@@ -10,7 +10,8 @@ describe('endpoint authentcation', () => {
     {routeName: '/1/indexes/{name}/settings', method: 'PUT', url: '/1/indexes/some-index/settings'},
     {routeName: '/1/indexes/{name}/settings', method: 'GET', url: '/1/indexes/some-index/settings'},
     {routeName: '/1/indexes/{name}/{objectID}', method: 'DELETE', url: '/1/indexes/some-index/1}'},
-    {routeName: '/1/indexes/{name}/{objectID}', method: 'PUT', url: '/1/indexes/some-index/1'}
+    {routeName: '/1/indexes/{name}/{objectID}', method: 'PUT', url: '/1/indexes/some-index/1'},
+    {routeName: '/1/indexes/{name}/batch', method: 'POST', url: '/1/indexes/some-index/batch'}
   ];
 
   tests.forEach(test => {
