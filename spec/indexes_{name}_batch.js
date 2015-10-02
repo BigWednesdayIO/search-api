@@ -158,6 +158,19 @@ describe('/indexes/{name}/batch', () => {
             expect(response.result.message).to.match(/"objectID" is not allowed]/);
           });
       });
+
+      it('does not allow unknown actions', () => {
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/batch`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 12345'},
+          payload: {requests: [{action: 'unknown', body: {}}]}
+        })
+          .then(response => {
+            expect(response.statusCode).to.equal(400);
+            expect(response.result.message).to.match(/"action" must be one of/);
+          });
+      });
     });
   });
 });
