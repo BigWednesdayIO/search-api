@@ -231,6 +231,45 @@ describe('/indexes/{name}/batch', () => {
             expect(response.result.message).to.match(/"body" is not allowed]/);
           });
       });
+
+      it('requires objectID parameter for upsert actions', () => {
+        const payload = {
+          requests: [{
+            action: 'upsert',
+            body: {name: 'something'}
+          }]
+        };
+
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/batch`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 12345'},
+          payload
+        })
+          .then(response => {
+            expect(response.statusCode).to.equal(400);
+            expect(response.result.message).to.match(/"objectID" is required/);
+          });
+      });
+
+      it('requires objectID parameter for delete actions', () => {
+        const payload = {
+          requests: [{
+            action: 'delete'
+          }]
+        };
+
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/batch`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 12345'},
+          payload
+        })
+          .then(response => {
+            expect(response.statusCode).to.equal(400);
+            expect(response.result.message).to.match(/"objectID" is required/);
+          });
+      });
     });
   });
 });
