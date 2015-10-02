@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const cuid = require('cuid');
 
 const specRequest = require('./spec_request');
@@ -49,6 +50,7 @@ describe('/indexes/{name}/batch', () => {
             return elasticsearchClient.mget({index: testIndexName, body: {ids: response.result.objectIDs}})
               .then(result => {
                 expect(result.docs).to.have.length(2);
+                expect(_.every(result.docs, {found: true})).to.equal(true, 'Created documents not found');
               });
           });
       });
@@ -85,6 +87,7 @@ describe('/indexes/{name}/batch', () => {
             return elasticsearchClient.mget({index: testIndexName, body: {ids: response.result.objectIDs}})
               .then(result => {
                 expect(result.docs).to.have.length(2);
+                expect(_.every(result.docs, {found: true})).to.equal(true, 'Created documents not found');
               });
           });
       });
