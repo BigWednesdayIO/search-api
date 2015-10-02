@@ -4,3 +4,9 @@ api:
     - '8080'
   environment:
     - API_KEYS=12345
+dev:
+  extends:
+    service: api
+  volumes:
+    - .:/src
+  command: grunt watch
