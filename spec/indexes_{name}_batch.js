@@ -138,7 +138,7 @@ describe('/indexes/{name}/batch', () => {
     });
 
     describe('validation', () => {
-      it('does not allow objectID to be sent for create operations', () => {
+      it('does not allow objectID to be sent for create actions', () => {
         const payload = {
           requests: [{
             action: 'create',
@@ -169,6 +169,66 @@ describe('/indexes/{name}/batch', () => {
           .then(response => {
             expect(response.statusCode).to.equal(400);
             expect(response.result.message).to.match(/"action" must be one of/);
+          });
+      });
+
+      it('requires body parameter for create actions', () => {
+        const payload = {
+          requests: [{
+            action: 'create'
+          }]
+        };
+
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/batch`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 12345'},
+          payload
+        })
+          .then(response => {
+            expect(response.statusCode).to.equal(400);
+            expect(response.result.message).to.match(/"body" is required/);
+          });
+      });
+
+      it('requires body parameter for upsert actions', () => {
+        const payload = {
+          requests: [{
+            action: 'upsert',
+            objectID: '1'
+          }]
+        };
+
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/batch`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 12345'},
+          payload
+        })
+          .then(response => {
+            expect(response.statusCode).to.equal(400);
+            expect(response.result.message).to.match(/"body" is required/);
+          });
+      });
+
+      it('does not allow body to be sent for delete actions', () => {
+        const payload = {
+          requests: [{
+            action: 'delete',
+            body: {name: 'something'},
+            objectID: 'myid'
+          }]
+        };
+
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/batch`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 12345'},
+          payload
+        })
+          .then(response => {
+            expect(response.statusCode).to.equal(400);
+            expect(response.result.message).to.match(/"body" is not allowed]/);
           });
       });
     });

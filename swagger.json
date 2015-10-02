@@ -474,15 +474,15 @@
         "BatchOperation": {
             "type": "object",
             "required": [
-                "action",
-                "body"
+                "action"
             ],
             "properties": {
                 "action": {
                     "type": "string",
                     "enum": [
                         "create",
-                        "upsert"
+                        "upsert",
+                        "delete"
                     ],
                     "description": "The action to perform on an index"
                 },
@@ -492,7 +492,7 @@
                 },
                 "objectID": {
                     "type": "string",
-                    "description": "For upsert, the identifier of the object to create or replace"
+                    "description": "For upsert and delete, the identifier of the object to act upon"
                 }
             }
         },
