@@ -12,8 +12,12 @@ dependencies:
   override:
     - sudo pip install -U docker-compose
     - if [[ -e ~/docker/elastic.tar ]]; then docker load -i ~/docker/elastic.tar; fi
+    - if [[ -e ~/docker/node.tar ]]; then docker load -i ~/docker/node.tar; fi
     - docker pull elasticsearch:1.7.2
-    - mkdir -p ~/docker; docker save elasticsearch:1.7.2 > ~/docker/elastic.tar
+    - docker pull node:4.1.1
+    - mkdir -p ~/docker
+    - docker save elasticsearch:1.7.2 > ~/docker/elastic.tar
+    - docker save node:4.1.1 > ~/docker/node.tar
 
 test:
   override:
