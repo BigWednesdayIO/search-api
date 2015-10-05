@@ -6,7 +6,9 @@ const specRequest = require('./spec_request');
 const elasticsearchClient = require('../lib/elasticsearchClient');
 const generateOpsIndexName = require('../lib/analytics_logger').generateIndexName;
 
-describe('analytics', () => {
+describe('analytics', function () {
+  this.timeout(3000);
+
   const testIndexName = `test_index_${cuid()}`;
 
   before(() => {
