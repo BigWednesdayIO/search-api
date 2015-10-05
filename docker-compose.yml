@@ -9,8 +9,11 @@ api:
   links:
     - elasticsearch
 dev:
-  extends:
-    service: api
+  build: .
+  ports:
+    - '8080'
   volumes:
     - .:/src
+  links:
+    - elasticsearch
   command: grunt watch
