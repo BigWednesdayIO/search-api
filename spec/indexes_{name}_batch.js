@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const cuid = require('cuid');
 
 const specRequest = require('./spec_request');
@@ -49,6 +50,7 @@ describe('/indexes/{name}/batch', () => {
             return elasticsearchClient.mget({index: testIndexName, body: {ids: response.result.objectIDs}})
               .then(result => {
                 expect(result.docs).to.have.length(2);
+                expect(_.every(result.docs, {found: true})).to.equal(true, 'Created documents not found');
               });
           });
       });
@@ -85,6 +87,7 @@ describe('/indexes/{name}/batch', () => {
             return elasticsearchClient.mget({index: testIndexName, body: {ids: response.result.objectIDs}})
               .then(result => {
                 expect(result.docs).to.have.length(2);
+                expect(_.every(result.docs, {found: true})).to.equal(true, 'Created documents not found');
               });
           });
       });
@@ -137,8 +140,49 @@ describe('/indexes/{name}/batch', () => {
       });
     });
 
+    describe('delete operation', () => {
+      it('removes objects from the index', () => {
+        const payload = {
+          requests: [{
+            action: 'delete',
+            objectID: '1'
+          }, {
+            action: 'delete',
+            objectID: '2'
+          }]
+        };
+
+        const existingData = {
+          body: [
+            {index: {_index: testIndexName, _type: 'object', _id: '1'}},
+            {name: 'object 1'},
+            {index: {_index: testIndexName, _type: 'object', _id: '2'}},
+            {name: 'object 2'}
+          ]
+        };
+
+        return elasticsearchClient.bulk(existingData)
+          .then(() => {
+            return specRequest({
+              url: `/1/indexes/${testIndexName}/batch`,
+              method: 'post',
+              headers: {Authorization: 'Bearer 12345'},
+              payload
+            })
+              .then(response => {
+                expect(response.statusCode).to.equal(200);
+
+                return elasticsearchClient.mget({index: testIndexName, body: {ids: ['1', '2']}})
+                  .then(result => {
+                    expect(_.every(result.docs, {found: false})).to.equal(true, 'Deleted documents still exist in index');
+                  });
+              });
+          });
+      });
+    });
+
     describe('validation', () => {
-      it('does not allow objectID to be sent for create operations', () => {
+      it('does not allow objectID to be sent for create actions', () => {
         const payload = {
           requests: [{
             action: 'create',
@@ -169,6 +213,105 @@ describe('/indexes/{name}/batch', () => {
           .then(response => {
             expect(response.statusCode).to.equal(400);
             expect(response.result.message).to.match(/"action" must be one of/);
+          });
+      });
+
+      it('requires body parameter for create actions', () => {
+        const payload = {
+          requests: [{
+            action: 'create'
+          }]
+        };
+
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/batch`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 12345'},
+          payload
+        })
+          .then(response => {
+            expect(response.statusCode).to.equal(400);
+            expect(response.result.message).to.match(/"body" is required/);
+          });
+      });
+
+      it('requires body parameter for upsert actions', () => {
+        const payload = {
+          requests: [{
+            action: 'upsert',
+            objectID: '1'
+          }]
+        };
+
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/batch`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 12345'},
+          payload
+        })
+          .then(response => {
+            expect(response.statusCode).to.equal(400);
+            expect(response.result.message).to.match(/"body" is required/);
+          });
+      });
+
+      it('does not allow body to be sent for delete actions', () => {
+        const payload = {
+          requests: [{
+            action: 'delete',
+            body: {name: 'something'},
+            objectID: 'myid'
+          }]
+        };
+
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/batch`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 12345'},
+          payload
+        })
+          .then(response => {
+            expect(response.statusCode).to.equal(400);
+            expect(response.result.message).to.match(/"body" is not allowed]/);
+          });
+      });
+
+      it('requires objectID parameter for upsert actions', () => {
+        const payload = {
+          requests: [{
+            action: 'upsert',
+            body: {name: 'something'}
+          }]
+        };
+
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/batch`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 12345'},
+          payload
+        })
+          .then(response => {
+            expect(response.statusCode).to.equal(400);
+            expect(response.result.message).to.match(/"objectID" is required/);
+          });
+      });
+
+      it('requires objectID parameter for delete actions', () => {
+        const payload = {
+          requests: [{
+            action: 'delete'
+          }]
+        };
+
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/batch`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 12345'},
+          payload
+        })
+          .then(response => {
+            expect(response.statusCode).to.equal(400);
+            expect(response.result.message).to.match(/"objectID" is required/);
           });
       });
     });

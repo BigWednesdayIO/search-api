@@ -13,10 +13,11 @@ describe('Index', () => {
     let bulkStub;
     let batchResult;
 
-    describe('insert', () => {
-      const batchOperations = {
-        insert: [{name: 'an object'}, {name: 'another object'}]
-      };
+    describe('create', () => {
+      const batchOperations = [
+        {action: 'create', body: {name: 'an object'}},
+        {action: 'create', body: {name: 'another object'}}
+      ];
 
       const ids = ['id1', 'id2'];
 
@@ -46,13 +47,13 @@ describe('Index', () => {
         bulkStub.restore();
       });
 
-      it('makes an index request for each inserted object', () => {
+      it('makes an index request for each created object', () => {
         const expectedBulkArgs = {
           body: [{
             index: {_index: testIndexName, _type: 'object'}
-          }, batchOperations.insert[0], {
+          }, batchOperations[0].body, {
             index: {_index: testIndexName, _type: 'object'}
-          }, batchOperations.insert[1]]
+          }, batchOperations[1].body]
         };
 
         sinon.assert.calledOnce(bulkStub);
@@ -67,9 +68,10 @@ describe('Index', () => {
     describe('upsert', () => {
       const ids = ['id1', 'id2'];
 
-      const batchOperations = {
-        upsert: [{objectID: ids[0], data: {name: 'an object'}}, {objectID: ids[1], data: {name: 'another object'}}]
-      };
+      const batchOperations = [
+        {action: 'upsert', objectID: ids[0], body: {name: 'an object'}},
+        {action: 'upsert', objectID: ids[1], body: {name: 'another object'}}
+      ];
 
       before(() => {
         bulkStub = sinon.stub(elasticsearchClient, 'bulk', () => {
@@ -101,9 +103,9 @@ describe('Index', () => {
         const expectedBulkArgs = {
           body: [{
             index: {_index: testIndexName, _type: 'object', _id: ids[0]}
-          }, batchOperations.upsert[0].data, {
+          }, batchOperations[0].body, {
             index: {_index: testIndexName, _type: 'object', _id: ids[1]}
-          }, batchOperations.upsert[1].data]
+          }, batchOperations[1].body]
         };
 
         sinon.assert.calledOnce(bulkStub);
@@ -112,6 +114,58 @@ describe('Index', () => {
 
       it('returns the ids of upserted objects', () => {
         expect(batchResult.upserted).to.deep.equal(ids);
+      });
+    });
+
+    describe('delete', () => {
+      const ids = ['id1', 'id2'];
+
+      const batchOperations = [
+        {action: 'delete', objectID: ids[0]},
+        {action: 'delete', objectID: ids[1]}
+      ];
+
+      before(() => {
+        bulkStub = sinon.stub(elasticsearchClient, 'bulk', () => {
+          const result = {
+            items: [{
+              'delete': {_id: ids[0]}
+            }, {
+              'delete': {_id: ids[1]}
+            }]
+          };
+
+          return Promise.resolve(result);
+        });
+
+        const Index = require('../../lib/index');
+        const index = new Index(testIndexName);
+
+        return index.batchOperation(batchOperations)
+          .then(result => {
+            batchResult = result;
+          });
+      });
+
+      after(() => {
+        bulkStub.restore();
+      });
+
+      it('makes a delete request for each deleted object', () => {
+        const expectedBulkArgs = {
+          body: [{
+            'delete': {_index: testIndexName, _type: 'object', _id: ids[0]}
+          }, {
+            'delete': {_index: testIndexName, _type: 'object', _id: ids[1]}
+          }]
+        };
+
+        sinon.assert.calledOnce(bulkStub);
+        sinon.assert.calledWith(bulkStub, expectedBulkArgs);
+      });
+
+      it('returns the ids of deleted objects', () => {
+        expect(batchResult.deleted).to.deep.equal(ids);
       });
     });
   });
