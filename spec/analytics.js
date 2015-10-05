@@ -42,7 +42,7 @@ describe('analytics', function () {
         });
       })
       .then(result => {
-        return expect(result).to.equal(true);
+        expect(result).to.equal(true);
       });
   });
 
@@ -64,7 +64,7 @@ describe('analytics', function () {
         });
       })
       .then(result => {
-        return expect(result).to.equal(false);
+        expect(result).to.equal(false);
       });
   });
 });
