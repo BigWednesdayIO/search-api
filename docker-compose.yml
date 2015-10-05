@@ -1,16 +1,16 @@
+elasticsearch:
+  image: elasticsearch:1.7.2
 api:
   build: .
   ports:
     - '8080'
   environment:
     - API_KEYS=12345
-elasticsearch:
-  image: elasticsearch:1.7.2
+  links:
+    - elasticsearch
 dev:
   extends:
     service: api
   volumes:
     - .:/src
   command: grunt watch
-  links:
-    - elasticsearch
