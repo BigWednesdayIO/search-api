@@ -8,9 +8,7 @@ const specRequest = require('./spec_request');
 
 const expect = require('chai').expect;
 
-describe('/indexes/{name}/{objectID}', function () {
-  this.timeout(5000);
-
+describe('/indexes/{name}/{objectID}', () => {
   const testIndexName = `test_index_${cuid()}`;
   const testObject = {name: 'an object', field1: 'some value', field2: false};
   let indexedObject;
