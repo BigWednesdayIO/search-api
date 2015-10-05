@@ -31,7 +31,13 @@ describe('analytics', function () {
     return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload: {}})
       .then(resp => {
         opsRecordId = resp.request.id;
-        return elasticsearchClient.indices.refresh({index: opsIndexName});
+        return elasticsearchClient.indices.refresh({index: opsIndexName})
+          .then(() => {
+            // give refresh a chance to work
+            return new Promise(resolve => {
+              setTimeout(resolve, 1000);
+            });
+          });
       })
       .then(() => {
         return elasticsearchClient.exists({

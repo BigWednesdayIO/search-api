@@ -21,4 +21,4 @@ dependencies:
 
 test:
   override:
-    - docker-compose run api bash -c "sleep 10 && grunt ci"
+    - docker-compose run api bash -c grunt ci
