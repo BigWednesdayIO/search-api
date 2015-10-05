@@ -7,7 +7,7 @@ describe('token authenticator', () => {
   let authenticator;
 
   before(() => {
-    authenticator = authenticatorFactory('123456');
+    authenticator = authenticatorFactory({123456: 'bigwednesday.io'});
   });
 
   it('returns true when token is found', () => {
@@ -20,7 +20,7 @@ describe('token authenticator', () => {
   it('returns credentials when token is found', () => {
     authenticator('123456', (err, valid, credentials) => {
       expect(err).not.to.be.ok;
-      expect(credentials).to.deep.equal({token: '123456'});
+      expect(credentials).to.deep.equal({name: 'bigwednesday.io', token: '123456'});
     });
   });
 
