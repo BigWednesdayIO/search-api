@@ -10,7 +10,7 @@ const expect = require('chai').expect;
 const testIndexName = 'my-index-name';
 const testObject = {name: 'an object', field1: 'value', field2: 0};
 
-describe('Index', () => {
+describe('Search Index', () => {
   describe('insertObject', () => {
     let elasticStub;
     let indexedObject;
@@ -25,8 +25,8 @@ describe('Index', () => {
         return Promise.resolve({_id: '123'});
       });
 
-      const Index = require('../../lib/index');
-      index = new Index(testIndexName);
+      const SearchIndex = require('../../lib/search_index');
+      index = new SearchIndex(testIndexName);
     });
 
     afterEach(() => {

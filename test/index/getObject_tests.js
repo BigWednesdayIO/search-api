@@ -26,9 +26,9 @@ const indexData = [{
   }]
 }];
 
-describe('Index', () => {
+describe('Search Index', () => {
   describe('getObject', () => {
-    let Index;
+    let SearchIndex;
     let index;
     let elasticStub;
     let retrievedObject;
@@ -65,8 +65,8 @@ describe('Index', () => {
         });
       });
 
-      Index = require('../../lib/index');
-      index = new Index('two');
+      SearchIndex = require('../../lib/search_index');
+      index = new SearchIndex('two');
 
       return index.getObject('3')
         .then(o => {
@@ -103,7 +103,7 @@ describe('Index', () => {
       });
 
       it('returns index not found errors', () => {
-        const index = new Index('nonexistantindex');
+        const index = new SearchIndex('nonexistantindex');
         return index.getObject('a')
           .then(() => {
             throw new Error('expected index not found error');
