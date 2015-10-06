@@ -18,7 +18,7 @@ describe('/indexes/{name}', () => {
       url: `/1/indexes/${testIndexName}`,
       method: 'post',
       payload: testObject,
-      headers: {Authorization: 'Bearer 12345'}
+      headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
     })
       .then(response => {
         createResponse = response;
@@ -54,7 +54,7 @@ describe('/indexes/{name}', () => {
         url: `/1/indexes/${deleteIndexName}`,
         method: 'post',
         payload: testObject,
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       });
     });
 
@@ -62,7 +62,7 @@ describe('/indexes/{name}', () => {
       return specRequest({
         url: `/1/indexes/${deleteIndexName}`,
         method: 'delete',
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(204);
@@ -81,7 +81,7 @@ describe('/indexes/{name}', () => {
       return specRequest({
         url: `/1/indexes/nonexistantindex`,
         method: 'delete',
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(404);

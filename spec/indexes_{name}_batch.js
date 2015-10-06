@@ -41,7 +41,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {
@@ -79,7 +79,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {
@@ -125,7 +125,7 @@ describe('/indexes/{name}/batch', () => {
             return specRequest({
               url: `/1/indexes/${testIndexName}/batch`,
               method: 'post',
-              headers: {Authorization: 'Bearer 12345'},
+              headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
               payload
             })
               .then(response => {
@@ -168,7 +168,7 @@ describe('/indexes/{name}/batch', () => {
             return specRequest({
               url: `/1/indexes/${testIndexName}/batch`,
               method: 'post',
-              headers: {Authorization: 'Bearer 12345'},
+              headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
               payload
             })
               .then(response => {
@@ -196,7 +196,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {
@@ -209,7 +209,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload: {requests: [{action: 'unknown', body: {}}]}
         })
           .then(response => {
@@ -228,7 +228,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {
@@ -248,7 +248,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {
@@ -269,7 +269,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {
@@ -289,7 +289,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {
@@ -308,7 +308,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {

@@ -30,7 +30,7 @@ describe('analytics', () => {
     return specRequest({
       url: `/1/indexes/${testIndexName}/query`,
       method: 'post',
-      headers: {Authorization: 'Bearer 12345'},
+      headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
       payload: {}
     })
       .then(resp => {
@@ -63,7 +63,7 @@ describe('analytics', () => {
     return specRequest({
       url: '/1/indexes/some-index/query',
       method: 'post',
-      headers: {Authorization: 'Bearer 12345'},
+      headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
       payload: {}
     })
       .then(resp => {

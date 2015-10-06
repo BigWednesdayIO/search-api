@@ -37,7 +37,7 @@ describe('/indexes/{name}/query', () => {
       return specRequest({
         url: `/1/indexes/${testIndexName}/query`,
         method: 'post',
-        headers: {Authorization: 'Bearer 12345'},
+        headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload
       })
         .then(response => {
@@ -52,7 +52,7 @@ describe('/indexes/{name}/query', () => {
       return specRequest({
         url: `/1/indexes/${testIndexName}/query`,
         method: 'post',
-        headers: {Authorization: 'Bearer 12345'},
+        headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload
       })
         .then(response => {
@@ -67,7 +67,7 @@ describe('/indexes/{name}/query', () => {
       return specRequest({
         url: `/1/indexes/${testIndexName}/query`,
         method: 'post',
-        headers: {Authorization: 'Bearer 12345'},
+        headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload
       })
         .then(response => {
@@ -82,7 +82,7 @@ describe('/indexes/{name}/query', () => {
       return specRequest({
         url: `/1/indexes/${testIndexName}/query`,
         method: 'post',
-        headers: {Authorization: 'Bearer 12345'},
+        headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload
       })
         .then(response => {
@@ -97,7 +97,7 @@ describe('/indexes/{name}/query', () => {
       return specRequest({
         url: `/1/indexes/${testIndexName}/query`,
         method: 'post',
-        headers: {Authorization: 'Bearer 12345'},
+        headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload
       })
         .then(response => {
@@ -113,7 +113,7 @@ describe('/indexes/{name}/query', () => {
       return specRequest({
         url: `/1/indexes/${testIndexName}/query`,
         method: 'post',
-        headers: {Authorization: 'Bearer 12345'},
+        headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload
       })
         .then(response => {
@@ -127,7 +127,7 @@ describe('/indexes/{name}/query', () => {
       return specRequest({
         url: '/1/indexes/nonexistantindex/query',
         method: 'post',
-        headers: {Authorization: 'Bearer 12345'},
+        headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload: {}
       })
         .then(response => {
@@ -140,7 +140,7 @@ describe('/indexes/{name}/query', () => {
       return specRequest({
         url: '/1/indexes/*/query',
         method: 'post',
-        headers: {Authorization: 'Bearer 12345'},
+        headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload: {}
       })
         .then(response => {
@@ -156,7 +156,7 @@ describe('/indexes/{name}/query', () => {
         return specRequest({
           url: '/1/indexes/test-index/query',
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
         })
           .then(response => {
@@ -171,7 +171,7 @@ describe('/indexes/{name}/query', () => {
         return specRequest({
           url: '/1/indexes/test-index/query',
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
         })
           .then(response => {
@@ -186,7 +186,7 @@ describe('/indexes/{name}/query', () => {
         return specRequest({
           url: '/1/indexes/test-index/query',
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
         })
           .then(response => {
@@ -201,7 +201,7 @@ describe('/indexes/{name}/query', () => {
         return specRequest({
           url: '/1/indexes/test-index/query',
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
         })
           .then(response => {
@@ -216,7 +216,7 @@ describe('/indexes/{name}/query', () => {
         return specRequest({
           url: '/1/indexes/test-index/query',
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
         })
           .then(response => {
@@ -231,7 +231,7 @@ describe('/indexes/{name}/query', () => {
         return specRequest({
           url: '/1/indexes/test-index/query',
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
         })
           .then(response => {
@@ -246,7 +246,7 @@ describe('/indexes/{name}/query', () => {
         return specRequest({
           url: '/1/indexes/test-index/query',
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
         })
           .then(response => {
@@ -261,7 +261,7 @@ describe('/indexes/{name}/query', () => {
         return specRequest({
           url: '/1/indexes/test-index/query',
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
         })
           .then(response => {
@@ -276,7 +276,7 @@ describe('/indexes/{name}/query', () => {
         return specRequest({
           url: '/1/indexes/test-index/query',
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
         })
           .then(response => {
@@ -291,7 +291,7 @@ describe('/indexes/{name}/query', () => {
         return specRequest({
           url: '/1/indexes/test-index/query',
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
         })
           .then(response => {
@@ -306,7 +306,7 @@ describe('/indexes/{name}/query', () => {
         return specRequest({
           url: '/1/indexes/test-index/query',
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
         })
           .then(response => {

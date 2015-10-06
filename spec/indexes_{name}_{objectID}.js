@@ -34,7 +34,7 @@ describe('/indexes/{name}/{objectID}', () => {
     it('indexed objects can be retrieved', () => {
       return specRequest({
         url: `/1/indexes/${testIndexName}/${indexedObject._id}`,
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(200);
@@ -49,7 +49,7 @@ describe('/indexes/{name}/{objectID}', () => {
     it('returns a 404 when the index does not contain the identified object', () => {
       return specRequest({
         url: `/1/indexes/${testIndexName}/12345`,
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(404);
@@ -60,7 +60,7 @@ describe('/indexes/{name}/{objectID}', () => {
     it('returns a 404 when the index does not exist', () => {
       return specRequest({
         url: '/1/indexes/nonexistantindex/12345',
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(404);
@@ -75,7 +75,7 @@ describe('/indexes/{name}/{objectID}', () => {
         url: `/1/indexes/${testIndexName}/12345`,
         method: 'put',
         payload: testObject,
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(201);
@@ -99,7 +99,7 @@ describe('/indexes/{name}/{objectID}', () => {
         url: `/1/indexes/${testIndexName}/${indexedObject._id}`,
         method: 'put',
         payload: update,
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(200);
@@ -122,7 +122,7 @@ describe('/indexes/{name}/{objectID}', () => {
       return specRequest({
         url: `/1/indexes/${testIndexName}/${indexedObject._id}`,
         method: 'delete',
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(204);
@@ -144,7 +144,7 @@ describe('/indexes/{name}/{objectID}', () => {
       return specRequest({
         url: '/1/indexes/nonexistantindex/12345',
         method: 'delete',
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(404);
