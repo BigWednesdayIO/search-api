@@ -1,6 +1,8 @@
 machine:
   python:
     version: 2.7.3
+  services:
+    - docker
   pre:
     - |
       sudo curl -L -o /usr/bin/docker 'http://s3-external-1.amazonaws.com/circle-downloads/docker-1.8.2-circleci'
@@ -9,7 +11,6 @@ machine:
 
 checkout:
   post:
-    - git submodule sync
     - git submodule update --init
 
 dependencies:
