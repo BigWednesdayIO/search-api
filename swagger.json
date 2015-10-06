@@ -317,6 +317,11 @@
         "/indexes/{name}/query": {
             "post": {
                 "description": "Performs a search on an index\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "200": {
                         "description": "Search results",

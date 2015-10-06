@@ -8,10 +8,11 @@ const generateOpsIndexName = require('../lib/analytics_logger').generateIndexNam
 
 describe('analytics', () => {
   const testIndexName = `test_index_${cuid()}`;
+  const clientIndexName = `1_${testIndexName}`;
 
   before(() => {
     return elasticsearchClient.create({
-      index: testIndexName,
+      index: clientIndexName,
       type: 'test_type',
       body: {},
       refresh: true
@@ -19,14 +20,19 @@ describe('analytics', () => {
   });
 
   after(() => {
-    return elasticsearchClient.indices.delete({index: testIndexName});
+    return elasticsearchClient.indices.delete({index: clientIndexName});
   });
 
   it('records analytics for successful operation', () => {
     const opsIndexName = generateOpsIndexName();
     let opsRecordId;
 
-    return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload: {}})
+    return specRequest({
+      url: `/1/indexes/${testIndexName}/query`,
+      method: 'post',
+      headers: {Authorization: 'Bearer 12345'},
+      payload: {}
+    })
       .then(resp => {
         opsRecordId = resp.request.id;
         return elasticsearchClient.indices.refresh({index: opsIndexName})
@@ -54,7 +60,12 @@ describe('analytics', () => {
     const opsIndexName = generateOpsIndexName();
     let opsRecordId;
 
-    return specRequest({url: '/1/indexes/some-index/query', method: 'post', payload: {}})
+    return specRequest({
+      url: '/1/indexes/some-index/query',
+      method: 'post',
+      headers: {Authorization: 'Bearer 12345'},
+      payload: {}
+    })
       .then(resp => {
         opsRecordId = resp.request.id;
         return elasticsearchClient.indices.refresh({index: opsIndexName});
