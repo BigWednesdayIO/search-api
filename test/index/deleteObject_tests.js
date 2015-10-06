@@ -10,11 +10,11 @@ const expect = require('chai').expect;
 const testId = 'myid';
 const testIndexName = 'my-index-name';
 
-describe('Index', () => {
+describe('Search Index', () => {
   describe('deleteObject', () => {
     let elasticDeleteStub;
     let elasticGetIndexStub;
-    let Index;
+    let SearchIndex;
     let index;
     let deletedId;
     let indexName;
@@ -38,8 +38,8 @@ describe('Index', () => {
         return Promise.resolve({});
       });
 
-      Index = require('../../lib/index');
-      index = new Index(testIndexName);
+      SearchIndex = require('../../lib/search_index');
+      index = new SearchIndex(testIndexName);
     });
 
     afterEach(() => {
@@ -62,7 +62,7 @@ describe('Index', () => {
     });
 
     it('returns index not found errors', () => {
-      const index = new Index('nonexistantindex');
+      const index = new SearchIndex('nonexistantindex');
 
       return index.deleteObject(testId)
         .then(() => {
@@ -75,7 +75,7 @@ describe('Index', () => {
     it('does not call client.delete when index does not exist', () => {
       // calling delete item for an non-existant index causes the index to be created
       // so test that this never happens
-      const index = new Index('nonexistantindex');
+      const index = new SearchIndex('nonexistantindex');
 
       return index.deleteObject(testId)
         .then(() => {

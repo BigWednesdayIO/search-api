@@ -11,7 +11,7 @@ const testId = 'myid';
 const testIndexName = 'my-index-name';
 const testObject = {name: 'an object', field1: 'value', field2: 0};
 
-describe('Index', () => {
+describe('Search Index', () => {
   describe('upsertObject', () => {
     let elasticStub;
     let indexedObject;
@@ -28,8 +28,8 @@ describe('Index', () => {
         return Promise.resolve({_id: testId, _version: 2});
       });
 
-      const Index = require('../../lib/index');
-      index = new Index(testIndexName);
+      const SearchIndex = require('../../lib/search_index');
+      index = new SearchIndex(testIndexName);
     });
 
     afterEach(() => {

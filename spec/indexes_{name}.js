@@ -9,6 +9,7 @@ const expect = require('chai').expect;
 
 describe('/indexes/{name}', () => {
   const testIndexName = `test_index_${cuid()}`;
+  const clientIndexName = `1_${testIndexName}`;
   const testObject = {name: 'object', field: 'value'};
   let createResponse;
 
@@ -25,7 +26,7 @@ describe('/indexes/{name}', () => {
   });
 
   after(() => {
-    return elasticsearchClient.indices.delete({index: testIndexName});
+    return elasticsearchClient.indices.delete({index: clientIndexName});
   });
 
   describe('post', () => {
@@ -35,7 +36,7 @@ describe('/indexes/{name}', () => {
 
       // TODO: replace once async indexing is in place
       return elasticsearchClient.get({
-        index: testIndexName,
+        index: clientIndexName,
         type: 'object',
         id: createResponse.result.objectID
       }).then(o => {
@@ -46,6 +47,7 @@ describe('/indexes/{name}', () => {
 
   describe('delete', () => {
     const deleteIndexName = `test_index_${cuid()}`;
+    const deleteClientIndexName = `1_${deleteIndexName}`;
 
     before(() => {
       return specRequest({
@@ -66,7 +68,7 @@ describe('/indexes/{name}', () => {
           expect(response.statusCode).to.equal(204);
 
           // TODO: replace once async indexing is in place
-          return elasticsearchClient.indices.get({index: deleteIndexName})
+          return elasticsearchClient.indices.get({index: deleteClientIndexName})
             .then(() => {
               throw new Error('Expected index to not exist');
             }, err => {
