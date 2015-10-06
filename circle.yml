@@ -1,15 +1,23 @@
 machine:
+  python:
+    version: 2.7.3
   pre:
     - |
       sudo curl -L -o /usr/bin/docker 'http://s3-external-1.amazonaws.com/circle-downloads/docker-1.8.2-circleci'
       sudo chmod 0755 /usr/bin/docker
       sudo service docker start
 
+checkout:
+  post:
+    - git submodule sync
+    - git submodule update --init
+
 dependencies:
   cache_directories:
     - '~/docker'
-
+    - ~/google-cloud-sdk
   override:
+    - scripts/ensure_glcoud_installed.sh
     - sudo pip install -U docker-compose
     - if [[ -e ~/docker/elastic.tar ]]; then docker load -i ~/docker/elastic.tar; fi
     - if [[ -e ~/docker/node.tar ]]; then docker load -i ~/docker/node.tar; fi
@@ -22,3 +30,9 @@ dependencies:
 test:
   override:
     - docker-compose run api grunt ci
+
+deployment:
+  prod:
+    branch: feature/gcloud_deploy
+    commands:
+      - scripts/rolling_deploy.sh search-api app=search-api production
