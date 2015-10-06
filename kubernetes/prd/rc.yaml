@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: search-api-rc
+  labels:
+    app: search-api
+    env: production
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: search-api
+        env: production
+    spec:
+      containers:
+      - name: api
+        image: "gcr.io/first-footing-108508/search-api"
+        ports:
+        - containerPort: 8080

@@ -4,6 +4,7 @@ metadata:
   name: search-api-svc
   labels:
     app: search-api
+    env: development
 spec:
   ports:
     -
@@ -11,4 +12,5 @@ spec:
       targetPort: 8080
   selector:
     app: search-api
-  type: NodePort
+    env: development
+  type: LoadBalancer
