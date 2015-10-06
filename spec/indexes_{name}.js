@@ -9,6 +9,7 @@ const expect = require('chai').expect;
 
 describe('/indexes/{name}', () => {
   const testIndexName = `test_index_${cuid()}`;
+  const clientIndexName = `1_${testIndexName}`;
   const testObject = {name: 'object', field: 'value'};
   let createResponse;
 
@@ -17,7 +18,7 @@ describe('/indexes/{name}', () => {
       url: `/1/indexes/${testIndexName}`,
       method: 'post',
       payload: testObject,
-      headers: {Authorization: 'Bearer 12345'}
+      headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
     })
       .then(response => {
         createResponse = response;
@@ -25,7 +26,7 @@ describe('/indexes/{name}', () => {
   });
 
   after(() => {
-    return elasticsearchClient.indices.delete({index: testIndexName});
+    return elasticsearchClient.indices.delete({index: clientIndexName});
   });
 
   describe('post', () => {
@@ -35,7 +36,7 @@ describe('/indexes/{name}', () => {
 
       // TODO: replace once async indexing is in place
       return elasticsearchClient.get({
-        index: testIndexName,
+        index: clientIndexName,
         type: 'object',
         id: createResponse.result.objectID
       }).then(o => {
@@ -46,13 +47,14 @@ describe('/indexes/{name}', () => {
 
   describe('delete', () => {
     const deleteIndexName = `test_index_${cuid()}`;
+    const deleteClientIndexName = `1_${deleteIndexName}`;
 
     before(() => {
       return specRequest({
         url: `/1/indexes/${deleteIndexName}`,
         method: 'post',
         payload: testObject,
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       });
     });
 
@@ -60,13 +62,13 @@ describe('/indexes/{name}', () => {
       return specRequest({
         url: `/1/indexes/${deleteIndexName}`,
         method: 'delete',
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(204);
 
           // TODO: replace once async indexing is in place
-          return elasticsearchClient.indices.get({index: deleteIndexName})
+          return elasticsearchClient.indices.get({index: deleteClientIndexName})
             .then(() => {
               throw new Error('Expected index to not exist');
             }, err => {
@@ -79,7 +81,7 @@ describe('/indexes/{name}', () => {
       return specRequest({
         url: `/1/indexes/nonexistantindex`,
         method: 'delete',
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(404);

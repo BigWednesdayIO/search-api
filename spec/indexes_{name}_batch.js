@@ -10,14 +10,16 @@ const expect = require('chai').expect;
 
 describe('/indexes/{name}/batch', () => {
   let testIndexName;
+  let clientIndexName;
 
   describe('post', () => {
     beforeEach(() => {
       testIndexName = `test_index_${cuid()}`;
+      clientIndexName = `1_${testIndexName}`;
     });
 
     afterEach(() => {
-      return elasticsearchClient.indices.delete({index: testIndexName, ignore: 404});
+      return elasticsearchClient.indices.delete({index: clientIndexName, ignore: 404});
     });
 
     describe('create operation', () => {
@@ -39,7 +41,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {
@@ -47,7 +49,7 @@ describe('/indexes/{name}/batch', () => {
             expect(response.result).to.have.property('objectIDs');
 
             // TODO: replace once async indexing is in place
-            return elasticsearchClient.mget({index: testIndexName, body: {ids: response.result.objectIDs}})
+            return elasticsearchClient.mget({index: clientIndexName, body: {ids: response.result.objectIDs}})
               .then(result => {
                 expect(result.docs).to.have.length(2);
                 expect(_.every(result.docs, {found: true})).to.equal(true, 'Created documents not found');
@@ -77,14 +79,14 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {
             expect(response.statusCode).to.equal(200);
             expect(response.result).to.have.property('objectIDs');
 
-            return elasticsearchClient.mget({index: testIndexName, body: {ids: response.result.objectIDs}})
+            return elasticsearchClient.mget({index: clientIndexName, body: {ids: response.result.objectIDs}})
               .then(result => {
                 expect(result.docs).to.have.length(2);
                 expect(_.every(result.docs, {found: true})).to.equal(true, 'Created documents not found');
@@ -111,9 +113,9 @@ describe('/indexes/{name}/batch', () => {
 
         const existingData = {
           body: [
-            {index: {_index: testIndexName, _type: 'object', _id: '1'}},
+            {index: {_index: clientIndexName, _type: 'object', _id: '1'}},
             {name: 'object 1'},
-            {index: {_index: testIndexName, _type: 'object', _id: '2'}},
+            {index: {_index: clientIndexName, _type: 'object', _id: '2'}},
             {name: 'object 2'}
           ]
         };
@@ -123,14 +125,14 @@ describe('/indexes/{name}/batch', () => {
             return specRequest({
               url: `/1/indexes/${testIndexName}/batch`,
               method: 'post',
-              headers: {Authorization: 'Bearer 12345'},
+              headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
               payload
             })
               .then(response => {
                 expect(response.statusCode).to.equal(200);
                 expect(response.result).to.have.property('objectIDs');
 
-                return elasticsearchClient.mget({index: testIndexName, body: {ids: response.result.objectIDs}})
+                return elasticsearchClient.mget({index: clientIndexName, body: {ids: response.result.objectIDs}})
                   .then(result => {
                     expect(result.docs[0]._source).to.deep.equal(payload.requests[0].body);
                     expect(result.docs[1]._source).to.deep.equal(payload.requests[1].body);
@@ -154,9 +156,9 @@ describe('/indexes/{name}/batch', () => {
 
         const existingData = {
           body: [
-            {index: {_index: testIndexName, _type: 'object', _id: '1'}},
+            {index: {_index: clientIndexName, _type: 'object', _id: '1'}},
             {name: 'object 1'},
-            {index: {_index: testIndexName, _type: 'object', _id: '2'}},
+            {index: {_index: clientIndexName, _type: 'object', _id: '2'}},
             {name: 'object 2'}
           ]
         };
@@ -166,13 +168,13 @@ describe('/indexes/{name}/batch', () => {
             return specRequest({
               url: `/1/indexes/${testIndexName}/batch`,
               method: 'post',
-              headers: {Authorization: 'Bearer 12345'},
+              headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
               payload
             })
               .then(response => {
                 expect(response.statusCode).to.equal(200);
 
-                return elasticsearchClient.mget({index: testIndexName, body: {ids: ['1', '2']}})
+                return elasticsearchClient.mget({index: clientIndexName, body: {ids: ['1', '2']}})
                   .then(result => {
                     expect(_.every(result.docs, {found: false})).to.equal(true, 'Deleted documents still exist in index');
                   });
@@ -194,7 +196,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {
@@ -207,7 +209,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload: {requests: [{action: 'unknown', body: {}}]}
         })
           .then(response => {
@@ -226,7 +228,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {
@@ -246,7 +248,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {
@@ -267,7 +269,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {
@@ -287,7 +289,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {
@@ -306,7 +308,7 @@ describe('/indexes/{name}/batch', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/batch`,
           method: 'post',
-          headers: {Authorization: 'Bearer 12345'},
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
         })
           .then(response => {

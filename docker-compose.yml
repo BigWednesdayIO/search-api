@@ -4,8 +4,6 @@ api:
   build: .
   ports:
     - '8080'
-  environment:
-    - API_KEYS=12345
   links:
     - elasticsearch
 dev:

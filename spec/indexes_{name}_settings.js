@@ -11,7 +11,7 @@ describe('/indexes/{name}/settings', () => {
         url: '/1/indexes/test-index/settings',
         method: 'put',
         payload: {},
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(200);
@@ -21,7 +21,7 @@ describe('/indexes/{name}/settings', () => {
     it('returns settings', () => {
       return specRequest({
         url: '/1/indexes/test-index/settings',
-        headers: {Authorization: 'Bearer 12345'}
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(200);

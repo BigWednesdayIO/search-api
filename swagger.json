@@ -75,6 +75,12 @@
                         "schema": {
                             "type": "object"
                         }
+                    },
+                    "403": {
+                        "description": "A valid authentication token was supplied but does not allow access for this operation",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             },
@@ -91,6 +97,12 @@
                     },
                     "401": {
                         "description": "A valid authentication token has not been supplied with the request",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "403": {
+                        "description": "A valid authentication token was supplied but does not allow access for this operation",
                         "schema": {
                             "type": "object"
                         }
@@ -133,6 +145,12 @@
                     },
                     "401": {
                         "description": "A valid authentication token has not been supplied with the request",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "403": {
+                        "description": "A valid authentication token was supplied but does not allow access for this operation",
                         "schema": {
                             "type": "object"
                         }
@@ -186,6 +204,12 @@
                         "schema": {
                             "type": "object"
                         }
+                    },
+                    "403": {
+                        "description": "A valid authentication token was supplied but does not allow access for this operation",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             },
@@ -205,6 +229,12 @@
                     },
                     "401": {
                         "description": "A valid authentication token has not been supplied with the request",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "403": {
+                        "description": "A valid authentication token was supplied but does not allow access for this operation",
                         "schema": {
                             "type": "object"
                         }
@@ -238,14 +268,31 @@
                         "schema": {
                             "type": "object"
                         }
+                    },
+                    "403": {
+                        "description": "A valid authentication token was supplied but does not allow access for this operation",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             },
             "get": {
                 "description": "Get an object by it's identifier.\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "200": {
                         "description": "The identified object",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
                         "schema": {
                             "type": "object"
                         }
@@ -283,6 +330,12 @@
                         "schema": {
                             "type": "object"
                         }
+                    },
+                    "403": {
+                        "description": "A valid authentication token was supplied but does not allow access for this operation",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             },
@@ -306,6 +359,11 @@
         "/indexes/{name}/query": {
             "post": {
                 "description": "Performs a search on an index\n",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ],
                 "responses": {
                     "200": {
                         "description": "Search results",

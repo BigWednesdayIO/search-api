@@ -8,10 +8,10 @@ const expect = require('chai').expect;
 
 const testIndexName = 'an-index';
 
-describe('Index', () => {
+describe('Search Index', () => {
   describe('drop', () => {
     let elasticStub;
-    let Index;
+    let SearchIndex;
 
     before(() => {
       elasticStub = sinon.stub(elasticsearchClient.indices, 'delete', args => {
@@ -25,7 +25,7 @@ describe('Index', () => {
         return Promise.resolve({});
       });
 
-      Index = require('../../lib/index');
+      SearchIndex = require('../../lib/search_index');
     });
 
     after(() => {
@@ -33,7 +33,7 @@ describe('Index', () => {
     });
 
     it('deletes the index', () => {
-      const index = new Index(testIndexName);
+      const index = new SearchIndex(testIndexName);
 
       index.drop().then(() => {
         sinon.assert.calledWith(elasticStub, {index: testIndexName});
@@ -41,7 +41,7 @@ describe('Index', () => {
     });
 
     it('returns index not found errors', () => {
-      const index = new Index('nonexistantindex');
+      const index = new SearchIndex('nonexistantindex');
 
       return index.drop()
         .then(() => {

@@ -47,17 +47,12 @@ module.exports = function (grunt) {
     },
     retire: {
       node: ['node']
-    },
-    env: {
-      test: {
-        API_KEYS: '12345'
-      }
     }
   });
 
   grunt.registerTask('lint', 'eslint');
-  grunt.registerTask('test', ['env:test', 'mochaTest:test']);
-  grunt.registerTask('spec', ['env:test', 'mochaTest:spec']);
+  grunt.registerTask('test', 'mochaTest:test');
+  grunt.registerTask('spec', 'mochaTest:spec');
   grunt.registerTask('ci', ['retire', 'default']);
   grunt.registerTask('default', ['lint', 'test', 'shell:validateSwagger', 'spec']);
 };

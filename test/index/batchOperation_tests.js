@@ -6,7 +6,7 @@ const elasticsearchClient = require('../../lib/elasticsearchClient');
 
 const expect = require('chai').expect;
 
-describe('Index', () => {
+describe('Search Index', () => {
   describe('batchOperation', () => {
     const testIndexName = 'an-index';
 
@@ -34,8 +34,8 @@ describe('Index', () => {
           return Promise.resolve(result);
         });
 
-        const Index = require('../../lib/index');
-        const index = new Index(testIndexName);
+        const SearchIndex = require('../../lib/search_index');
+        const index = new SearchIndex(testIndexName);
 
         return index.batchOperation(batchOperations)
           .then(result => {
@@ -86,8 +86,8 @@ describe('Index', () => {
           return Promise.resolve(result);
         });
 
-        const Index = require('../../lib/index');
-        const index = new Index(testIndexName);
+        const SearchIndex = require('../../lib/search_index');
+        const index = new SearchIndex(testIndexName);
 
         return index.batchOperation(batchOperations)
           .then(result => {
@@ -138,8 +138,8 @@ describe('Index', () => {
           return Promise.resolve(result);
         });
 
-        const Index = require('../../lib/index');
-        const index = new Index(testIndexName);
+        const SearchIndex = require('../../lib/search_index');
+        const index = new SearchIndex(testIndexName);
 
         return index.batchOperation(batchOperations)
           .then(result => {
