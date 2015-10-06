@@ -6,9 +6,7 @@ const specRequest = require('./spec_request');
 const elasticsearchClient = require('../lib/elasticsearchClient');
 const generateOpsIndexName = require('../lib/analytics_logger').generateIndexName;
 
-describe('analytics', function () {
-  this.timeout(3000);
-
+describe('analytics', () => {
   const testIndexName = `test_index_${cuid()}`;
 
   before(() => {
@@ -31,7 +29,13 @@ describe('analytics', function () {
     return specRequest({url: `/1/indexes/${testIndexName}/query`, method: 'post', payload: {}})
       .then(resp => {
         opsRecordId = resp.request.id;
-        return elasticsearchClient.indices.refresh({index: opsIndexName});
+        return elasticsearchClient.indices.refresh({index: opsIndexName})
+          .then(() => {
+            // give refresh a chance to work
+            return new Promise(resolve => {
+              setTimeout(resolve, 1000);
+            });
+          });
       })
       .then(() => {
         return elasticsearchClient.exists({
@@ -42,7 +46,7 @@ describe('analytics', function () {
         });
       })
       .then(result => {
-        return expect(result).to.equal(true);
+        expect(result).to.equal(true);
       });
   });
 
@@ -64,7 +68,7 @@ describe('analytics', function () {
         });
       })
       .then(result => {
-        return expect(result).to.equal(false);
+        expect(result).to.equal(false);
       });
   });
 });

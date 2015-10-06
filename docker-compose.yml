@@ -1,0 +1,19 @@
+elasticsearch:
+  image: elasticsearch:1.7.2
+api:
+  build: .
+  ports:
+    - '8080'
+  environment:
+    - API_KEYS=12345
+  links:
+    - elasticsearch
+dev:
+  build: .
+  ports:
+    - '8080'
+  volumes:
+    - .:/src
+  links:
+    - elasticsearch
+  command: grunt watch

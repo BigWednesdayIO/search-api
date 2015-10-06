@@ -1,12 +1,24 @@
 machine:
-  services:
-    - docker
+  pre:
+    - |
+      sudo curl -L -o /usr/bin/docker 'http://s3-external-1.amazonaws.com/circle-downloads/docker-1.8.2-circleci'
+      sudo chmod 0755 /usr/bin/docker
+      sudo service docker start
 
 dependencies:
+  cache_directories:
+    - '~/docker'
+
   override:
-    - docker info
-    - docker build -t search-api .
+    - sudo pip install -U docker-compose
+    - if [[ -e ~/docker/elastic.tar ]]; then docker load -i ~/docker/elastic.tar; fi
+    - if [[ -e ~/docker/node.tar ]]; then docker load -i ~/docker/node.tar; fi
+    - docker pull elasticsearch:1.7.2
+    - docker pull node:4.1.1
+    - mkdir -p ~/docker
+    - docker save elasticsearch:1.7.2 > ~/docker/elastic.tar
+    - docker save node:4.1.1 > ~/docker/node.tar
 
 test:
   override:
-    - docker run -w "/src" search-api /bin/bash -c "grunt ci"; 
+    - docker-compose run api grunt ci

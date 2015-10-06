@@ -8,9 +8,7 @@ const elasticsearchClient = require('../lib/elasticsearchClient');
 
 const expect = require('chai').expect;
 
-describe('/indexes/{name}/batch', function () {
-  this.timeout(5000);
-
+describe('/indexes/{name}/batch', () => {
   let testIndexName;
 
   describe('post', () => {
