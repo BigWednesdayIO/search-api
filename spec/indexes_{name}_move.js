@@ -52,24 +52,12 @@ describe('/indexes/{name}/move', () => {
           return elasticsearchClient.exists({index: clientNewIndexName, type: '_all', id: '1'})
             .then(result => {
               expect(result).to.equal(true, 'Document does not exist in moved index');
-            });
-        });
-    });
-
-    it('moves an index to an existing index, replacing it', () => {
-      return specRequest({
-        url: `/1/indexes/${testIndexName}/move`,
-        method: 'post',
-        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
-        payload: {destination: existingIndexName}
-      })
-        .then(response => {
-          expect(response.statusCode).to.equal(200);
-
-          return elasticsearchClient.mget({index: clientExistingIndexName, body: {ids: ['1', '2']}})
-            .then(result => {
-              expect(result.docs).to.have.length(1);
-              expect(result.docs[0]._source.name).to.equal('object 1');
+              return elasticsearchClient.indices.get({index: clientIndexName});
+            })
+            .then(() => {
+              throw new Error('Expected original index to not exist');
+            }, err => {
+              expect(err.result).to.equal(404);
             });
         });
     });
