@@ -8,19 +8,22 @@ const generateOpsIndexName = require('../lib/analytics_logger').generateIndexNam
 
 describe('analytics', () => {
   const testIndexName = `test_index_${cuid()}`;
-  const clientIndexName = `1_${testIndexName}`;
 
   before(() => {
-    return elasticsearchClient.create({
-      index: clientIndexName,
-      type: 'test_type',
-      body: {},
-      refresh: true
+    return specRequest({
+      url: `/1/indexes/${testIndexName}`,
+      method: 'POST',
+      headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
+      payload: {name: 'test data'}
     });
   });
 
   after(() => {
-    return elasticsearchClient.indices.delete({index: clientIndexName});
+    return specRequest({
+      url: `/1/indexes/${testIndexName}`,
+      method: 'DELETE',
+      headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
+    });
   });
 
   it('records analytics for successful operation', () => {

@@ -5,41 +5,43 @@ const cuid = require('cuid');
 const expect = require('chai').expect;
 
 const specRequest = require('./spec_request');
-const elasticsearchClient = require('../lib/elasticsearchClient');
 
 describe('/indexes/{name}/move', () => {
   const testIndexName = `test_index_${cuid()}`;
   const newIndexName = `new_index_${cuid()}`;
-  const existingIndexName = `existing_index_${cuid()}`;
 
-  const clientIndexName = `1_${testIndexName}`;
-  const clientNewIndexName = `1_${newIndexName}`;
-  const clientExistingIndexName = `1_${existingIndexName}`;
+  before(() => {
+    return Promise.all([
+      specRequest({
+        url: `/1/indexes/${testIndexName}/1`,
+        method: 'put',
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
+        payload: {name: 'object 1'}}),
 
-  const existingData = {
-    body: [
-      {index: {_index: clientIndexName, _type: 'object', _id: '1'}},
-      {name: 'object 1'},
-      {index: {_index: clientExistingIndexName, _type: 'object', _id: '1'}},
-      {name: 'existing object 1'},
-      {index: {_index: clientExistingIndexName, _type: 'object', _id: '2'}},
-      {name: 'existing object 2'}
-    ],
-    refresh: true
-  };
-
-  beforeEach(() => {
-    return elasticsearchClient.bulk(existingData);
+      specRequest({
+        url: `/1/indexes/${newIndexName}/1`,
+        method: 'put',
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
+        payload: {name: 'existing object 1'}})
+    ]);
   });
 
-  afterEach(() => {
-    elasticsearchClient.indices.delete({index: clientIndexName, ignore: 404});
-    elasticsearchClient.indices.delete({index: clientNewIndexName, ignore: 404});
-    elasticsearchClient.indices.delete({index: clientExistingIndexName, ignore: 404});
+  after(() => {
+    return Promise.all([
+      specRequest({
+        url: `/1/indexes/${testIndexName}`,
+        method: 'DELETE',
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}}),
+
+      specRequest({
+        url: `/1/indexes/${newIndexName}`,
+        method: 'DELETE',
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}})
+    ]);
   });
 
   describe('post', () => {
-    it.skip('moves an index to a new index', () => {
+    it('moves an index to a new index', () => {
       return specRequest({
         url: `/1/indexes/${testIndexName}/move`,
         method: 'post',
@@ -49,16 +51,23 @@ describe('/indexes/{name}/move', () => {
         .then(response => {
           expect(response.statusCode).to.equal(200);
 
-          return elasticsearchClient.exists({index: clientNewIndexName, type: '_all', id: '1'})
-            .then(result => {
-              expect(result).to.equal(true, 'Document does not exist in moved index');
-              return elasticsearchClient.indices.get({index: clientIndexName});
-            })
-            .then(() => {
-              throw new Error('Expected original index to not exist');
-            }, err => {
-              expect(err.result).to.equal(404);
-            });
+          return specRequest({
+            url: `/1/indexes/${newIndexName}/1`,
+            headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
+          });
+        })
+        .then(response => {
+          expect(response.statusCode).to.equal(200);
+          expect(response.result).to.have.property('name', 'object 1');
+
+          return specRequest({
+            url: `/1/indexes/${testIndexName}/1`,
+            headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
+          });
+        })
+        .then(response => {
+          expect(response.statusCode).to.equal(404);
+          expect(response.result.message).to.equal(`Index ${testIndexName} does not exist`);
         });
     });
   });
