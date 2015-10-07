@@ -34,4 +34,4 @@ deployment:
   prod:
     branch: feature/gcloud_deploy
     commands:
-      - scripts/rolling_deploy.sh search-api app=search-api production
+      - scripts/rolling_deploy.sh search-api app=search-api production ${PWD}
