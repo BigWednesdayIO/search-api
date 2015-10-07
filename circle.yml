@@ -28,7 +28,7 @@ dependencies:
 
 test:
   override:
-    - docker-compose run api grunt ci
+    - docker-compose run api npm run ci
 
 deployment:
   prod:

@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "grunt test"
+    "test": "grunt test",
+    "setup": "npm install -g grunt-cli",
+    "preci": "npm run setup",
+    "ci": "grunt ci"
   },
   "repository": {
     "type": "git",
