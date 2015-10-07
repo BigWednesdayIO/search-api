@@ -31,13 +31,13 @@ docker-compose up api
  - Create the service:
 
  ``` shell
- kubectl create -f ./kubernetes/prd/service.yml --namespace=production
+ kubectl create -f ./kubernetes/prd/service.yml --namespace=development
  ```
 
  - Create the replication controller (note that the image field must refer to the image and tag created above):
 
  ``` shell
- kubectl create -f ./kubernetes/prd/rc.yaml --namespace=production
+ kubectl create -f ./kubernetes/prd/rc.yaml --namespace=development
  ```
 
 ## Update steps
@@ -51,6 +51,6 @@ docker-compose up api
 
  - Peform a rolling update on the replication controller
 ```shell
-PREVIOUS=$(kubectl get rc -l app=search-api | cut -f1 -d " " | tail -1)
-kubectl rolling-update $PREVIOUS search-api-rc-v2 --image=gcr.io/${PROJECT_ID}/search-api:v2
+PREVIOUS=$(kubectl get rc -l app=search-api --namespace=development | cut -f1 -d " " | tail -1)
+kubectl rolling-update $PREVIOUS search-api-rc-v2 --image=gcr.io/${PROJECT_ID}/search-api:v2 --namespace=development
 ```
