@@ -15,8 +15,7 @@ module.exports = function (options) {
           return reject(new Error(`Undefined route ${options.url}`));
         }
 
-        const apiBasePath = swagger.basePath || '';
-        const route = response.request.route.path.replace(new RegExp(`^${apiBasePath}`), '');
+        const route = response.request.route.path;
         const method = response.request.method;
 
         const swaggerPath = swagger.paths[route];

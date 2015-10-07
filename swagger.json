@@ -4,7 +4,6 @@
         "version": "1.0.0",
         "title": "Search API"
     },
-    "basePath": "/1",
     "paths": {
         "/indexes": {
             "get": {

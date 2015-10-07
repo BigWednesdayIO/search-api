@@ -17,7 +17,7 @@ describe('/indexes/{name}/query', () => {
     };
 
     return specRequest({
-      url: `/1/indexes/${testIndexName}/batch`,
+      url: `/indexes/${testIndexName}/batch`,
       method: 'POST',
       headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
       payload: batch
@@ -29,7 +29,7 @@ describe('/indexes/{name}/query', () => {
 
   after(() => {
     return specRequest({
-      url: `/1/indexes/${testIndexName}`,
+      url: `/indexes/${testIndexName}`,
       method: 'DELETE',
       headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
     });
@@ -40,7 +40,7 @@ describe('/indexes/{name}/query', () => {
       const payload = {query: '12345'};
 
       return specRequest({
-        url: `/1/indexes/${testIndexName}/query`,
+        url: `/indexes/${testIndexName}/query`,
         method: 'post',
         headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload
@@ -55,7 +55,7 @@ describe('/indexes/{name}/query', () => {
       const payload = {filters: [{field: 'sku', term: '12345'}]};
 
       return specRequest({
-        url: `/1/indexes/${testIndexName}/query`,
+        url: `/indexes/${testIndexName}/query`,
         method: 'post',
         headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload
@@ -70,7 +70,7 @@ describe('/indexes/{name}/query', () => {
       const payload = {filters: [{field: 'sku', range: {from: 2}}]};
 
       return specRequest({
-        url: `/1/indexes/${testIndexName}/query`,
+        url: `/indexes/${testIndexName}/query`,
         method: 'post',
         headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload
@@ -85,7 +85,7 @@ describe('/indexes/{name}/query', () => {
       const payload = {page: 2, hitsPerPage: 1};
 
       return specRequest({
-        url: `/1/indexes/${testIndexName}/query`,
+        url: `/indexes/${testIndexName}/query`,
         method: 'post',
         headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload
@@ -100,7 +100,7 @@ describe('/indexes/{name}/query', () => {
       const payload = {sort: [{field: 'price'}]};
 
       return specRequest({
-        url: `/1/indexes/${testIndexName}/query`,
+        url: `/indexes/${testIndexName}/query`,
         method: 'post',
         headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload
@@ -116,7 +116,7 @@ describe('/indexes/{name}/query', () => {
       const payload = {sort: [{field: 'price', direction: 'desc'}]};
 
       return specRequest({
-        url: `/1/indexes/${testIndexName}/query`,
+        url: `/indexes/${testIndexName}/query`,
         method: 'post',
         headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload
@@ -130,7 +130,7 @@ describe('/indexes/{name}/query', () => {
 
     it('returns a 404 when the index does not exist', () => {
       return specRequest({
-        url: '/1/indexes/nonexistantindex/query',
+        url: '/indexes/nonexistantindex/query',
         method: 'post',
         headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload: {}
@@ -143,7 +143,7 @@ describe('/indexes/{name}/query', () => {
 
     it('returns a 404 when index wildcard is used', () => {
       return specRequest({
-        url: '/1/indexes/*/query',
+        url: '/indexes/*/query',
         method: 'post',
         headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
         payload: {}
@@ -159,7 +159,7 @@ describe('/indexes/{name}/query', () => {
         const payload = {query: {}};
 
         return specRequest({
-          url: '/1/indexes/test-index/query',
+          url: '/indexes/test-index/query',
           method: 'post',
           headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
@@ -174,7 +174,7 @@ describe('/indexes/{name}/query', () => {
         const payload = {filters: {}};
 
         return specRequest({
-          url: '/1/indexes/test-index/query',
+          url: '/indexes/test-index/query',
           method: 'post',
           headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
@@ -189,7 +189,7 @@ describe('/indexes/{name}/query', () => {
         const payload = {filters: [{term: '12345'}]};
 
         return specRequest({
-          url: '/1/indexes/test-index/query',
+          url: '/indexes/test-index/query',
           method: 'post',
           headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
@@ -204,7 +204,7 @@ describe('/indexes/{name}/query', () => {
         const payload = {filters: [{field: 'sku'}]};
 
         return specRequest({
-          url: '/1/indexes/test-index/query',
+          url: '/indexes/test-index/query',
           method: 'post',
           headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
@@ -219,7 +219,7 @@ describe('/indexes/{name}/query', () => {
         const payload = {filters: [{field: 'sku', term: '12345', range: {from: 1}}]};
 
         return specRequest({
-          url: '/1/indexes/test-index/query',
+          url: '/indexes/test-index/query',
           method: 'post',
           headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
@@ -234,7 +234,7 @@ describe('/indexes/{name}/query', () => {
         const payload = {filters: [{field: 'sku', range: {}}]};
 
         return specRequest({
-          url: '/1/indexes/test-index/query',
+          url: '/indexes/test-index/query',
           method: 'post',
           headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
@@ -249,7 +249,7 @@ describe('/indexes/{name}/query', () => {
         const payload = {page: 1.5};
 
         return specRequest({
-          url: '/1/indexes/test-index/query',
+          url: '/indexes/test-index/query',
           method: 'post',
           headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
@@ -264,7 +264,7 @@ describe('/indexes/{name}/query', () => {
         const payload = {hitsPerPage: 25.5};
 
         return specRequest({
-          url: '/1/indexes/test-index/query',
+          url: '/indexes/test-index/query',
           method: 'post',
           headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
@@ -279,7 +279,7 @@ describe('/indexes/{name}/query', () => {
         const payload = {sort: 'sku'};
 
         return specRequest({
-          url: '/1/indexes/test-index/query',
+          url: '/indexes/test-index/query',
           method: 'post',
           headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
@@ -294,7 +294,7 @@ describe('/indexes/{name}/query', () => {
         const payload = {sort: [{}]};
 
         return specRequest({
-          url: '/1/indexes/test-index/query',
+          url: '/indexes/test-index/query',
           method: 'post',
           headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload
@@ -309,7 +309,7 @@ describe('/indexes/{name}/query', () => {
         const payload = {sort: [{field: 'sku', direction: 'upwards'}]};
 
         return specRequest({
-          url: '/1/indexes/test-index/query',
+          url: '/indexes/test-index/query',
           method: 'post',
           headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
           payload

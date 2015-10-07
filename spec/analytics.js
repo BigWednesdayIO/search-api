@@ -11,7 +11,7 @@ describe('analytics', () => {
 
   before(() => {
     return specRequest({
-      url: `/1/indexes/${testIndexName}`,
+      url: `/indexes/${testIndexName}`,
       method: 'POST',
       headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
       payload: {name: 'test data'}
@@ -20,7 +20,7 @@ describe('analytics', () => {
 
   after(() => {
     return specRequest({
-      url: `/1/indexes/${testIndexName}`,
+      url: `/indexes/${testIndexName}`,
       method: 'DELETE',
       headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
     });
@@ -31,7 +31,7 @@ describe('analytics', () => {
     let opsRecordId;
 
     return specRequest({
-      url: `/1/indexes/${testIndexName}/query`,
+      url: `/indexes/${testIndexName}/query`,
       method: 'post',
       headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
       payload: {}
@@ -64,7 +64,7 @@ describe('analytics', () => {
     let opsRecordId;
 
     return specRequest({
-      url: '/1/indexes/some-index/query',
+      url: '/indexes/some-index/query',
       method: 'post',
       headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
       payload: {}
