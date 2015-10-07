@@ -7,61 +7,92 @@ const expect = require('chai').expect;
 const elasticsearchClient = require('../../lib/elasticsearchClient');
 
 const SearchIndex = require('../../lib/search_index');
-let sourceIndex;
-let newDestinationIndex;
-let existingDestinationIndex;
 
 describe('Search Index', () => {
   describe('move', () => {
-    let updateAliasesStub;
-    let getAliasStub;
+    let sandbox;
     let updateAliasesArgs;
+    let deleteIndexStub;
+    let sourceIndex;
+    let existingDestinationIndex;
+    let newDestinationIndex;
 
-    before(() => {
-      updateAliasesStub = sinon.stub(elasticsearchClient.indices, 'updateAliases', args => {
+    beforeEach(() => {
+      sandbox = sinon.sandbox.create();
+
+      sandbox.stub(elasticsearchClient.indices, 'updateAliases', args => {
         updateAliasesArgs = args;
         return Promise.resolve({});
       });
 
-      getAliasStub = sinon.stub(elasticsearchClient.indices, 'getAlias', () => {
-        return Promise.resolve({existingindex: {}});
+      sandbox.stub(elasticsearchClient.indices, 'getAlias', () => {
+        return Promise.resolve({
+          '1_existingindex': {aliases: {existingindex: {}}},
+          '1_originalindex': {aliases: {originalindex: {}}}
+        });
       });
 
-      sourceIndex = new SearchIndex('movedindex');
-      newDestinationIndex = new SearchIndex('myindex');
+      deleteIndexStub = sandbox.stub(elasticsearchClient.indices, 'delete', () => {
+        return Promise.resolve({});
+      });
+
+      sourceIndex = new SearchIndex('originalindex');
       existingDestinationIndex = new SearchIndex('existingindex');
+      newDestinationIndex = new SearchIndex('newindex');
     });
 
-    after(() => {
-      updateAliasesStub.restore();
-      getAliasStub.restore();
+    afterEach(() => {
+      sandbox.restore();
     });
 
-    it('assigns the destination\'s name as an alias to the source index', () => {
-      return sourceIndex.move(newDestinationIndex)
-        .then(() => {
-          const addAction = updateAliasesArgs.body.actions.find(action => {
-            return action.hasOwnProperty('add');
-          });
+    describe('when the destination index exists', () => {
+      beforeEach(() => {
+        return sourceIndex.move(existingDestinationIndex);
+      });
 
-          expect(addAction).to.exist;
-          expect(addAction.add.index).to.equal('movedindex');
-          expect(addAction.add.alias).to.equal('myindex');
-        });
+      it('removes the destination alias from the destination index first', () => {
+        const removeAction = updateAliasesArgs.body.actions[0];
+        expect(removeAction.remove.index).to.equal('1_existingindex');
+        expect(removeAction.remove.alias).to.equal('existingindex');
+      });
+
+      it('reassigns the destination alias to the source index second', () => {
+        const addAction = updateAliasesArgs.body.actions[1];
+        expect(addAction.add.index).to.equal('1_originalindex');
+        expect(addAction.add.alias).to.equal('existingindex');
+      });
+
+      it('removes the source alias from the source index third', () => {
+        const addAction = updateAliasesArgs.body.actions[2];
+        expect(addAction.remove.index).to.equal('1_originalindex');
+        expect(addAction.remove.alias).to.equal('originalindex');
+      });
+
+      it('removes the old destination index', () => {
+        sinon.assert.calledOnce(deleteIndexStub);
+        sinon.assert.calledWith(deleteIndexStub, {index: '1_existingindex'});
+      });
     });
 
-    describe('when the destination exists', () => {
-      it('removes the alias from the destination', () => {
-        return sourceIndex.move(existingDestinationIndex)
-          .then(() => {
-            const removeAction = updateAliasesArgs.body.actions.find(action => {
-              return action.hasOwnProperty('remove');
-            });
+    describe('when the destination index does not exist', () => {
+      beforeEach(() => {
+        return sourceIndex.move(newDestinationIndex);
+      });
 
-            expect(removeAction).to.exist;
-            expect(removeAction.remove.index).to.equal('existingindex');
-            expect(removeAction.remove.alias).to.equal('existingindex');
-          });
+      it('sets the destination alias on the source index first', () => {
+        const addAction = updateAliasesArgs.body.actions[0];
+        expect(addAction.add.index).to.equal('1_originalindex');
+        expect(addAction.add.alias).to.equal('newindex');
+      });
+
+      it('removes the source alias from the source index second', () => {
+        const addAction = updateAliasesArgs.body.actions[1];
+        expect(addAction.remove.index).to.equal('1_originalindex');
+        expect(addAction.remove.alias).to.equal('originalindex');
+      });
+
+      it('does not remove any indexes', () => {
+        sinon.assert.notCalled(deleteIndexStub);
       });
     });
   });
