@@ -1,43 +1,31 @@
 'use strict';
 
-const elasticsearchClient = require('../../lib/elasticsearchClient');
-
 const _ = require('lodash');
 const sinon = require('sinon');
-
 const expect = require('chai').expect;
+
+const elasticsearchClient = require('../../lib/elasticsearchClient');
 
 const testNewIndexName = 'my-index-name';
 const testExistingIndexName = 'existing-index-name';
-
 const testObject = {name: 'an object', field1: 'value', field2: 0};
 
 describe('Search Index', () => {
   describe('insertObject', () => {
+    let sandbox;
     let indexStub;
-    let getAliasStub;
     let createIndexStub;
     let putAliasStub;
-    let indexedObject;
     let SearchIndex;
-    let indexName;
-    let clock;
-    const testDate = new Date();
-    const indexNameDateString = `${testDate.getFullYear()}.${testDate.getMonth() + 1}.${testDate.getDate()}.${testDate.getMilliseconds()}`;
-
-    before(() => {
-      clock = sinon.useFakeTimers(testDate.getTime());
-    });
 
     beforeEach(() => {
-      indexStub = sinon.stub(elasticsearchClient, 'index', args => {
-        indexedObject = args.body;
-        indexName = args.index;
+      sandbox = sinon.sandbox.create();
 
+      indexStub = sandbox.stub(elasticsearchClient, 'index', () => {
         return Promise.resolve({_id: '123'});
       });
 
-      getAliasStub = sinon.stub(elasticsearchClient.indices, 'getAlias', args => {
+      sandbox.stub(elasticsearchClient.indices, 'getAlias', args => {
         if (args.name === testExistingIndexName) {
           return Promise.resolve({
             anIndex: {
@@ -59,11 +47,11 @@ describe('Search Index', () => {
         return Promise.reject(err);
       });
 
-      createIndexStub = sinon.stub(elasticsearchClient.indices, 'create', () => {
+      createIndexStub = sandbox.stub(elasticsearchClient.indices, 'create', () => {
         return Promise.resolve({});
       });
 
-      putAliasStub = sinon.stub(elasticsearchClient.indices, 'putAlias', () => {
+      putAliasStub = sandbox.stub(elasticsearchClient.indices, 'putAlias', () => {
         return Promise.resolve({});
       });
 
@@ -71,22 +59,18 @@ describe('Search Index', () => {
     });
 
     afterEach(() => {
-      indexStub.restore();
-      getAliasStub.restore();
-      createIndexStub.restore();
-      putAliasStub.restore();
-      indexedObject = undefined;
-      indexName = undefined;
-    });
-
-    after(() => {
-      clock.restore();
+      sandbox.restore();
     });
 
     describe('when the index does not exist', () => {
-      const expectedUniqueIndexName = `${testNewIndexName}_${indexNameDateString}`;
+      let expectedUniqueIndexName;
 
       beforeEach(() => {
+        const testDate = new Date();
+        sandbox.useFakeTimers(testDate.getTime());
+
+        expectedUniqueIndexName = `${testNewIndexName}_${testDate.getFullYear()}.${testDate.getMonth() + 1}.${testDate.getDate()}.${testDate.getMilliseconds()}`;
+
         const index = new SearchIndex(testNewIndexName);
         return index.insertObject(testObject);
       });
@@ -103,7 +87,7 @@ describe('Search Index', () => {
     });
 
     describe('when the index exists', () => {
-      beforeEach(() => {
+      before(() => {
         const index = new SearchIndex(testExistingIndexName);
         return index.insertObject(testObject);
       });
@@ -125,11 +109,13 @@ describe('Search Index', () => {
       });
 
       it('adds the object to elasticsearch', () => {
-        expect(indexedObject).to.be.equal(testObject);
+        sinon.assert.calledOnce(indexStub);
+        sinon.assert.calledWith(indexStub, sinon.match({body: testObject}));
       });
 
       it('writes to the named index', () => {
-        expect(indexName).to.be.equal(testNewIndexName);
+        sinon.assert.calledOnce(indexStub);
+        sinon.assert.calledWith(indexStub, sinon.match({index: testNewIndexName}));
       });
 
       it('returns the fields from the indexed object', () => {
