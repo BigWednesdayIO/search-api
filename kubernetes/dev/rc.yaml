@@ -16,5 +16,8 @@ spec:
       containers:
       - name: api
         image: "gcr.io/first-footing-108508/search-api"
+        env:
+        - name: ELASTICSEARCH_HOST
+          value: https://87a4e5f9c57a4bb50454348998c03dff.eu-west-1.aws.found.io:9243
         ports:
         - containerPort: 8080
