@@ -36,10 +36,6 @@ describe('Search Index', () => {
           });
         }
 
-        if (args.ignore === 404) {
-          return Promise.resolve({});
-        }
-
         const err = new Error();
         err.error = `alias [${args.name}] missing`;
         err.status = 404;
@@ -87,7 +83,7 @@ describe('Search Index', () => {
     });
 
     describe('when the index exists', () => {
-      before(() => {
+      beforeEach(() => {
         const index = new SearchIndex(testExistingIndexName);
         return index.insertObject(testObject);
       });

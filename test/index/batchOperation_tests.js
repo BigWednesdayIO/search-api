@@ -37,10 +37,6 @@ describe('Search Index', () => {
           });
         }
 
-        if (args.ignore === 404) {
-          return Promise.resolve({});
-        }
-
         const err = new Error();
         err.error = `alias [${args.name}] missing`;
         err.status = 404;
