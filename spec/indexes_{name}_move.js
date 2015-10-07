@@ -39,7 +39,7 @@ describe('/indexes/{name}/move', () => {
   });
 
   describe('post', () => {
-    it('moves an index to a new index', () => {
+    it.skip('moves an index to a new index', () => {
       return specRequest({
         url: `/1/indexes/${testIndexName}/move`,
         method: 'post',
