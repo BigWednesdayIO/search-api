@@ -28,7 +28,7 @@ module.exports = function (grunt) {
     },
     shell: {
       validateSwagger: {
-        command: 'swagger-tools validate swagger.json'
+        command: 'node_modules/swagger-tools/bin/swagger-tools validate swagger.json'
       }
     },
     watch: {
