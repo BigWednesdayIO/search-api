@@ -13,4 +13,4 @@ spec:
   selector:
     app: search-api
     env: development
-  type: LoadBalancer
+  type: NodePort
