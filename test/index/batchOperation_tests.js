@@ -1,17 +1,101 @@
 'use strict';
 
 const sinon = require('sinon');
+const expect = require('chai').expect;
 
 const elasticsearchClient = require('../../lib/elasticsearchClient');
 
-const expect = require('chai').expect;
+const testNewIndexName = 'my-index-name';
+const testExistingIndexName = 'existing-index-name';
+const operations = [
+  {action: 'create', body: {name: 'an object'}},
+  {action: 'create', body: {name: 'another object'}}
+];
 
 describe('Search Index', () => {
   describe('batchOperation', () => {
-    const testIndexName = 'an-index';
-
+    let sandbox;
+    let createIndexStub;
+    let putAliasStub;
     let bulkStub;
+    let SearchIndex;
     let batchResult;
+
+    beforeEach(() => {
+      sandbox = sinon.sandbox.create();
+
+      sandbox.stub(elasticsearchClient.indices, 'getAlias', args => {
+        if (args.name === testExistingIndexName) {
+          return Promise.resolve({
+            anIndex: {
+              aliases: {
+                [testExistingIndexName]: {}
+              }
+            }
+          });
+        }
+
+        if (args.ignore === 404) {
+          return Promise.resolve({});
+        }
+
+        const err = new Error();
+        err.error = `alias [${args.name}] missing`;
+        err.status = 404;
+
+        return Promise.reject(err);
+      });
+
+      createIndexStub = sandbox.stub(elasticsearchClient.indices, 'create', () => {
+        return Promise.resolve({});
+      });
+
+      putAliasStub = sandbox.stub(elasticsearchClient.indices, 'putAlias', () => {
+        return Promise.resolve({});
+      });
+
+      SearchIndex = require('../../lib/search_index');
+    });
+
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    describe('when the index does not exist', () => {
+      let expectedUniqueIndexName;
+
+      beforeEach(() => {
+        const testDate = new Date();
+        sinon.useFakeTimers(testDate.getTime());
+
+        expectedUniqueIndexName = `${testNewIndexName}_${testDate.getFullYear()}.${testDate.getMonth() + 1}.${testDate.getDate()}.${testDate.getMilliseconds()}`;
+
+        const index = new SearchIndex(testNewIndexName);
+        return index.batchOperation(operations);
+      });
+
+      it('creates the index with a unique name', () => {
+        sinon.assert.calledOnce(createIndexStub);
+        sinon.assert.calledWith(createIndexStub, {index: expectedUniqueIndexName});
+      });
+
+      it('sets the index name as an alias', () => {
+        sinon.assert.calledOnce(putAliasStub);
+        sinon.assert.calledWith(putAliasStub, {index: expectedUniqueIndexName, name: testNewIndexName});
+      });
+    });
+
+    describe('when the index exists', () => {
+      beforeEach(() => {
+        const index = new SearchIndex(testExistingIndexName);
+        return index.batchOperation(operations);
+      });
+
+      it('does not create a new index', () => {
+        sinon.assert.notCalled(createIndexStub);
+        sinon.assert.notCalled(putAliasStub);
+      });
+    });
 
     describe('create', () => {
       const batchOperations = [
@@ -35,7 +119,7 @@ describe('Search Index', () => {
         });
 
         const SearchIndex = require('../../lib/search_index');
-        const index = new SearchIndex(testIndexName);
+        const index = new SearchIndex(testNewIndexName);
 
         return index.batchOperation(batchOperations)
           .then(result => {
@@ -50,9 +134,9 @@ describe('Search Index', () => {
       it('makes an index request for each created object', () => {
         const expectedBulkArgs = {
           body: [{
-            index: {_index: testIndexName, _type: 'object'}
+            index: {_index: testNewIndexName, _type: 'object'}
           }, batchOperations[0].body, {
-            index: {_index: testIndexName, _type: 'object'}
+            index: {_index: testNewIndexName, _type: 'object'}
           }, batchOperations[1].body]
         };
 
@@ -87,7 +171,7 @@ describe('Search Index', () => {
         });
 
         const SearchIndex = require('../../lib/search_index');
-        const index = new SearchIndex(testIndexName);
+        const index = new SearchIndex(testNewIndexName);
 
         return index.batchOperation(batchOperations)
           .then(result => {
@@ -102,9 +186,9 @@ describe('Search Index', () => {
       it('makes an index request for each upserted object', () => {
         const expectedBulkArgs = {
           body: [{
-            index: {_index: testIndexName, _type: 'object', _id: ids[0]}
+            index: {_index: testNewIndexName, _type: 'object', _id: ids[0]}
           }, batchOperations[0].body, {
-            index: {_index: testIndexName, _type: 'object', _id: ids[1]}
+            index: {_index: testNewIndexName, _type: 'object', _id: ids[1]}
           }, batchOperations[1].body]
         };
 
@@ -139,7 +223,7 @@ describe('Search Index', () => {
         });
 
         const SearchIndex = require('../../lib/search_index');
-        const index = new SearchIndex(testIndexName);
+        const index = new SearchIndex(testNewIndexName);
 
         return index.batchOperation(batchOperations)
           .then(result => {
@@ -154,9 +238,9 @@ describe('Search Index', () => {
       it('makes a delete request for each deleted object', () => {
         const expectedBulkArgs = {
           body: [{
-            'delete': {_index: testIndexName, _type: 'object', _id: ids[0]}
+            'delete': {_index: testNewIndexName, _type: 'object', _id: ids[0]}
           }, {
-            'delete': {_index: testIndexName, _type: 'object', _id: ids[1]}
+            'delete': {_index: testNewIndexName, _type: 'object', _id: ids[1]}
           }]
         };
 
