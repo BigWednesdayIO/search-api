@@ -1,4 +1,4 @@
-FROM node:4.1.1
+FROM node:4.1.2
 
 ADD . /src
 
