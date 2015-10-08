@@ -13,7 +13,8 @@ describe('endpoint authentication', () => {
     {routeName: '/1/indexes/{name}/{objectID}', method: 'DELETE', url: '/1/indexes/some-index/1}'},
     {routeName: '/1/indexes/{name}/{objectID}', method: 'PUT', url: '/1/indexes/some-index/1'},
     {routeName: '/1/indexes/{name}/batch', method: 'POST', url: '/1/indexes/some-index/batch'},
-    {routeName: '/1/indexes/{name}/query', method: 'POST', url: '/1/indexes/some-index/batch'}
+    {routeName: '/1/indexes/{name}/query', method: 'POST', url: '/1/indexes/some-index/query'},
+    {routeName: '/1/indexes/{name}/move', method: 'POST', url: '/1/indexes/some-index/move'}
   ];
 
   tests.forEach(test => {
