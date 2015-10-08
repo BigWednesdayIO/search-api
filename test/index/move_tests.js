@@ -25,7 +25,18 @@ describe('Search Index', () => {
         return Promise.resolve({});
       });
 
-      sandbox.stub(elasticsearchClient.indices, 'getAlias', () => {
+      sandbox.stub(elasticsearchClient.indices, 'getAlias', args => {
+        if (args.name.indexOf('nonexistantsource') >= 0 && args.name.indexOf('newindex') >= 0) {
+          const err = new Error('alias [nonexistantsource, newindex] missing');
+          err.status = 404;
+
+          return Promise.reject(err);
+        }
+
+        if (args.name.indexOf('nonexistantsource') >= 0 && args.name.indexOf('originalindex') >= 0) {
+          return Promise.resolve({'1_originalindex': {aliases: {originalindex: {}}}});
+        }
+
         return Promise.resolve({
           '1_existingindex': {aliases: {existingindex: {}}},
           '1_originalindex': {aliases: {originalindex: {}}}
@@ -93,6 +104,30 @@ describe('Search Index', () => {
 
       it('does not remove any indexes', () => {
         sinon.assert.notCalled(deleteIndexStub);
+      });
+    });
+
+    describe('errors', () => {
+      it('returns index not found error when source does not exist, and neither does destination', () => {
+        const nonExistantSource = new SearchIndex('nonexistantsource');
+
+        return nonExistantSource.move(newDestinationIndex)
+          .then(() => {
+            throw new Error('Expected index not found error');
+          }, err => {
+            expect(err).to.have.property('indexFound', false);
+          });
+      });
+
+      it('returns index not found error when source does not exist, but destination does', () => {
+        const nonExistantSource = new SearchIndex('nonexistantsource');
+
+        return nonExistantSource.move(existingDestinationIndex)
+          .then(() => {
+            throw new Error('Expected index not found error');
+          }, err => {
+            expect(err).to.have.property('indexFound', false);
+          });
       });
     });
   });

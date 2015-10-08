@@ -70,5 +70,18 @@ describe('/indexes/{name}/move', () => {
           expect(response.result.message).to.equal(`Index ${testIndexName} does not exist`);
         });
     });
+
+    it('returns a 404 when the index to move does not exist', () => {
+      return specRequest({
+        url: `/1/indexes/non-existant-index/move`,
+        method: 'post',
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
+        payload: {destination: newIndexName}
+      })
+      .then(response => {
+        expect(response.statusCode).to.equal(404);
+        expect(response.result.message).to.equal('Index non-existant-index does not exist');
+      });
+    });
   });
 });
