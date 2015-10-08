@@ -34,7 +34,8 @@ describe('endpoint authentication', () => {
       {routeName: '/1/indexes/{name}/settings', method: 'GET', url: '/1/indexes/some-index/settings', payload: {}},
       {routeName: '/1/indexes/{name}/{objectID}', method: 'DELETE', url: '/1/indexes/some-index/1', payload: {}},
       {routeName: '/1/indexes/{name}/{objectID}', method: 'PUT', url: '/1/indexes/some-index/1', payload: {}},
-      {routeName: '/1/indexes/{name}/batch', method: 'POST', url: '/1/indexes/some-index/batch', payload: {requests: []}}
+      {routeName: '/1/indexes/{name}/batch', method: 'POST', url: '/1/indexes/some-index/batch', payload: {requests: []}},
+      {routeName: '/1/indexes/{name}/move', method: 'POST', url: '/1/indexes/some-index/move', payload: {destination: '123'}}
     ];
 
     tests.forEach(test => {
