@@ -1,33 +1,38 @@
 'use strict';
 
 const cuid = require('cuid');
+const expect = require('chai').expect;
 
 const elasticsearchClient = require('../lib/elasticsearchClient');
 const specRequest = require('./spec_request');
 
-const expect = require('chai').expect;
-
 describe('/indexes/{name}/query', () => {
   const testIndexName = `test_index_${cuid()}`;
-  const clientIndexName = `1_${testIndexName}`;
-  const testIndexType = 'test_type';
   const document1 = {sku: '12345', price: 1};
   const document2 = {sku: '98765', price: 5};
 
   before(() => {
-    return elasticsearchClient.bulk({
-      refresh: true,
-      body: [
-        {index: {_index: clientIndexName, _type: testIndexType, _id: 1}},
-        document1,
-        {index: {_index: clientIndexName, _type: testIndexType, _id: 2}},
-        document2
-      ]
+    const batch = {
+      requests: [{action: 'upsert', body: document1, objectID: '1'}, {action: 'upsert', body: document2, objectID: '2'}]
+    };
+
+    return specRequest({
+      url: `/1/indexes/${testIndexName}/batch`,
+      method: 'POST',
+      headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
+      payload: batch
+    })
+    .then(() => {
+      return elasticsearchClient.indices.refresh();
     });
   });
 
   after(() => {
-    return elasticsearchClient.indices.delete({index: clientIndexName});
+    return specRequest({
+      url: `/1/indexes/${testIndexName}`,
+      method: 'DELETE',
+      headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
+    });
   });
 
   describe('post', () => {
