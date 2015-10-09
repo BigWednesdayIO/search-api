@@ -14,7 +14,8 @@
       "metadata": {
         "labels": {
           "app": "search-api",
-          "env": "{{NAMESPACE}}"
+          "env": "{{NAMESPACE}}",
+          "deployment": "{{DEPLOYMENT_ID}}"
         }
       },
       "spec": {
