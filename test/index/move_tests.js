@@ -26,20 +26,20 @@ describe('Search Index', () => {
       });
 
       sandbox.stub(elasticsearchClient.indices, 'getAlias', args => {
-        if (args.name.indexOf('nonexistantsource') >= 0 && args.name.indexOf('newindex') >= 0) {
-          const err = new Error('alias [nonexistantsource, newindex] missing');
+        if (args.name.indexOf('nonexistantsource') >= 0 && args.name.indexOf('newdestinationindex') >= 0) {
+          const err = new Error('alias [nonexistantsource, newdestinationindex] missing');
           err.status = 404;
 
           return Promise.reject(err);
         }
 
-        if (args.name.indexOf('nonexistantsource') >= 0 && args.name.indexOf('originalindex') >= 0) {
-          return Promise.resolve({'1_originalindex': {aliases: {originalindex: {}}}});
+        if (args.name.indexOf('nonexistantsource') >= 0 && args.name.indexOf('sourceindex') >= 0) {
+          return Promise.resolve({'1_sourceindex': {aliases: {sourceindex: {}}}});
         }
 
         return Promise.resolve({
-          '1_existingindex': {aliases: {existingindex: {}}},
-          '1_originalindex': {aliases: {originalindex: {}}}
+          '1_existingdestinationindex': {aliases: {existingdestinationindex: {}}},
+          '1_sourceindex': {aliases: {sourceindex: {}}}
         });
       });
 
@@ -47,9 +47,9 @@ describe('Search Index', () => {
         return Promise.resolve({});
       });
 
-      sourceIndex = new SearchIndex('originalindex');
-      existingDestinationIndex = new SearchIndex('existingindex');
-      newDestinationIndex = new SearchIndex('newindex');
+      sourceIndex = new SearchIndex('sourceindex');
+      existingDestinationIndex = new SearchIndex('existingdestinationindex');
+      newDestinationIndex = new SearchIndex('newdestinationindex');
     });
 
     afterEach(() => {
@@ -63,25 +63,25 @@ describe('Search Index', () => {
 
       it('removes the destination alias from the destination index first', () => {
         const removeAction = updateAliasesArgs.body.actions[0];
-        expect(removeAction.remove.index).to.equal('1_existingindex');
-        expect(removeAction.remove.alias).to.equal('existingindex');
+        expect(removeAction.remove.index).to.equal('1_existingdestinationindex');
+        expect(removeAction.remove.alias).to.equal('existingdestinationindex');
       });
 
       it('reassigns the destination alias to the source index second', () => {
         const addAction = updateAliasesArgs.body.actions[1];
-        expect(addAction.add.index).to.equal('1_originalindex');
-        expect(addAction.add.alias).to.equal('existingindex');
+        expect(addAction.add.index).to.equal('1_sourceindex');
+        expect(addAction.add.alias).to.equal('existingdestinationindex');
       });
 
       it('removes the source alias from the source index third', () => {
         const addAction = updateAliasesArgs.body.actions[2];
-        expect(addAction.remove.index).to.equal('1_originalindex');
-        expect(addAction.remove.alias).to.equal('originalindex');
+        expect(addAction.remove.index).to.equal('1_sourceindex');
+        expect(addAction.remove.alias).to.equal('sourceindex');
       });
 
       it('removes the old destination index', () => {
         sinon.assert.calledOnce(deleteIndexStub);
-        sinon.assert.calledWith(deleteIndexStub, {index: '1_existingindex'});
+        sinon.assert.calledWith(deleteIndexStub, {index: '1_existingdestinationindex'});
       });
     });
 
@@ -92,14 +92,14 @@ describe('Search Index', () => {
 
       it('sets the destination alias on the source index first', () => {
         const addAction = updateAliasesArgs.body.actions[0];
-        expect(addAction.add.index).to.equal('1_originalindex');
-        expect(addAction.add.alias).to.equal('newindex');
+        expect(addAction.add.index).to.equal('1_sourceindex');
+        expect(addAction.add.alias).to.equal('newdestinationindex');
       });
 
       it('removes the source alias from the source index second', () => {
         const addAction = updateAliasesArgs.body.actions[1];
-        expect(addAction.remove.index).to.equal('1_originalindex');
-        expect(addAction.remove.alias).to.equal('originalindex');
+        expect(addAction.remove.index).to.equal('1_sourceindex');
+        expect(addAction.remove.alias).to.equal('sourceindex');
       });
 
       it('does not remove any indexes', () => {
