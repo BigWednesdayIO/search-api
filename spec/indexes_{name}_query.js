@@ -8,12 +8,17 @@ const specRequest = require('./spec_request');
 
 describe('/indexes/{name}/query', () => {
   const testIndexName = `test_index_${cuid()}`;
-  const document1 = {sku: '12345', price: 1};
-  const document2 = {sku: '98765', price: 5};
+  const document1 = {sku: '12345', price: 1, name: 'blue dress', colour: 'blue', colour_group: 'blue'};
+  const document2 = {sku: '98765', price: 5, name: 'navy blue dress', colour: 'navy', colour_group: 'blue'};
+  const document3 = {sku: 'abcdef', price: 4, name: 'turquoise dress', colour: 'turquoise', colour_group: 'blue'};
 
-  before(() => {
+  const reindexTestDocuments = () => {
     const batch = {
-      requests: [{action: 'upsert', body: document1, objectID: '1'}, {action: 'upsert', body: document2, objectID: '2'}]
+      requests: [
+        {action: 'upsert', body: document1, objectID: '1'},
+        {action: 'upsert', body: document2, objectID: '2'},
+        {action: 'upsert', body: document3, objectID: '3'}
+      ]
     };
 
     return specRequest({
@@ -25,6 +30,10 @@ describe('/indexes/{name}/query', () => {
     .then(() => {
       return elasticsearchClient.indices.refresh();
     });
+  };
+
+  before(() => {
+    return reindexTestDocuments();
   });
 
   after(() => {
@@ -76,7 +85,7 @@ describe('/indexes/{name}/query', () => {
         payload
       })
         .then(response => {
-          expect(response.result.hits).to.be.deep.equal([document2]);
+          expect(response.result.hits).to.be.deep.equal([document2, document3]);
           expect(response.statusCode).to.equal(200);
         });
     });
@@ -107,7 +116,8 @@ describe('/indexes/{name}/query', () => {
       })
         .then(response => {
           expect(response.result.hits[0].price).to.equal(1);
-          expect(response.result.hits[1].price).to.equal(5);
+          expect(response.result.hits[1].price).to.equal(4);
+          expect(response.result.hits[2].price).to.equal(5);
           expect(response.statusCode).to.equal(200);
         });
     });
@@ -123,7 +133,8 @@ describe('/indexes/{name}/query', () => {
       })
         .then(response => {
           expect(response.result.hits[0].price).to.equal(5);
-          expect(response.result.hits[1].price).to.equal(1);
+          expect(response.result.hits[1].price).to.equal(4);
+          expect(response.result.hits[2].price).to.equal(1);
           expect(response.statusCode).to.equal(200);
         });
     });
@@ -152,6 +163,45 @@ describe('/indexes/{name}/query', () => {
           expect(response.statusCode).to.equal(404);
           expect(response.result.message).to.equal('Index * does not exist');
         });
+    });
+
+    describe.skip('searchable fields', () => {
+      it('returns results that match any field when searchable_fields setting is not set', () => {
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/query`,
+          method: 'post',
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
+          payload: {query: 'blue'}
+        })
+        .then(response => {
+          expect(response.result.hits).to.be.deep.equal([document1, document2, document3]);
+          expect(response.statusCode).to.equal(200);
+        });
+      });
+
+      it('returns results that match only fields from searchable_fields setting', () => {
+        return specRequest({
+          url: `/1/indexes/${testIndexName}/settings`,
+          method: 'post',
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
+          payload: {searchable_fields: ['name', 'colour']}
+        })
+        .then(() => {
+          return reindexTestDocuments();
+        })
+        .then(() => {
+          return specRequest({
+            url: `/1/indexes/${testIndexName}/query`,
+            method: 'post',
+            headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
+            payload: {query: 'blue'}
+          });
+        })
+        .then(response => {
+          expect(response.result.hits).to.be.deep.equal([document1, document2]);
+          expect(response.statusCode).to.equal(200);
+        });
+      });
     });
 
     describe('validation', () => {
