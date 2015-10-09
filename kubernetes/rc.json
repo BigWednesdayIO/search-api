@@ -1,0 +1,41 @@
+{
+  "apiVersion": "v1",
+  "kind": "ReplicationController",
+  "metadata": {
+    "name": "search-api-rc-{{TAG}}",
+    "labels": {
+      "app": "search-api",
+      "env": "{{NAMESPACE}}"
+    }
+  },
+  "spec": {
+    "replicas": {{REPLICAS}},
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "search-api",
+          "env": "{{NAMESPACE}}"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "name": "api",
+            "image": "{{QUALIFIED_IMAGE_NAME}}",
+            "env": [
+              {
+                "name": "ELASTICSEARCH_HOST",
+                "value": "{{ELASTICSEARCH_HOST}}"
+              }
+            ],
+            "ports": [
+              {
+                "containerPort": 8080
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
