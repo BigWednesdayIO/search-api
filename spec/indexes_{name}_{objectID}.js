@@ -10,35 +10,40 @@ const expect = require('chai').expect;
 
 describe('/indexes/{name}/{objectID}', () => {
   const testIndexName = `test_index_${cuid()}`;
-  const clientIndexName = `1_${testIndexName}`;
   const testObject = {name: 'an object', field1: 'some value', field2: false};
   let indexedObject;
 
   before(() => {
-    return elasticsearchClient.index({
-      index: clientIndexName,
-      type: 'object',
-      body: testObject,
-      refresh: true
+    return specRequest({
+      url: `/1/indexes/${testIndexName}`,
+      method: 'POST',
+      headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
+      payload: testObject
     })
-    .then(o => {
-      indexedObject = o;
+    .then(response => {
+      indexedObject = response.result;
+
+      return elasticsearchClient.indices.refresh();
     });
   });
 
   after(() => {
-    return elasticsearchClient.indices.delete({index: clientIndexName});
+    return specRequest({
+      url: `/1/indexes/${testIndexName}`,
+      method: 'DELETE',
+      headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
+    });
   });
 
   describe('get', () => {
     it('indexed objects can be retrieved', () => {
       return specRequest({
-        url: `/1/indexes/${testIndexName}/${indexedObject._id}`,
+        url: `/1/indexes/${testIndexName}/${indexedObject.objectID}`,
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(200);
-          expect(response.result.objectID).to.equal(indexedObject._id);
+          expect(response.result.objectID).to.equal(indexedObject.objectID);
 
           _.forOwn(testObject, (value, property) => {
             expect(response.result).to.have.property(property, value);
@@ -80,39 +85,38 @@ describe('/indexes/{name}/{objectID}', () => {
         .then(response => {
           expect(response.statusCode).to.equal(201);
           expect(response.headers.location).to.equal(`/1/indexes/${testIndexName}/12345`);
-        })
-        .then(() => {
-          // TODO: replace once async indexing is in place
-          return elasticsearchClient.get({
-            index: clientIndexName,
-            type: 'object',
-            id: '12345'
-          }).then(o => {
-            expect(o._source).to.be.deep.equal(testObject);
+
+          return specRequest({
+            url: `/1/indexes/${testIndexName}/12345`,
+            headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
           });
+        })
+        .then(response => {
+          expect(response.result.objectID).to.equal('12345');
+          expect(_.omit(response.result, 'objectID')).to.deep.equal(testObject);
         });
     });
 
     it('updates existing objects in an index', () => {
       const update = {name: 'another object', aField: 'value'};
+
       return specRequest({
-        url: `/1/indexes/${testIndexName}/${indexedObject._id}`,
+        url: `/1/indexes/${testIndexName}/${indexedObject.objectID}`,
         method: 'put',
         payload: update,
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(200);
-        })
-        .then(() => {
-          // TODO: replace once async indexing is in place
-          return elasticsearchClient.get({
-            index: clientIndexName,
-            type: 'object',
-            id: indexedObject._id
-          }).then(o => {
-            expect(o._source).to.be.deep.equal(update);
+
+          return specRequest({
+            url: `/1/indexes/${testIndexName}/${indexedObject.objectID}`,
+            headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
           });
+        })
+        .then(response => {
+          expect(response.result.objectID).to.equal(indexedObject.objectID);
+          expect(_.omit(response.result, 'objectID')).to.deep.equal(update);
         });
     });
   });
@@ -120,23 +124,21 @@ describe('/indexes/{name}/{objectID}', () => {
   describe('delete', () => {
     it('removes the object from the index', () => {
       return specRequest({
-        url: `/1/indexes/${testIndexName}/${indexedObject._id}`,
+        url: `/1/indexes/${testIndexName}/${indexedObject.objectID}`,
         method: 'delete',
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(204);
 
-          // TODO: replace once async indexing is in place
-          return elasticsearchClient.get({
-            index: clientIndexName,
-            type: 'object',
-            id: indexedObject._id
-          }).then(() => {
-            throw new Error('Object not removed from index');
-          }, err => {
-            expect(err).to.have.deep.property('body.found', false);
+          return specRequest({
+            url: `/1/indexes/${testIndexName}/${indexedObject.objectID}`,
+            headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
           });
+        })
+        .then(response => {
+          expect(response.statusCode).to.equal(404);
+          expect(response.result.message).to.match(/Index does not contain object with identifier/);
         });
     });
 
