@@ -6,7 +6,7 @@ const specRequest = require('./spec_request');
 
 const expect = require('chai').expect;
 
-describe.skip('/indexes/{name}/settings', () => {
+describe('/indexes/{name}/settings', () => {
   const testIndexName = `test_index_${cuid()}`;
 
   after(() => {
@@ -27,12 +27,12 @@ describe.skip('/indexes/{name}/settings', () => {
       })
         .then(response => {
           expect(response.statusCode).to.equal(200);
-          expect(response.result).to.equal({searchable_fields: ['one', 'two', 'three']});
+          expect(response.result).to.deep.equal({searchable_fields: ['one', 'two', 'three']});
         });
     });
   });
 
-  describe('get', () => {
+  describe.skip('get', () => {
     before(() => {
       return specRequest({
         url: `/1/indexes/${testIndexName}/settings`,
