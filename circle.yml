@@ -35,9 +35,9 @@ deployment:
     branch: feature/gcloud_deploy
     commands:
       - echo "production = true" > .npmrc
-      - scripts/rolling_deploy.sh search-api app=search-api development ${PWD}
+      - scripts/rolling_deploy.sh search-api app=search-api development ${PWD} ${PWD}/kubernetes/rc.json
   prod:
     branch: production
     commands:
       - echo "production = true" > .npmrc
-      - scripts/rolling_deploy.sh search-api app=search-api production ${PWD}
+      - scripts/rolling_deploy.sh search-api app=search-api production ${PWD} ${PWD}/kubernetes/rc.json
