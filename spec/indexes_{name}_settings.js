@@ -32,7 +32,7 @@ describe('/indexes/{name}/settings', () => {
     });
   });
 
-  describe.skip('get', () => {
+  describe('get', () => {
     before(() => {
       return specRequest({
         url: `/indexes/${testIndexName}/settings`,
@@ -50,6 +50,17 @@ describe('/indexes/{name}/settings', () => {
         .then(response => {
           expect(response.statusCode).to.equal(200);
           expect(response.result).to.equal({searchable_fields: ['one', 'two', 'three', 'four']});
+        });
+    });
+
+    it('returns a 404 response when the index does not exist', () => {
+      return specRequest({
+        url: `/indexes/nonexistantindex/settings`,
+        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
+      })
+        .then(response => {
+          expect(response.statusCode).to.equal(404);
+          expect(response.result.message).to.equal(`Index nonexistantindex does not exist`);
         });
     });
   });
