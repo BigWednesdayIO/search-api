@@ -32,7 +32,7 @@ test:
 
 deployment:
   dev:
-    branch: feature/gcloud_deploy
+    branch: master
     commands:
       - echo "production = true" > .npmrc
       - scripts/rolling_deploy.sh search-api app=search-api development ${PWD} ${PWD}/kubernetes/rc.json
