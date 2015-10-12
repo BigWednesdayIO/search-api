@@ -89,7 +89,7 @@ describe('Search Index', () => {
 
       beforeEach(() => {
         const testDate = new Date();
-        sinon.useFakeTimers(testDate.getTime());
+        sandbox.useFakeTimers(testDate.getTime());
 
         expectedUniqueIndexName = `${testNewIndexName}_${testDate.getFullYear()}.${testDate.getMonth() + 1}.${testDate.getDate()}.${testDate.getMilliseconds()}`;
 
