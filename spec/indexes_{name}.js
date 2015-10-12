@@ -12,7 +12,7 @@ describe('/indexes/{name}', () => {
 
   before(() => {
     return specRequest({
-      url: `/1/indexes/${testIndexName}`,
+      url: `/indexes/${testIndexName}`,
       method: 'post',
       payload: testObject,
       headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
@@ -24,7 +24,7 @@ describe('/indexes/{name}', () => {
 
   after(() => {
     return specRequest({
-      url: `/1/indexes/${testIndexName}`,
+      url: `/indexes/${testIndexName}`,
       method: 'DELETE',
       headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
     });
@@ -33,7 +33,7 @@ describe('/indexes/{name}', () => {
   describe('post', () => {
     it('indexes a new object', () => {
       expect(createResponse.statusCode).to.equal(201);
-      expect(createResponse.headers.location).to.equal(`/1/indexes/${testIndexName}/${createResponse.result.objectID}`);
+      expect(createResponse.headers.location).to.equal(`/indexes/${testIndexName}/${createResponse.result.objectID}`);
 
       return specRequest({
         url: createResponse.headers.location,
@@ -51,7 +51,7 @@ describe('/indexes/{name}', () => {
 
     before(() => {
       return specRequest({
-        url: `/1/indexes/${deleteIndexName}`,
+        url: `/indexes/${deleteIndexName}`,
         method: 'post',
         payload: testObject,
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
@@ -60,7 +60,7 @@ describe('/indexes/{name}', () => {
 
     it('deletes the index', () => {
       return specRequest({
-        url: `/1/indexes/${deleteIndexName}`,
+        url: `/indexes/${deleteIndexName}`,
         method: 'delete',
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
@@ -68,7 +68,7 @@ describe('/indexes/{name}', () => {
           expect(response.statusCode).to.equal(204);
 
           return specRequest({
-            url: `/1/indexes/${deleteIndexName}/1`,
+            url: `/indexes/${deleteIndexName}/1`,
             headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
           })
             .then(response => {
@@ -80,7 +80,7 @@ describe('/indexes/{name}', () => {
 
     it('returns a 404 when the index does not exist', () => {
       return specRequest({
-        url: `/1/indexes/nonexistantindex`,
+        url: `/indexes/nonexistantindex`,
         method: 'delete',
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })

@@ -8,7 +8,7 @@ describe('/indexes/{name}/settings', () => {
   describe('put', () => {
     it('accepts settings', () => {
       return specRequest({
-        url: '/1/indexes/test-index/settings',
+        url: '/indexes/test-index/settings',
         method: 'put',
         payload: {},
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
@@ -20,7 +20,7 @@ describe('/indexes/{name}/settings', () => {
 
     it('returns settings', () => {
       return specRequest({
-        url: '/1/indexes/test-index/settings',
+        url: '/indexes/test-index/settings',
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {

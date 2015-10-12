@@ -16,7 +16,7 @@ describe('/indexes/{name}/batch', () => {
 
     afterEach(() => {
       return specRequest({
-        url: `/1/indexes/${testIndexName}`,
+        url: `/indexes/${testIndexName}`,
         method: 'DELETE',
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       });
@@ -39,7 +39,7 @@ describe('/indexes/{name}/batch', () => {
         };
 
         return specRequest({
-          url: `/1/indexes/${testIndexName}/batch`,
+          url: `/indexes/${testIndexName}/batch`,
           method: 'post',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
@@ -50,7 +50,7 @@ describe('/indexes/{name}/batch', () => {
 
             const checkObjects = response.result.objectIDs.map(id => {
               return specRequest({
-                url: `/1/indexes/${testIndexName}/${id}`,
+                url: `/indexes/${testIndexName}/${id}`,
                 headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
               });
             });
@@ -84,7 +84,7 @@ describe('/indexes/{name}/batch', () => {
         };
 
         return specRequest({
-          url: `/1/indexes/${testIndexName}/batch`,
+          url: `/indexes/${testIndexName}/batch`,
           method: 'post',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
@@ -95,7 +95,7 @@ describe('/indexes/{name}/batch', () => {
 
             const checkObjects = response.result.objectIDs.map(id => {
               return specRequest({
-                url: `/1/indexes/${testIndexName}/${id}`,
+                url: `/indexes/${testIndexName}/${id}`,
                 headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
               });
             });
@@ -130,7 +130,7 @@ describe('/indexes/{name}/batch', () => {
         };
 
         return specRequest({
-          url: `/1/indexes/${testIndexName}/batch`,
+          url: `/indexes/${testIndexName}/batch`,
           method: 'post',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
@@ -142,7 +142,7 @@ describe('/indexes/{name}/batch', () => {
           payload.requests[1].body.name = 'new object 2';
 
           return specRequest({
-            url: `/1/indexes/${testIndexName}/batch`,
+            url: `/indexes/${testIndexName}/batch`,
             method: 'post',
             headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
             payload
@@ -153,7 +153,7 @@ describe('/indexes/{name}/batch', () => {
 
           const checkObjects = ['1', '2'].map(id => {
             return specRequest({
-              url: `/1/indexes/${testIndexName}/${id}`,
+              url: `/indexes/${testIndexName}/${id}`,
               headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
             });
           });
@@ -190,7 +190,7 @@ describe('/indexes/{name}/batch', () => {
         };
 
         return specRequest({
-          url: `/1/indexes/${testIndexName}/batch`,
+          url: `/indexes/${testIndexName}/batch`,
           method: 'post',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload: createPayload
@@ -209,7 +209,7 @@ describe('/indexes/{name}/batch', () => {
           };
 
           return specRequest({
-            url: `/1/indexes/${testIndexName}/batch`,
+            url: `/indexes/${testIndexName}/batch`,
             method: 'post',
             headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
             payload: deletePayload
@@ -220,7 +220,7 @@ describe('/indexes/{name}/batch', () => {
 
           const checkObjects = ['1', '2'].map(id => {
             return specRequest({
-              url: `/1/indexes/${testIndexName}/${id}`,
+              url: `/indexes/${testIndexName}/${id}`,
               headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
             });
           });
@@ -247,7 +247,7 @@ describe('/indexes/{name}/batch', () => {
         };
 
         return specRequest({
-          url: `/1/indexes/${testIndexName}/batch`,
+          url: `/indexes/${testIndexName}/batch`,
           method: 'post',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
@@ -260,7 +260,7 @@ describe('/indexes/{name}/batch', () => {
 
       it('does not allow unknown actions', () => {
         return specRequest({
-          url: `/1/indexes/${testIndexName}/batch`,
+          url: `/indexes/${testIndexName}/batch`,
           method: 'post',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload: {requests: [{action: 'unknown', body: {}}]}
@@ -279,7 +279,7 @@ describe('/indexes/{name}/batch', () => {
         };
 
         return specRequest({
-          url: `/1/indexes/${testIndexName}/batch`,
+          url: `/indexes/${testIndexName}/batch`,
           method: 'post',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
@@ -299,7 +299,7 @@ describe('/indexes/{name}/batch', () => {
         };
 
         return specRequest({
-          url: `/1/indexes/${testIndexName}/batch`,
+          url: `/indexes/${testIndexName}/batch`,
           method: 'post',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
@@ -320,7 +320,7 @@ describe('/indexes/{name}/batch', () => {
         };
 
         return specRequest({
-          url: `/1/indexes/${testIndexName}/batch`,
+          url: `/indexes/${testIndexName}/batch`,
           method: 'post',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
@@ -340,7 +340,7 @@ describe('/indexes/{name}/batch', () => {
         };
 
         return specRequest({
-          url: `/1/indexes/${testIndexName}/batch`,
+          url: `/indexes/${testIndexName}/batch`,
           method: 'post',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload
@@ -359,7 +359,7 @@ describe('/indexes/{name}/batch', () => {
         };
 
         return specRequest({
-          url: `/1/indexes/${testIndexName}/batch`,
+          url: `/indexes/${testIndexName}/batch`,
           method: 'post',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload

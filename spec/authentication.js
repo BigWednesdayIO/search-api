@@ -5,16 +5,16 @@ const specRequest = require('./spec_request');
 
 describe('endpoint authentication', () => {
   const tests = [
-    {routeName: '/1/indexes/{name}', method: 'POST', url: '/1/indexes/some-index'},
-    {routeName: '/1/indexes/{name}', method: 'DELETE', url: '/1/indexes/some-index'},
-    {routeName: '/1/indexes/{name}/settings', method: 'PUT', url: '/1/indexes/some-index/settings'},
-    {routeName: '/1/indexes/{name}/settings', method: 'GET', url: '/1/indexes/some-index/settings'},
-    {routeName: '/1/indexes/{name}/{objectID}', method: 'GET', url: '/1/indexes/some-index/1}'},
-    {routeName: '/1/indexes/{name}/{objectID}', method: 'DELETE', url: '/1/indexes/some-index/1}'},
-    {routeName: '/1/indexes/{name}/{objectID}', method: 'PUT', url: '/1/indexes/some-index/1'},
-    {routeName: '/1/indexes/{name}/batch', method: 'POST', url: '/1/indexes/some-index/batch'},
-    {routeName: '/1/indexes/{name}/query', method: 'POST', url: '/1/indexes/some-index/query'},
-    {routeName: '/1/indexes/{name}/move', method: 'POST', url: '/1/indexes/some-index/move'}
+    {routeName: '/indexes/{name}', method: 'POST', url: '/indexes/some-index'},
+    {routeName: '/indexes/{name}', method: 'DELETE', url: '/indexes/some-index'},
+    {routeName: '/indexes/{name}/settings', method: 'PUT', url: '/indexes/some-index/settings'},
+    {routeName: '/indexes/{name}/settings', method: 'GET', url: '/indexes/some-index/settings'},
+    {routeName: '/indexes/{name}/{objectID}', method: 'GET', url: '/indexes/some-index/1'},
+    {routeName: '/indexes/{name}/{objectID}', method: 'DELETE', url: '/indexes/some-index/1}'},
+    {routeName: '/indexes/{name}/{objectID}', method: 'PUT', url: '/indexes/some-index/1'},
+    {routeName: '/indexes/{name}/batch', method: 'POST', url: '/indexes/some-index/batch'},
+    {routeName: '/indexes/{name}/query', method: 'POST', url: '/indexes/some-index/query'},
+    {routeName: '/indexes/{name}/move', method: 'POST', url: '/indexes/some-index/move'}
   ];
 
   tests.forEach(test => {
@@ -29,14 +29,14 @@ describe('endpoint authentication', () => {
   describe('indexing scope', () => {
     const nonIndexScopeToken = 'NG0TuV~u2ni#BP|';
     const tests = [
-      {routeName: '/1/indexes/{name}', method: 'POST', url: '/1/indexes/some-index', payload: {}},
-      {routeName: '/1/indexes/{name}', method: 'DELETE', url: '/1/indexes/some-index', payload: {}},
-      {routeName: '/1/indexes/{name}/settings', method: 'PUT', url: '/1/indexes/some-index/settings', payload: {}},
-      {routeName: '/1/indexes/{name}/settings', method: 'GET', url: '/1/indexes/some-index/settings', payload: {}},
-      {routeName: '/1/indexes/{name}/{objectID}', method: 'DELETE', url: '/1/indexes/some-index/1', payload: {}},
-      {routeName: '/1/indexes/{name}/{objectID}', method: 'PUT', url: '/1/indexes/some-index/1', payload: {}},
-      {routeName: '/1/indexes/{name}/batch', method: 'POST', url: '/1/indexes/some-index/batch', payload: {requests: []}},
-      {routeName: '/1/indexes/{name}/move', method: 'POST', url: '/1/indexes/some-index/move', payload: {destination: '123'}}
+      {routeName: '/indexes/{name}', method: 'POST', url: '/indexes/some-index', payload: {}},
+      {routeName: '/indexes/{name}', method: 'DELETE', url: '/indexes/some-index', payload: {}},
+      {routeName: '/indexes/{name}/settings', method: 'PUT', url: '/indexes/some-index/settings', payload: {}},
+      {routeName: '/indexes/{name}/settings', method: 'GET', url: '/indexes/some-index/settings', payload: {}},
+      {routeName: '/indexes/{name}/{objectID}', method: 'DELETE', url: '/indexes/some-index/1', payload: {}},
+      {routeName: '/indexes/{name}/{objectID}', method: 'PUT', url: '/indexes/some-index/1', payload: {}},
+      {routeName: '/indexes/{name}/batch', method: 'POST', url: '/indexes/some-index/batch', payload: {requests: []}},
+      {routeName: '/indexes/{name}/move', method: 'POST', url: '/indexes/some-index/move', payload: {destination: '123'}}
     ];
 
     tests.forEach(test => {

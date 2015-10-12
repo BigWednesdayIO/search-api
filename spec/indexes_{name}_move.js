@@ -13,13 +13,13 @@ describe('/indexes/{name}/move', () => {
   before(() => {
     return Promise.all([
       specRequest({
-        url: `/1/indexes/${testIndexName}/1`,
+        url: `/indexes/${testIndexName}/1`,
         method: 'put',
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
         payload: {name: 'object 1'}}),
 
       specRequest({
-        url: `/1/indexes/${newIndexName}/1`,
+        url: `/indexes/${newIndexName}/1`,
         method: 'put',
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
         payload: {name: 'existing object 1'}})
@@ -29,12 +29,12 @@ describe('/indexes/{name}/move', () => {
   after(() => {
     return Promise.all([
       specRequest({
-        url: `/1/indexes/${testIndexName}`,
+        url: `/indexes/${testIndexName}`,
         method: 'DELETE',
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}}),
 
       specRequest({
-        url: `/1/indexes/${newIndexName}`,
+        url: `/indexes/${newIndexName}`,
         method: 'DELETE',
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}})
     ]);
@@ -43,7 +43,7 @@ describe('/indexes/{name}/move', () => {
   describe('post', () => {
     it('moves an index to a new index', () => {
       return specRequest({
-        url: `/1/indexes/${testIndexName}/move`,
+        url: `/indexes/${testIndexName}/move`,
         method: 'post',
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
         payload: {destination: newIndexName}
@@ -52,7 +52,7 @@ describe('/indexes/{name}/move', () => {
           expect(response.statusCode).to.equal(200);
 
           return specRequest({
-            url: `/1/indexes/${newIndexName}/1`,
+            url: `/indexes/${newIndexName}/1`,
             headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
           });
         })
@@ -61,7 +61,7 @@ describe('/indexes/{name}/move', () => {
           expect(response.result).to.have.property('name', 'object 1');
 
           return specRequest({
-            url: `/1/indexes/${testIndexName}/1`,
+            url: `/indexes/${testIndexName}/1`,
             headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
           });
         })
@@ -73,7 +73,7 @@ describe('/indexes/{name}/move', () => {
 
     it('returns a 404 when the index to move does not exist', () => {
       return specRequest({
-        url: `/1/indexes/non-existant-index/move`,
+        url: `/indexes/non-existant-index/move`,
         method: 'post',
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
         payload: {destination: newIndexName}

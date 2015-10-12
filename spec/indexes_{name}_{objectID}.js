@@ -15,7 +15,7 @@ describe('/indexes/{name}/{objectID}', () => {
 
   before(() => {
     return specRequest({
-      url: `/1/indexes/${testIndexName}`,
+      url: `/indexes/${testIndexName}`,
       method: 'POST',
       headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
       payload: testObject
@@ -29,7 +29,7 @@ describe('/indexes/{name}/{objectID}', () => {
 
   after(() => {
     return specRequest({
-      url: `/1/indexes/${testIndexName}`,
+      url: `/indexes/${testIndexName}`,
       method: 'DELETE',
       headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
     });
@@ -38,7 +38,7 @@ describe('/indexes/{name}/{objectID}', () => {
   describe('get', () => {
     it('indexed objects can be retrieved', () => {
       return specRequest({
-        url: `/1/indexes/${testIndexName}/${indexedObject.objectID}`,
+        url: `/indexes/${testIndexName}/${indexedObject.objectID}`,
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
@@ -53,7 +53,7 @@ describe('/indexes/{name}/{objectID}', () => {
 
     it('returns a 404 when the index does not contain the identified object', () => {
       return specRequest({
-        url: `/1/indexes/${testIndexName}/12345`,
+        url: `/indexes/${testIndexName}/12345`,
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
@@ -64,7 +64,7 @@ describe('/indexes/{name}/{objectID}', () => {
 
     it('returns a 404 when the index does not exist', () => {
       return specRequest({
-        url: '/1/indexes/nonexistantindex/12345',
+        url: '/indexes/nonexistantindex/12345',
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
@@ -77,17 +77,17 @@ describe('/indexes/{name}/{objectID}', () => {
   describe('put', () => {
     it('indexes new objects into an index', () => {
       return specRequest({
-        url: `/1/indexes/${testIndexName}/12345`,
+        url: `/indexes/${testIndexName}/12345`,
         method: 'put',
         payload: testObject,
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(201);
-          expect(response.headers.location).to.equal(`/1/indexes/${testIndexName}/12345`);
+          expect(response.headers.location).to.equal(`/indexes/${testIndexName}/12345`);
 
           return specRequest({
-            url: `/1/indexes/${testIndexName}/12345`,
+            url: `/indexes/${testIndexName}/12345`,
             headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
           });
         })
@@ -101,7 +101,7 @@ describe('/indexes/{name}/{objectID}', () => {
       const update = {name: 'another object', aField: 'value'};
 
       return specRequest({
-        url: `/1/indexes/${testIndexName}/${indexedObject.objectID}`,
+        url: `/indexes/${testIndexName}/${indexedObject.objectID}`,
         method: 'put',
         payload: update,
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
@@ -110,7 +110,7 @@ describe('/indexes/{name}/{objectID}', () => {
           expect(response.statusCode).to.equal(200);
 
           return specRequest({
-            url: `/1/indexes/${testIndexName}/${indexedObject.objectID}`,
+            url: `/indexes/${testIndexName}/${indexedObject.objectID}`,
             headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
           });
         })
@@ -124,7 +124,7 @@ describe('/indexes/{name}/{objectID}', () => {
   describe('delete', () => {
     it('removes the object from the index', () => {
       return specRequest({
-        url: `/1/indexes/${testIndexName}/${indexedObject.objectID}`,
+        url: `/indexes/${testIndexName}/${indexedObject.objectID}`,
         method: 'delete',
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
@@ -132,7 +132,7 @@ describe('/indexes/{name}/{objectID}', () => {
           expect(response.statusCode).to.equal(204);
 
           return specRequest({
-            url: `/1/indexes/${testIndexName}/${indexedObject.objectID}`,
+            url: `/indexes/${testIndexName}/${indexedObject.objectID}`,
             headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
           });
         })
@@ -144,7 +144,7 @@ describe('/indexes/{name}/{objectID}', () => {
 
     it('returns a 404 when the index does not exist', () => {
       return specRequest({
-        url: '/1/indexes/nonexistantindex/12345',
+        url: '/indexes/nonexistantindex/12345',
         method: 'delete',
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })

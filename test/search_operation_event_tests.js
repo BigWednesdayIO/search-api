@@ -12,12 +12,12 @@ describe('SearchOperationEvent', () => {
   const requestTime = new Date(requestTimeISO);
 
   const testRequest = {
-    path: '/1/indexes/big-wednesday-io-products/query',
+    path: '/indexes/big-wednesday-io-products/query',
     params: {name: 'big-wednesday-io-products'},
     payload: {query: 'API'},
     query: {},
     method: 'post',
-    route: {path: '/1/indexes/{name}/query'},
+    route: {path: '/indexes/{name}/query'},
     info: {
       received: requestTime.getTime(),
       remoteAddress: '1.2.3.4'
@@ -40,7 +40,7 @@ describe('SearchOperationEvent', () => {
   });
 
   it('has path', () => {
-    expect(searchOpEvent.path).to.equal('/1/indexes/big-wednesday-io-products/query');
+    expect(searchOpEvent.path).to.equal('/indexes/big-wednesday-io-products/query');
   });
 
   it('has params', () => {
@@ -64,7 +64,7 @@ describe('SearchOperationEvent', () => {
   });
 
   it('has route', () => {
-    expect(searchOpEvent.route).to.equal('/1/indexes/{name}/query');
+    expect(searchOpEvent.route).to.equal('/indexes/{name}/query');
   });
 
   it('has requestReceived', () => {
