@@ -25,6 +25,30 @@ describe('Search Index', () => {
         return Promise.resolve({});
       });
 
+      sandbox.stub(elasticsearchClient.indices, 'getMapping', () => {
+        const mapping = {
+          testIndex: {
+            mappings: {
+              object: {
+                dynamic_templates: []
+              },
+              properties: {
+                previously_searchable: {
+                  type: 'string',
+                  index: 'analyzed'
+                },
+                previously_unsearchable: {
+                  type: 'string',
+                  index: 'no'
+                }
+              }
+            }
+          }
+        };
+
+        return Promise.resolve(mapping);
+      });
+
       sandbox.stub(elasticsearchClient.indices, 'getAlias', args => {
         if (args.name === testExistingIndexName) {
           return Promise.resolve({
@@ -93,20 +117,21 @@ describe('Search Index', () => {
     });
 
     describe('when searchable_fields is set', () => {
-      const fields = ['one', 'two'];
+      const newFields = ['one', 'two'];
+      const oldFields = ['previously_unsearchable'];
 
       beforeEach(() => {
-        const index = new SearchIndex(testNewIndexName);
-        return index.saveSettings({searchable_fields: fields});
+        const index = new SearchIndex(testExistingIndexName);
+        return index.saveSettings({searchable_fields: newFields.concat(oldFields)});
       });
 
       it('creates an index mapping', () => {
         sinon.assert.calledOnce(putMappingStub);
-        sinon.assert.calledWithMatch(putMappingStub, {index: testNewIndexName, type: 'object'});
+        sinon.assert.calledWithMatch(putMappingStub, {index: testExistingIndexName, type: 'object'});
       });
 
-      it('defines the searchable fields in the mapping', () => {
-        fields.forEach(field => {
+      it('defines new searchable fields in the mapping using templates', () => {
+        newFields.forEach(field => {
           sinon.assert.calledWithMatch(putMappingStub, sinon.match(value => {
             const fieldTemplate = _.find(value.body.object.dynamic_templates, t => {
               return t[field];
@@ -132,7 +157,7 @@ describe('Search Index', () => {
         });
       });
 
-      it('makes all other fields not searchable in the mapping', () => {
+      it('makes all other fields not searchable in the mapping using a template', () => {
         sinon.assert.calledWithMatch(putMappingStub, sinon.match(value => {
           const disableDefaultTemplate = {
             not_searchable: {
@@ -145,6 +170,18 @@ describe('Search Index', () => {
 
           return _.eq(_.last(value.body.object.dynamic_templates), disableDefaultTemplate);
         }, 'not searchable template'));
+      });
+
+      it('disables previously searchable fields in the mapping properties', () => {
+        sinon.assert.calledWithMatch(putMappingStub, sinon.match(value => {
+          return value.body.object.properties.previously_searchable.index === 'no';
+        }, 'disable searchable field'));
+      });
+
+      it('enables previously unsearchable fields in the mapping properties', () => {
+        sinon.assert.calledWithMatch(putMappingStub, sinon.match(value => {
+          return value.body.object.properties.previously_unsearchable.index === 'analyzed';
+        }, 'enable unsearchable field'));
       });
     });
 

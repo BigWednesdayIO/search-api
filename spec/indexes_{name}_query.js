@@ -165,7 +165,7 @@ describe('/indexes/{name}/query', () => {
         });
     });
 
-    describe.skip('searchable fields', () => {
+    describe('searchable fields', () => {
       it('returns results that match any field when searchable_fields setting is not set', () => {
         return specRequest({
           url: `/1/indexes/${testIndexName}/query`,
