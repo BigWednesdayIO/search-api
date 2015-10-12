@@ -187,12 +187,20 @@ describe('Search Index', () => {
 
     describe('when searchable_fields is not set', () => {
       beforeEach(() => {
-        const index = new SearchIndex(testNewIndexName);
+        const index = new SearchIndex(testExistingIndexName);
         return index.saveSettings({});
       });
 
-      it('does not disable any fields with a mapping', () => {
-        sinon.assert.notCalled(putMappingStub);
+      it('enables search on existing mapping properties', () => {
+        sinon.assert.calledWithMatch(putMappingStub, sinon.match(value => {
+          return value.body.object.properties.previously_unsearchable.index === 'analyzed';
+        }, 'enable all fields'));
+      });
+
+      it('removes all templates', () => {
+        sinon.assert.calledWithMatch(putMappingStub, sinon.match(value => {
+          return value.body.object.dynamic_templates.length === 0;
+        }, 'remove templates'));
       });
     });
 
