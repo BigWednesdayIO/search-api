@@ -11,7 +11,7 @@ describe('/indexes/{name}/settings', () => {
 
   after(() => {
     return specRequest({
-      url: `/1/indexes/${testIndexName}`,
+      url: `/indexes/${testIndexName}`,
       method: 'DELETE',
       headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
     });
@@ -35,7 +35,7 @@ describe('/indexes/{name}/settings', () => {
   describe.skip('get', () => {
     before(() => {
       return specRequest({
-        url: `/1/indexes/${testIndexName}/settings`,
+        url: `/indexes/${testIndexName}/settings`,
         method: 'put',
         payload: {searchable_fields: ['one', 'two', 'three', 'four']},
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
