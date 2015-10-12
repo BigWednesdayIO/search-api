@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "grunt test",
-    "ci": "grunt ci"
+    "ci": "grunt ci",
+    "watch": "grunt watch"
   },
   "repository": {
     "type": "git",
