@@ -9,9 +9,9 @@ describe('endpoint authentication', () => {
     {routeName: '/indexes/{name}', method: 'DELETE', url: '/indexes/some-index'},
     {routeName: '/indexes/{name}/settings', method: 'PUT', url: '/indexes/some-index/settings'},
     {routeName: '/indexes/{name}/settings', method: 'GET', url: '/indexes/some-index/settings'},
-    {routeName: '/indexes/{name}/{objectID}', method: 'GET', url: '/indexes/some-index}'},
-    {routeName: '/indexes/{name}/{objectID}', method: 'DELETE', url: '/indexes/some-index}'},
-    {routeName: '/indexes/{name}/{objectID}', method: 'PUT', url: '/indexes/some-index'},
+    {routeName: '/indexes/{name}/{objectID}', method: 'GET', url: '/indexes/some-index/1'},
+    {routeName: '/indexes/{name}/{objectID}', method: 'DELETE', url: '/indexes/some-index/1}'},
+    {routeName: '/indexes/{name}/{objectID}', method: 'PUT', url: '/indexes/some-index/1'},
     {routeName: '/indexes/{name}/batch', method: 'POST', url: '/indexes/some-index/batch'},
     {routeName: '/indexes/{name}/query', method: 'POST', url: '/indexes/some-index/query'},
     {routeName: '/indexes/{name}/move', method: 'POST', url: '/indexes/some-index/move'}
@@ -33,8 +33,8 @@ describe('endpoint authentication', () => {
       {routeName: '/indexes/{name}', method: 'DELETE', url: '/indexes/some-index', payload: {}},
       {routeName: '/indexes/{name}/settings', method: 'PUT', url: '/indexes/some-index/settings', payload: {}},
       {routeName: '/indexes/{name}/settings', method: 'GET', url: '/indexes/some-index/settings', payload: {}},
-      {routeName: '/indexes/{name}/{objectID}', method: 'DELETE', url: '/indexes/some-index', payload: {}},
-      {routeName: '/indexes/{name}/{objectID}', method: 'PUT', url: '/indexes/some-index', payload: {}},
+      {routeName: '/indexes/{name}/{objectID}', method: 'DELETE', url: '/indexes/some-index/1', payload: {}},
+      {routeName: '/indexes/{name}/{objectID}', method: 'PUT', url: '/indexes/some-index/1', payload: {}},
       {routeName: '/indexes/{name}/batch', method: 'POST', url: '/indexes/some-index/batch', payload: {requests: []}},
       {routeName: '/indexes/{name}/move', method: 'POST', url: '/indexes/some-index/move', payload: {destination: '123'}}
     ];
