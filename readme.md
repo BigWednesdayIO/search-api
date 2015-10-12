@@ -2,55 +2,60 @@
 
 Docker Compose Example:
 ```shell
-# start a container with grunt watch for testing (use docker exec to open a shell to perform other development tasks)
+## start a container with grunt watch for testing (use docker exec to open a shell to perform other development tasks)
 docker-compose up dev
 
-# run the api
+## run the api
 docker-compose up api
 ```
-
 # Deployment
-## Initial deployment steps
- - Set project id variable:
 
  ``` shell
+ # Set required variables
  export PROJECT_ID=first-footing-108508
+ export NAMESPACE=development
+ export TAG=v1
+ export QUALIFIED_IMAGE_NAME=eu.gcr.io/${PROJECT_ID}/search-api:${TAG}
+ export DEPLOYMENT_ID=1
+ export ELASTICSEARCH_HOST=http://theelasticsearchurl:9200
 
- ```
+ # Build the image and push to the container engine
+ docker build -t ${QUALIFIED_IMAGE_NAME} .
+ gcloud docker push ${QUALIFIED_IMAGE_NAME}
 
- - Build the image and push to the container engine (/set the image version tag as appropriate/)
+ # Create the service:
+ cat ./kubernetes/service.json | \
+    perl -pe 's/\{\{(\w+)\}\}/$ENV{$1}/eg' | \
+    kubectl create --namespace=${NAMESPACE} -f -
 
- ``` shell
- docker build -t gcr.io/${PROJECT_ID}/search-api:v1 .
- ```
-
- ``` shell
- gcloud docker push gcr.io/${PROJECT_ID}/search-api:v1
- ```
-
- - Create the service:
-
- ``` shell
- kubectl create -f ./kubernetes/prd/service.yml --namespace=development
- ```
-
- - Create the replication controller (note that the image field must refer to the image and tag created above):
-
- ``` shell
- kubectl create -f ./kubernetes/prd/rc.yaml --namespace=development
+ # Create the replication controller:
+ cat ./kubernetes/rc.json | \
+    perl -pe 's/\{\{(\w+)\}\}/$ENV{$1}/eg' | \
+    kubectl create --namespace=${NAMESPACE} -f -
  ```
 
 ## Update steps
- - Build the new image and push to container engine
+
  ``` shell
- docker build -t gcr.io/${PROJECT_ID}/search-api:v2 .
- ```
-  ``` shell
- gcloud docker push gcr.io/${PROJECT_ID}/search-api:v2
+ # Set required variables
+ export PROJECT_ID=first-footing-108508
+ export NAMESPACE=development
+ export TAG=v2
+ export DEPLOYMENT_ID=2
+ export QUALIFIED_IMAGE_NAME=eu.gcr.io/${PROJECT_ID}/search-api:${TAG}
+ export ELASTICSEARCH_HOST=http://theelasticsearchurl:9200
+
+ # Build the new image and push to container engine
+ docker build -t ${QUALIFIED_IMAGE_NAME} .
+ gcloud docker push ${QUALIFIED_IMAGE_NAME}
+
+ # Peform a rolling update on the replication controller
+ OLD_RC=$(~/google-cloud-sdk/bin/kubectl get rc -l "app=nginx" --namespace=${NAMESPACE} -o template --template="{{(index .items 0).metadata.name}}")
+
+ export REPLICAS=$(~/google-cloud-sdk/bin/kubectl get rc ${OLD_RC} --namespace=${NAMESPACE} -o template --template="{{.spec.replicas}}")
+
+ cat ./kubernetes/rc.json | \
+    perl -pe 's/\{\{(\w+)\}\}/$ENV{$1}/eg' | \
+    kubectl rolling-update ${OLD_RC} --namespace=${NAMESPACE} -f -
  ```
 
- - Peform a rolling update on the replication controller
-```shell
-PREVIOUS=$(kubectl get rc -l app=search-api --namespace=development | cut -f1 -d " " | tail -1)
-kubectl rolling-update $PREVIOUS search-api-rc-v2 --image=gcr.io/${PROJECT_ID}/search-api:v2 --namespace=development
-```
