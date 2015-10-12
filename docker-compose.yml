@@ -14,4 +14,4 @@ dev:
     - .:/src
   links:
     - elasticsearch
-  command: grunt watch
+  command: npm run watch
