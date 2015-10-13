@@ -30,16 +30,16 @@ describe('Search Index', () => {
           testIndex: {
             mappings: {
               object: {
-                dynamic_templates: []
-              },
-              properties: {
-                previously_searchable: {
-                  type: 'string',
-                  index: 'analyzed'
-                },
-                previously_unsearchable: {
-                  type: 'string',
-                  index: 'no'
+                dynamic_templates: [],
+                properties: {
+                  previously_searchable: {
+                    type: 'string',
+                    index: 'analyzed'
+                  },
+                  previously_unsearchable: {
+                    type: 'string',
+                    index: 'no'
+                  }
                 }
               }
             }
