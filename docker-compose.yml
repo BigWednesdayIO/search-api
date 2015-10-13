@@ -1,5 +1,6 @@
 elasticsearch:
   image: elasticsearch:1.7.2
+  command: elasticsearch -Des.index.number_of_shards="1"
 api:
   build: .
   ports:
