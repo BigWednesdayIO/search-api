@@ -28,6 +28,14 @@ describe('Search Index', () => {
           return Promise.resolve(mapping);
         }
 
+        if (args.index === 'nomapping') {
+          return Promise.resolve({});
+        }
+
+        if (args.index === 'nosettings') {
+          return Promise.resolve({testIndex: {mappings: {object: {properties: {}}}}});
+        }
+
         const err = new Error('index missing');
         err.status = 404;
 
@@ -47,6 +55,26 @@ describe('Search Index', () => {
 
     it('returns settings stored in index meta field', () => {
       expect(retrievedSettings).to.deep.equal(currentSettings);
+    });
+
+    it('returns no settings for an index without a mapping', () => {
+      // this case covers a fresh index containing no documents or settings
+      const index = new SearchIndex('nomapping');
+
+      return index.getSettings()
+        .then(settings => {
+          expect(settings).to.not.exist;
+        });
+    });
+
+    it('returns no settings for an index where no settings are stored', () => {
+      // this case covers an index containing documents but no settings
+      const index = new SearchIndex('nosettings');
+
+      return index.getSettings()
+        .then(settings => {
+          expect(settings).to.not.exist;
+        });
     });
 
     it('returns index not found errors', () => {
