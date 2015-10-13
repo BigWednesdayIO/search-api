@@ -21,7 +21,7 @@ describe('Search Index', () => {
           testIndex: {
             mappings: {
               object: {
-                _meta: {indexSettings: {searchable_fields: ['one', 'two', 'three']}}
+                _meta: {indexSettings: {searchable_fields: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']}}
               }
             }
           }
@@ -38,7 +38,16 @@ describe('Search Index', () => {
 
     it('applies boosts to fields based on position in searchable_fields setting', () => {
       const expectedQuery = {
-        query: {filtered: {query: {simple_query_string: {query: 'some-keyword~1', fields: ['three', 'two^1.1', 'one^1.2']}}}},
+        query: {
+          filtered: {
+            query: {
+              simple_query_string: {
+                query: 'some-keyword~1',
+                fields: ['l', 'k^1.1', 'j^1.2', 'i^1.3', 'h^1.4', 'g^1.5', 'f^1.6', 'e^1.7', 'd^1.8', 'c^1.9', 'b^2', 'a^2.1']
+              }
+            }
+          }
+        },
         size: 10
       };
 
