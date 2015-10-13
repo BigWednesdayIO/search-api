@@ -49,10 +49,7 @@ describe('/indexes/{name}/settings', () => {
       })
         .then(response => {
           expect(response.statusCode).to.equal(200);
-          expect(response.result.searchable_fields).to.include('one');
-          expect(response.result.searchable_fields).to.include('two');
-          expect(response.result.searchable_fields).to.include('three');
-          expect(response.result.searchable_fields).to.include('four');
+          expect(response.result).to.deep.equal({searchable_fields: ['one', 'two', 'three', 'four']});
         });
     });
 

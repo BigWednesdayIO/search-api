@@ -8,6 +8,7 @@ const SearchIndex = require('../../lib/search_index');
 
 describe('Search Index', () => {
   describe('getSettings', () => {
+    const currentSettings = {searchable_fields: ['one', 'two']};
     let retrievedSettings;
     let getMappingStub;
 
@@ -18,21 +19,7 @@ describe('Search Index', () => {
             testIndex: {
               mappings: {
                 object: {
-                  dynamic_templates: [
-                    {three: {}},
-                    {not_searchable: {}}
-                  ],
-                  properties: {
-                    one: {
-                      index: 'analyzed'
-                    },
-                    two: {
-                      index: 'analyzed'
-                    },
-                    four: {
-                      index: 'no'
-                    }
-                  }
+                  _meta: {indexSettings: currentSettings}
                 }
               }
             }
@@ -58,25 +45,8 @@ describe('Search Index', () => {
       getMappingStub.restore();
     });
 
-    it('returns searchable_fields', () => {
-      expect(retrievedSettings.searchable_fields).to.exist;
-    });
-
-    it('returns searchable_fields that exist in the mapping properties', () => {
-      expect(retrievedSettings.searchable_fields).to.include('one');
-      expect(retrievedSettings.searchable_fields).to.include('two');
-    });
-
-    it('returns searchable_fields that exist in the mapping templates', () => {
-      expect(retrievedSettings.searchable_fields).to.include('three');
-    });
-
-    it('does not return fields that are not searchable in searchable_fields', () => {
-      expect(retrievedSettings.searchable_fields).to.not.include('four');
-    });
-
-    it('does not return the not_searchable template as a searchable_field name', () => {
-      expect(retrievedSettings.searchable_fields).to.not.include('not_searchable');
+    it('returns settings stored in index meta field', () => {
+      expect(retrievedSettings).to.deep.equal(currentSettings);
     });
 
     it('returns index not found errors', () => {

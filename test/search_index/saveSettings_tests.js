@@ -204,6 +204,18 @@ describe('Search Index', () => {
       });
     });
 
+    it('records the current settings in a meta field in the mapping', () => {
+      const index = new SearchIndex(testNewIndexName);
+      const settings = {searchable_fields: ['one'], another_setting: true};
+
+      return index.saveSettings(settings)
+        .then(() => {
+          sinon.assert.calledWithMatch(putMappingStub, sinon.match(value => {
+            return _.eq(value.body.object._meta.indexSettings, settings);
+          }, 'searchable_fields meta'));
+        });
+    });
+
     it('returns the settings', () => {
       const index = new SearchIndex(testNewIndexName);
       return index.saveSettings({searchable_fields: ['one'], another_setting: true})
