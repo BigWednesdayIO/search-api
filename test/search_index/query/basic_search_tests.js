@@ -9,13 +9,14 @@ describe('Search Index', () => {
     let SearchIndex;
     let searchIndex;
     let searchArgs;
-    let elasticStub;
+    let searchStub;
+    let getMappingStub;
     const indexName = 'test-index';
     const nonExistantIndexName = 'non-existant-index';
     const testDocument = {name: 'test-item'};
 
     beforeEach(() => {
-      elasticStub = sinon.stub(elasticsearchClient, 'search', args => {
+      searchStub = sinon.stub(elasticsearchClient, 'search', args => {
         searchArgs = args;
 
         if (args.index === nonExistantIndexName) {
@@ -29,12 +30,27 @@ describe('Search Index', () => {
         });
       });
 
+      getMappingStub = sinon.stub(elasticsearchClient.indices, 'getMapping', () => {
+        const mapping = {
+          testIndex: {
+            mappings: {
+              object: {
+                _meta: {indexSettings: {}}
+              }
+            }
+          }
+        };
+
+        return Promise.resolve(mapping);
+      });
+
       SearchIndex = require('../../../lib/search_index');
       searchIndex = new SearchIndex(indexName);
     });
 
     afterEach(() => {
-      elasticStub.restore();
+      searchStub.restore();
+      getMappingStub.restore();
       searchArgs = undefined;
     });
 
