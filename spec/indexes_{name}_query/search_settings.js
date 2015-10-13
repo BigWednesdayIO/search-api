@@ -9,9 +9,9 @@ const specRequest = require('../spec_request');
 describe('/indexes/{name}/query - search settings', () => {
   describe('post', () => {
     const testIndexName = `test_index_${cuid()}`;
-    const document1 = {name: 'blue dress', colour: 'blue', colour_group: 'blue'};
-    const document2 = {name: 'navy blue dress', colour: 'navy', colour_group: 'blue'};
-    const document3 = {name: 'turquoise dress', colour: 'turquoise', colour_group: 'blue'};
+    const document1 = {field1: 'blue', field2: 'red'};
+    const document2 = {field1: 'red', field2: 'blue'};
+    const document3 = {field1: 'turquoise', field2: 'turquoise', field3: 'blue'};
 
     const reindexTestDocuments = () => {
       const batch = {
@@ -33,18 +33,6 @@ describe('/indexes/{name}/query - search settings', () => {
       });
     };
 
-    before(() => {
-      return specRequest({
-        url: `/indexes/${testIndexName}/settings`,
-        method: 'put',
-        headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
-        payload: {searchable_fields: ['name', 'colour']}
-      })
-      .then(() => {
-        return reindexTestDocuments();
-      });
-    });
-
     after(() => {
       return specRequest({
         url: `/indexes/${testIndexName}`,
@@ -53,16 +41,59 @@ describe('/indexes/{name}/query - search settings', () => {
       });
     });
 
-    it('returns results that match only fields from searchable_fields setting', () => {
-      return specRequest({
-        url: `/indexes/${testIndexName}/query`,
-        method: 'post',
-        headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
-        payload: {query: 'blue'}
-      })
-      .then(response => {
-        expect(response.result.hits).to.be.deep.equal([document1, document2]);
-        expect(response.statusCode).to.equal(200);
+    describe('searchable_fields', () => {
+      before(() => {
+        return specRequest({
+          url: `/indexes/${testIndexName}/settings`,
+          method: 'put',
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
+          payload: {searchable_fields: ['field1', 'field2']}
+        })
+        .then(() => {
+          return reindexTestDocuments();
+        });
+      });
+
+      it('returns results that match only fields from searchable_fields setting', () => {
+        return specRequest({
+          url: `/indexes/${testIndexName}/query`,
+          method: 'post',
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
+          payload: {query: 'blue'}
+        })
+        .then(response => {
+          expect(response.result.hits).to.be.deep.equal([document1, document2]);
+          expect(response.statusCode).to.equal(200);
+        });
+      });
+    });
+
+    describe('default ranking', () => {
+      // by flipping the order of searchable_fields we should be able to reverse
+      // the order of the results using the default ranking behaviour
+      before(() => {
+        return specRequest({
+          url: `/indexes/${testIndexName}/settings`,
+          method: 'put',
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
+          payload: {searchable_fields: ['field2', 'field1']}
+        })
+        .then(() => {
+          return reindexTestDocuments();
+        });
+      });
+
+      it('returns results that match only fields from searchable_fields setting', () => {
+        return specRequest({
+          url: `/indexes/${testIndexName}/query`,
+          method: 'post',
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
+          payload: {query: 'blue'}
+        })
+        .then(response => {
+          expect(response.result.hits).to.be.deep.equal([document2, document1]);
+          expect(response.statusCode).to.equal(200);
+        });
       });
     });
   });
