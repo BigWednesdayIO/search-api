@@ -1,6 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
 const sinon = require('sinon');
 
 const elasticsearchClient = require('../../../lib/elasticsearchClient');
@@ -74,21 +73,6 @@ describe('Search Index', () => {
             .then(() => {
               sinon.assert.calledOnce(createIndexStub);
               sinon.assert.calledWithMatch(createIndexStub, sinon.match({index: expectedUniqueIndexName}));
-            });
-        });
-
-        it(`disables the _all field when creating the index for ${test.functionName}`, () => {
-          return index[test.functionName].apply(index, test.arguments)
-            .then(() => {
-              sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
-                const allEnabled = _.get(value, 'body.mappings.object._all.enabled');
-
-                if (allEnabled === undefined) {
-                  console.error('enabled field for _all in mapping is not set');
-                }
-
-                return allEnabled === false;
-              }, '_all disabled'));
             });
         });
 
