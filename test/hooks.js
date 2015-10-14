@@ -1,5 +1,11 @@
 'use strict';
 
+const nock = require('nock');
+
 before(() => {
-  require('nock').disableNetConnect();
+  nock.disableNetConnect();
+});
+
+after(() => {
+  nock.enableNetConnect();
 });
