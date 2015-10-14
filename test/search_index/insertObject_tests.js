@@ -5,8 +5,8 @@ const sinon = require('sinon');
 const expect = require('chai').expect;
 
 const elasticsearchClient = require('../../lib/elasticsearchClient');
+const SearchIndex = require('../../lib/search_index');
 
-const testNewIndexName = 'my-index-name';
 const testExistingIndexName = 'existing-index-name';
 const testObject = {name: 'an object', field1: 'value', field2: 0};
 
@@ -14,14 +14,11 @@ describe('Search Index', () => {
   describe('insertObject', () => {
     let sandbox;
     let indexStub;
-    let SearchIndex;
 
     beforeEach(() => {
       sandbox = sinon.sandbox.create();
 
-      indexStub = sandbox.stub(elasticsearchClient, 'index', () => {
-        return Promise.resolve({_id: '123'});
-      });
+      indexStub = sandbox.stub(elasticsearchClient, 'index', () => Promise.resolve({_id: '123'}));
 
       sandbox.stub(elasticsearchClient.indices, 'getAlias', args => {
         if (args.name === testExistingIndexName) {
@@ -40,8 +37,6 @@ describe('Search Index', () => {
 
         return Promise.reject(err);
       });
-
-      SearchIndex = require('../../lib/search_index');
     });
 
     afterEach(() => {
@@ -52,7 +47,7 @@ describe('Search Index', () => {
       let insertResult;
 
       beforeEach(() => {
-        const index = new SearchIndex(testNewIndexName);
+        const index = new SearchIndex(testExistingIndexName);
         return index.insertObject(testObject).then(o => {
           insertResult = o;
         });
@@ -65,7 +60,7 @@ describe('Search Index', () => {
 
       it('writes to the named index', () => {
         sinon.assert.calledOnce(indexStub);
-        sinon.assert.calledWith(indexStub, sinon.match({index: testNewIndexName}));
+        sinon.assert.calledWith(indexStub, sinon.match({index: testExistingIndexName}));
       });
 
       it('returns the fields from the indexed object', () => {

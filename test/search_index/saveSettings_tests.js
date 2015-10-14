@@ -8,7 +8,6 @@ const elasticsearchClient = require('../../lib/elasticsearchClient');
 
 const SearchIndex = require('../../lib/search_index');
 
-const testNewIndexName = 'my-index-name';
 const testExistingIndexName = 'existing-index-name';
 
 describe('Search Index', () => {
@@ -19,9 +18,7 @@ describe('Search Index', () => {
     beforeEach(() => {
       sandbox = sinon.sandbox.create();
 
-      putMappingStub = sandbox.stub(elasticsearchClient.indices, 'putMapping', () => {
-        return Promise.resolve({});
-      });
+      putMappingStub = sandbox.stub(elasticsearchClient.indices, 'putMapping', () => Promise.resolve({}));
 
       sandbox.stub(elasticsearchClient.indices, 'getMapping', () => {
         const mapping = {
@@ -157,7 +154,7 @@ describe('Search Index', () => {
     });
 
     it('records the current settings in a meta field in the mapping', () => {
-      const index = new SearchIndex(testNewIndexName);
+      const index = new SearchIndex(testExistingIndexName);
       const settings = {searchable_fields: ['one'], another_setting: true};
 
       return index.saveSettings(settings)
@@ -169,7 +166,7 @@ describe('Search Index', () => {
     });
 
     it('returns the settings', () => {
-      const index = new SearchIndex(testNewIndexName);
+      const index = new SearchIndex(testExistingIndexName);
       return index.saveSettings({searchable_fields: ['one'], another_setting: true})
         .then(settings => {
           expect(settings).to.deep.equal({searchable_fields: ['one'], another_setting: true});

@@ -48,25 +48,13 @@ describe('Search Index', () => {
         return Promise.reject(err);
       });
 
-      createIndexStub = sandbox.stub(elasticsearchClient.indices, 'create', () => {
-        return Promise.resolve({});
-      });
+      createIndexStub = sandbox.stub(elasticsearchClient.indices, 'create', () => Promise.resolve({}));
+      putAliasStub = sandbox.stub(elasticsearchClient.indices, 'putAlias', () => Promise.resolve({}));
 
-      putAliasStub = sandbox.stub(elasticsearchClient.indices, 'putAlias', () => {
-        return Promise.resolve({});
-      });
-
-      sandbox.stub(elasticsearchClient, 'index', () => {
-        return Promise.resolve({});
-      });
-
-      sandbox.stub(elasticsearchClient, 'bulk', () => {
-        return Promise.resolve({items: []});
-      });
-
-      sandbox.stub(elasticsearchClient.indices, 'putMapping', () => {
-        return Promise.resolve({});
-      });
+      sandbox.stub(elasticsearchClient, 'index', () => Promise.resolve({}));
+      sandbox.stub(elasticsearchClient, 'bulk', () => Promise.resolve({items: []}));
+      sandbox.stub(elasticsearchClient.indices, 'putMapping', () => Promise.resolve({}));
+      sandbox.stub(elasticsearchClient.indices, 'getMapping', () => Promise.resolve({testIndex: {}}));
     });
 
     afterEach(() => {
@@ -77,7 +65,7 @@ describe('Search Index', () => {
       let index;
 
       beforeEach(() => {
-        index = index = new SearchIndex(newIndexName);
+        index = new SearchIndex(newIndexName);
       });
 
       tests.forEach(test => {

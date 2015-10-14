@@ -4,6 +4,7 @@ const sinon = require('sinon');
 const expect = require('chai').expect;
 
 const elasticsearchClient = require('../../lib/elasticsearchClient');
+const SearchIndex = require('../../lib/search_index');
 
 const testNewIndexName = 'my-index-name';
 const testExistingIndexName = 'existing-index-name';
@@ -19,7 +20,6 @@ describe('Search Index', () => {
     let sandbox;
     let bulkStub;
     let bulkArgs;
-    let SearchIndex;
 
     beforeEach(() => {
       sandbox = sinon.sandbox.create();
@@ -65,8 +65,6 @@ describe('Search Index', () => {
 
         return Promise.resolve(result);
       });
-
-      SearchIndex = require('../../lib/search_index');
     });
 
     afterEach(() => {
@@ -76,6 +74,9 @@ describe('Search Index', () => {
 
     describe('when the index does not exist', () => {
       beforeEach(() => {
+        sandbox.stub(elasticsearchClient.indices, 'create', () => Promise.resolve({}));
+        sandbox.stub(elasticsearchClient.indices, 'putAlias', () => Promise.resolve({}));
+
         const index = new SearchIndex(testNewIndexName);
         return index.batchOperation(operations);
       });
@@ -100,7 +101,7 @@ describe('Search Index', () => {
       ];
 
       beforeEach(() => {
-        const index = new SearchIndex(testNewIndexName);
+        const index = new SearchIndex(testExistingIndexName);
 
         return index.batchOperation(batchOperations)
           .then(result => {
@@ -111,9 +112,9 @@ describe('Search Index', () => {
       it('makes an index request for each created object', () => {
         const expectedBulkArgs = {
           body: [{
-            index: {_index: testNewIndexName, _type: 'object'}
+            index: {_index: testExistingIndexName, _type: 'object'}
           }, batchOperations[0].body, {
-            index: {_index: testNewIndexName, _type: 'object'}
+            index: {_index: testExistingIndexName, _type: 'object'}
           }, batchOperations[1].body]
         };
 
@@ -136,7 +137,7 @@ describe('Search Index', () => {
       ];
 
       beforeEach(() => {
-        const index = new SearchIndex(testNewIndexName);
+        const index = new SearchIndex(testExistingIndexName);
 
         return index.batchOperation(batchOperations)
           .then(result => {
@@ -151,9 +152,9 @@ describe('Search Index', () => {
       it('makes an index request for each upserted object', () => {
         const expectedBulkArgs = {
           body: [{
-            index: {_index: testNewIndexName, _type: 'object', _id: ids[0]}
+            index: {_index: testExistingIndexName, _type: 'object', _id: ids[0]}
           }, batchOperations[0].body, {
-            index: {_index: testNewIndexName, _type: 'object', _id: ids[1]}
+            index: {_index: testExistingIndexName, _type: 'object', _id: ids[1]}
           }, batchOperations[1].body]
         };
 

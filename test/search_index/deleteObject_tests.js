@@ -1,8 +1,8 @@
 'use strict';
 
 const elasticsearchClient = require('../../lib/elasticsearchClient');
+const SearchIndex = require('../../lib/search_index');
 
-// const _ = require('lodash');
 const sinon = require('sinon');
 
 const expect = require('chai').expect;
@@ -14,7 +14,6 @@ describe('Search Index', () => {
   describe('deleteObject', () => {
     let elasticDeleteStub;
     let elasticGetIndexStub;
-    let SearchIndex;
     let index;
     let deletedId;
     let indexName;
@@ -38,7 +37,6 @@ describe('Search Index', () => {
         return Promise.resolve({});
       });
 
-      SearchIndex = require('../../lib/search_index');
       index = new SearchIndex(testIndexName);
     });
 
