@@ -1,12 +1,12 @@
 'use strict';
 
+const SearchIndex = require('../../../lib/search_index');
 const elasticsearchClient = require('../../../lib/elasticsearchClient');
 const sinon = require('sinon');
 const expect = require('chai').expect;
 
 describe('Search Index', () => {
   describe('query', () => {
-    let SearchIndex;
     let searchIndex;
     let searchArgs;
     let searchStub;
@@ -44,7 +44,6 @@ describe('Search Index', () => {
         return Promise.resolve(mapping);
       });
 
-      SearchIndex = require('../../../lib/search_index');
       searchIndex = new SearchIndex(indexName);
     });
 

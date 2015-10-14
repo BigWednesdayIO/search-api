@@ -1,6 +1,7 @@
 'use strict';
 
 const elasticsearchClient = require('../../lib/elasticsearchClient');
+const SearchIndex = require('../../lib/search_index');
 
 const _ = require('lodash');
 const sinon = require('sinon');
@@ -28,7 +29,6 @@ const indexData = [{
 
 describe('Search Index', () => {
   describe('getObject', () => {
-    let SearchIndex;
     let index;
     let elasticStub;
     let retrievedObject;
@@ -65,7 +65,6 @@ describe('Search Index', () => {
         });
       });
 
-      SearchIndex = require('../../lib/search_index');
       index = new SearchIndex('two');
 
       return index.getObject('3')
