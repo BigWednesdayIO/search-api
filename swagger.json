@@ -5,55 +5,6 @@
         "title": "Search API"
     },
     "paths": {
-        "/indexes": {
-            "get": {
-                "description": "List all `Index` objects.\n",
-                "responses": {
-                    "200": {
-                        "description": "An array of indexes",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "description": "Unique index name"
-                                    },
-                                    "createdAt": {
-                                        "type": "string",
-                                        "description": "An ISO 8061 formatted date string for when the index was created"
-                                    },
-                                    "updatedAt": {
-                                        "type": "string",
-                                        "description": "An ISO 8061 formatted date string for when the index was last updated"
-                                    },
-                                    "entries": {
-                                        "type": "integer",
-                                        "format": "int32",
-                                        "description": "Number of records contained within the index"
-                                    },
-                                    "pendingTask": {
-                                        "type": "boolean",
-                                        "description": "An update task is currently running"
-                                    },
-                                    "lastBuildTimeS": {
-                                        "type": "integer",
-                                        "format": "int32",
-                                        "description": "Time taken to build the index"
-                                    },
-                                    "dataSize": {
-                                        "type": "integer",
-                                        "format": "int32",
-                                        "description": "Size of the data held within the index"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/indexes/{name}": {
             "post": {
                 "description": "Add an object to the index and automatically assign an identifier.\n",
@@ -241,11 +192,22 @@
                         "api_key": []
                     }
                 ],
+                "parameters": [
+                    {
+                        "name": "settings",
+                        "in": "body",
+                        "description": "The index settings",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/IndexSettings"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Settings saved",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/IndexSettings"
                         }
                     },
                     "401": {
@@ -273,7 +235,7 @@
                     "200": {
                         "description": "Settings",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/IndexSettings"
                         }
                     },
                     "401": {
@@ -591,6 +553,18 @@
         }
     },
     "definitions": {
+        "IndexSettings": {
+            "type": "object",
+            "required": ["searchable_fields"],
+            "properties": {
+                "searchable_fields": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "IndexMoveOptions": {
             "type": "object",
             "required": [

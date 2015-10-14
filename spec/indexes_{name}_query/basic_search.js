@@ -3,17 +3,20 @@
 const cuid = require('cuid');
 const expect = require('chai').expect;
 
-const elasticsearchClient = require('../lib/elasticsearchClient');
-const specRequest = require('./spec_request');
+const elasticsearchClient = require('../../lib/elasticsearchClient');
+const specRequest = require('../spec_request');
 
-describe('/indexes/{name}/query', () => {
+describe('/indexes/{name}/query - basic search', () => {
   const testIndexName = `test_index_${cuid()}`;
   const document1 = {sku: '12345', price: 1};
   const document2 = {sku: '98765', price: 5};
 
-  before(() => {
+  const reindexTestDocuments = () => {
     const batch = {
-      requests: [{action: 'upsert', body: document1, objectID: '1'}, {action: 'upsert', body: document2, objectID: '2'}]
+      requests: [
+        {action: 'upsert', body: document1, objectID: '1'},
+        {action: 'upsert', body: document2, objectID: '2'}
+      ]
     };
 
     return specRequest({
@@ -25,7 +28,9 @@ describe('/indexes/{name}/query', () => {
     .then(() => {
       return elasticsearchClient.indices.refresh();
     });
-  });
+  };
+
+  before(reindexTestDocuments);
 
   after(() => {
     return specRequest({
