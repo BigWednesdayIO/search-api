@@ -133,9 +133,7 @@ describe('Search Index', () => {
       it('defines new searchable fields in the mapping using templates', () => {
         newFields.forEach(field => {
           sinon.assert.calledWithMatch(putMappingStub, sinon.match(value => {
-            const fieldTemplate = _.find(value.body.object.dynamic_templates, t => {
-              return t[field];
-            });
+            const fieldTemplate = _.find(value.body.object.dynamic_templates, t => t[field]);
 
             if (!fieldTemplate) {
               console.error(`Template for ${field} not found`);
