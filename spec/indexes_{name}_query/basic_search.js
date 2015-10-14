@@ -30,9 +30,7 @@ describe('/indexes/{name}/query - basic search', () => {
     });
   };
 
-  before(() => {
-    return reindexTestDocuments();
-  });
+  before(reindexTestDocuments);
 
   after(() => {
     return specRequest({

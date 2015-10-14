@@ -49,9 +49,7 @@ describe('/indexes/{name}/query - search settings', () => {
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload: {searchable_fields: ['field1', 'field2']}
         })
-        .then(() => {
-          return reindexTestDocuments();
-        });
+        .then(reindexTestDocuments);
       });
 
       it('returns results that match only fields from searchable_fields setting', () => {
@@ -78,9 +76,7 @@ describe('/indexes/{name}/query - search settings', () => {
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
           payload: {searchable_fields: ['field2', 'field1']}
         })
-        .then(() => {
-          return reindexTestDocuments();
-        });
+        .then(reindexTestDocuments);
       });
 
       it('returns results that match only fields from searchable_fields setting', () => {
