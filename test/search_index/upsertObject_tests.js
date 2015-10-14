@@ -15,8 +15,6 @@ describe('Search Index', () => {
   describe('upsertObject', () => {
     let sandbox;
     let indexStub;
-    let createIndexStub;
-    let putAliasStub;
     let SearchIndex;
 
     beforeEach(() => {
@@ -44,55 +42,11 @@ describe('Search Index', () => {
         return Promise.reject(err);
       });
 
-      createIndexStub = sandbox.stub(elasticsearchClient.indices, 'create', () => {
-        return Promise.resolve({});
-      });
-
-      putAliasStub = sandbox.stub(elasticsearchClient.indices, 'putAlias', () => {
-        return Promise.resolve({});
-      });
-
       SearchIndex = require('../../lib/search_index');
     });
 
     afterEach(() => {
       sandbox.restore();
-    });
-
-    describe('when the index does not exist', () => {
-      let expectedUniqueIndexName;
-
-      beforeEach(() => {
-        const testDate = new Date();
-        sandbox.useFakeTimers(testDate.getTime());
-
-        expectedUniqueIndexName = `${testNewIndexName}_${testDate.getFullYear()}.${testDate.getMonth() + 1}.${testDate.getDate()}.${testDate.getMilliseconds()}`;
-
-        const index = new SearchIndex(testNewIndexName);
-        return index.upsertObject(testId, testObject);
-      });
-
-      it('creates the index with a unique name', () => {
-        sinon.assert.calledOnce(createIndexStub);
-        sinon.assert.calledWith(createIndexStub, {index: expectedUniqueIndexName});
-      });
-
-      it('sets the index name as an alias', () => {
-        sinon.assert.calledOnce(putAliasStub);
-        sinon.assert.calledWith(putAliasStub, {index: expectedUniqueIndexName, name: testNewIndexName});
-      });
-    });
-
-    describe('when the index exists', () => {
-      beforeEach(() => {
-        const index = new SearchIndex(testExistingIndexName);
-        return index.upsertObject(testId, testObject);
-      });
-
-      it('does not create a new index', () => {
-        sinon.assert.notCalled(createIndexStub);
-        sinon.assert.notCalled(putAliasStub);
-      });
     });
 
     describe('upserting', () => {

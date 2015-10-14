@@ -14,8 +14,6 @@ const testExistingIndexName = 'existing-index-name';
 describe('Search Index', () => {
   describe('saveSettings', () => {
     let sandbox;
-    let createIndexStub;
-    let putAliasStub;
     let putMappingStub;
 
     beforeEach(() => {
@@ -66,54 +64,10 @@ describe('Search Index', () => {
 
         return Promise.reject(err);
       });
-
-      createIndexStub = sandbox.stub(elasticsearchClient.indices, 'create', () => {
-        return Promise.resolve({});
-      });
-
-      putAliasStub = sandbox.stub(elasticsearchClient.indices, 'putAlias', () => {
-        return Promise.resolve({});
-      });
     });
 
     afterEach(() => {
       sandbox.restore();
-    });
-
-    describe('when the index does not exist', () => {
-      let expectedUniqueIndexName;
-
-      beforeEach(() => {
-        const testDate = new Date();
-        sandbox.useFakeTimers(testDate.getTime());
-
-        expectedUniqueIndexName = `${testNewIndexName}_${testDate.getFullYear()}.${testDate.getMonth() + 1}.${testDate.getDate()}.${testDate.getMilliseconds()}`;
-
-        const index = new SearchIndex(testNewIndexName);
-        return index.saveSettings({});
-      });
-
-      it('creates the index with a unique name', () => {
-        sinon.assert.calledOnce(createIndexStub);
-        sinon.assert.calledWith(createIndexStub, {index: expectedUniqueIndexName});
-      });
-
-      it('sets the index name as an alias', () => {
-        sinon.assert.calledOnce(putAliasStub);
-        sinon.assert.calledWith(putAliasStub, {index: expectedUniqueIndexName, name: testNewIndexName});
-      });
-    });
-
-    describe('when the index exists', () => {
-      beforeEach(() => {
-        const index = new SearchIndex(testExistingIndexName);
-        return index.saveSettings({});
-      });
-
-      it('does not create a new index', () => {
-        sinon.assert.notCalled(createIndexStub);
-        sinon.assert.notCalled(putAliasStub);
-      });
     });
 
     describe('when searchable_fields is set', () => {
