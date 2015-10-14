@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const sinon = require('sinon');
 
 const elasticsearchClient = require('../../../lib/elasticsearchClient');
@@ -73,22 +74,41 @@ describe('Search Index', () => {
     });
 
     describe('when the index does not exist', () => {
+      let index;
+
+      beforeEach(() => {
+        index = index = new SearchIndex(newIndexName);
+      });
+
       tests.forEach(test => {
         it(`creates an index with a unique name when ${test.functionName} is called`, () => {
-          const index = new SearchIndex(newIndexName);
           return index[test.functionName].apply(index, test.arguments)
             .then(() => {
               sinon.assert.calledOnce(createIndexStub);
-              sinon.assert.calledWith(createIndexStub, {index: expectedUniqueIndexName});
+              sinon.assert.calledWithMatch(createIndexStub, sinon.match({index: expectedUniqueIndexName}));
+            });
+        });
+
+        it(`disables the _all field when creating the index for ${test.functionName}`, () => {
+          return index[test.functionName].apply(index, test.arguments)
+            .then(() => {
+              sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
+                const allEnabled = _.get(value, 'body.mappings.object._all.enabled');
+
+                if (allEnabled === undefined) {
+                  console.error('enabled field for _all in mapping is not set');
+                }
+
+                return allEnabled === false;
+              }, '_all disabled'));
             });
         });
 
         it(`sets the index name as an alias when ${test.functionName} is called`, () => {
-          const index = new SearchIndex(newIndexName);
           return index[test.functionName].apply(index, test.arguments)
             .then(() => {
               sinon.assert.calledOnce(createIndexStub);
-              sinon.assert.calledWith(createIndexStub, {index: expectedUniqueIndexName});
+              sinon.assert.calledWith(createIndexStub, sinon.match({index: expectedUniqueIndexName}));
             });
         });
       });
