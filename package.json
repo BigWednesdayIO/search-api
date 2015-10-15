@@ -24,7 +24,7 @@
   "dependencies": {
     "boom": "^2.8.0",
     "elasticsearch": "^8.0.1",
-    "hapi": "^9.3.0",
+    "hapi": "^10.4.1",
     "hapi-auth-bearer-token": "^3.1.1",
     "joi": "^6.7.0",
     "lodash": "^3.10.1",
