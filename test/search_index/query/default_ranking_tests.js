@@ -12,9 +12,7 @@ describe('Search Index', () => {
     let getMappingStub;
 
     before(() => {
-      searchStub = sinon.stub(elasticsearchClient, 'search', () => {
-        return Promise.resolve({hits: {hits: []}});
-      });
+      searchStub = sinon.stub(elasticsearchClient, 'search', () => Promise.resolve({hits: {hits: []}}));
 
       getMappingStub = sinon.stub(elasticsearchClient.indices, 'getMapping', () => {
         const mapping = {

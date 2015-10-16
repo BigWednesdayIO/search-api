@@ -8,22 +8,17 @@ const elasticsearchClient = require('../../lib/elasticsearchClient');
 
 const SearchIndex = require('../../lib/search_index');
 
-const testNewIndexName = 'my-index-name';
 const testExistingIndexName = 'existing-index-name';
 
 describe('Search Index', () => {
   describe('saveSettings', () => {
     let sandbox;
-    let createIndexStub;
-    let putAliasStub;
     let putMappingStub;
 
     beforeEach(() => {
       sandbox = sinon.sandbox.create();
 
-      putMappingStub = sandbox.stub(elasticsearchClient.indices, 'putMapping', () => {
-        return Promise.resolve({});
-      });
+      putMappingStub = sandbox.stub(elasticsearchClient.indices, 'putMapping', () => Promise.resolve({}));
 
       sandbox.stub(elasticsearchClient.indices, 'getMapping', () => {
         const mapping = {
@@ -66,54 +61,10 @@ describe('Search Index', () => {
 
         return Promise.reject(err);
       });
-
-      createIndexStub = sandbox.stub(elasticsearchClient.indices, 'create', () => {
-        return Promise.resolve({});
-      });
-
-      putAliasStub = sandbox.stub(elasticsearchClient.indices, 'putAlias', () => {
-        return Promise.resolve({});
-      });
     });
 
     afterEach(() => {
       sandbox.restore();
-    });
-
-    describe('when the index does not exist', () => {
-      let expectedUniqueIndexName;
-
-      beforeEach(() => {
-        const testDate = new Date();
-        sandbox.useFakeTimers(testDate.getTime());
-
-        expectedUniqueIndexName = `${testNewIndexName}_${testDate.getFullYear()}.${testDate.getMonth() + 1}.${testDate.getDate()}.${testDate.getMilliseconds()}`;
-
-        const index = new SearchIndex(testNewIndexName);
-        return index.saveSettings({});
-      });
-
-      it('creates the index with a unique name', () => {
-        sinon.assert.calledOnce(createIndexStub);
-        sinon.assert.calledWith(createIndexStub, {index: expectedUniqueIndexName});
-      });
-
-      it('sets the index name as an alias', () => {
-        sinon.assert.calledOnce(putAliasStub);
-        sinon.assert.calledWith(putAliasStub, {index: expectedUniqueIndexName, name: testNewIndexName});
-      });
-    });
-
-    describe('when the index exists', () => {
-      beforeEach(() => {
-        const index = new SearchIndex(testExistingIndexName);
-        return index.saveSettings({});
-      });
-
-      it('does not create a new index', () => {
-        sinon.assert.notCalled(createIndexStub);
-        sinon.assert.notCalled(putAliasStub);
-      });
     });
 
     describe('when searchable_fields is set', () => {
@@ -181,6 +132,18 @@ describe('Search Index', () => {
           return value.body.object.properties.previously_unsearchable.index === 'analyzed';
         }, 'enable unsearchable field'));
       });
+
+      it('disables the _all field in the mapping', () => {
+        sinon.assert.calledWithMatch(putMappingStub, sinon.match(value => {
+          const allEnabled = _.get(value, 'body.object._all.enabled');
+
+          if (allEnabled === undefined) {
+            console.error('enabled field for _all in mapping is not set');
+          }
+
+          return allEnabled === false;
+        }, '_all disabled'));
+      });
     });
 
     describe('when searchable_fields is not set', () => {
@@ -200,10 +163,22 @@ describe('Search Index', () => {
           return value.body.object.dynamic_templates.length === 0;
         }, 'remove templates'));
       });
+
+      it('enables the _all field in the mapping', () => {
+        sinon.assert.calledWithMatch(putMappingStub, sinon.match(value => {
+          const allEnabled = _.get(value, 'body.object._all.enabled');
+
+          if (allEnabled === undefined) {
+            console.error('enabled field for _all in mapping is not set');
+          }
+
+          return allEnabled === true;
+        }, '_all enabled'));
+      });
     });
 
     it('records the current settings in a meta field in the mapping', () => {
-      const index = new SearchIndex(testNewIndexName);
+      const index = new SearchIndex(testExistingIndexName);
       const settings = {searchable_fields: ['one'], another_setting: true};
 
       return index.saveSettings(settings)
@@ -215,7 +190,7 @@ describe('Search Index', () => {
     });
 
     it('returns the settings', () => {
-      const index = new SearchIndex(testNewIndexName);
+      const index = new SearchIndex(testExistingIndexName);
       return index.saveSettings({searchable_fields: ['one'], another_setting: true})
         .then(settings => {
           expect(settings).to.deep.equal({searchable_fields: ['one'], another_setting: true});

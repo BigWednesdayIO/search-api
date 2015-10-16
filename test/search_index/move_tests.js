@@ -43,9 +43,7 @@ describe('Search Index', () => {
         });
       });
 
-      deleteIndexStub = sandbox.stub(elasticsearchClient.indices, 'delete', () => {
-        return Promise.resolve({});
-      });
+      deleteIndexStub = sandbox.stub(elasticsearchClient.indices, 'delete', () => Promise.resolve({}));
 
       sourceIndex = new SearchIndex('sourceindex');
       existingDestinationIndex = new SearchIndex('existingdestinationindex');

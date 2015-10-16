@@ -1,6 +1,7 @@
 'use strict';
 
 const elasticsearchClient = require('../../lib/elasticsearchClient');
+const SearchIndex = require('../../lib/search_index');
 
 const sinon = require('sinon');
 
@@ -11,7 +12,6 @@ const testIndexName = 'an-index';
 describe('Search Index', () => {
   describe('drop', () => {
     let elasticStub;
-    let SearchIndex;
 
     before(() => {
       elasticStub = sinon.stub(elasticsearchClient.indices, 'delete', args => {
@@ -24,8 +24,6 @@ describe('Search Index', () => {
 
         return Promise.resolve({});
       });
-
-      SearchIndex = require('../../lib/search_index');
     });
 
     after(() => {
