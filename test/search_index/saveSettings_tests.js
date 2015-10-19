@@ -132,18 +132,6 @@ describe('Search Index', () => {
           return value.body.object.properties.previously_unsearchable.index === 'analyzed';
         }, 'enable unsearchable field'));
       });
-
-      it('disables the _all field in the mapping', () => {
-        sinon.assert.calledWithMatch(putMappingStub, sinon.match(value => {
-          const allEnabled = _.get(value, 'body.object._all.enabled');
-
-          if (allEnabled === undefined) {
-            console.error('enabled field for _all in mapping is not set');
-          }
-
-          return allEnabled === false;
-        }, '_all disabled'));
-      });
     });
 
     describe('when searchable_fields is not set', () => {
@@ -162,18 +150,6 @@ describe('Search Index', () => {
         sinon.assert.calledWithMatch(putMappingStub, sinon.match(value => {
           return value.body.object.dynamic_templates.length === 0;
         }, 'remove templates'));
-      });
-
-      it('enables the _all field in the mapping', () => {
-        sinon.assert.calledWithMatch(putMappingStub, sinon.match(value => {
-          const allEnabled = _.get(value, 'body.object._all.enabled');
-
-          if (allEnabled === undefined) {
-            console.error('enabled field for _all in mapping is not set');
-          }
-
-          return allEnabled === true;
-        }, '_all enabled'));
       });
     });
 
