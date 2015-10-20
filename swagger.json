@@ -486,6 +486,10 @@
                                             }
                                         }
                                     }
+                                },
+                                "params": {
+                                    "type": "string",
+                                    "description": "URI encoded search parameters. If specified must be the only field in the request body."
                                 }
                             }
                         }
