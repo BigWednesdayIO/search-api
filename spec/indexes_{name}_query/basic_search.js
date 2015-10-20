@@ -67,7 +67,7 @@ describe('/indexes/{name}/query - basic search', () => {
         });
     });
 
-    it('rejects combiniation of parameter formats', () => {
+    it('rejects combination of parameter formats', () => {
       const payload = {
         filters: [{field: 'sku', term: '12345'}],
         params: 'query=1'
@@ -82,6 +82,25 @@ describe('/indexes/{name}/query - basic search', () => {
       .then(response => {
         expect(response.statusCode).to.equal(400);
         expect(response.result.message).to.equal('"params" cannot be combined with other keys');
+      });
+    });
+
+    it('allows additional search keys when performing an encoded query', () => {
+      const payload = {
+        params: 'query=1&analyticsTags=instantsearch'
+      };
+
+      return specRequest({
+        url: `/indexes/${testIndexName}/query`,
+        method: 'post',
+        headers: {
+          Authorization: 'Bearer NG0TuV~u2ni#BP|',
+          ['content-type']: 'application/x-www-form-urlencoded'
+        },
+        payload
+      })
+      .then(response => {
+        expect(response.statusCode).to.equal(200);
       });
     });
 
