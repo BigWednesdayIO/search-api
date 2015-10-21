@@ -34,7 +34,7 @@ describe('indexing record limits', () => {
         payload: {requests: [
           {action: 'create', body: {name: 'three'}},
           {action: 'create', body: {name: 'four'}},
-          {action: 'create', body: {name: 'five'}}
+          {action: 'upsert', body: {name: 'five'}, objectID: '5'}
         ]},
         headers: {Authorization: 'Bearer jQeaXOmEYpVTsb3'}
       })
@@ -70,7 +70,7 @@ describe('indexing record limits', () => {
 
   describe('/indexes/{name}', () => {
     describe('post', () => {
-      it('returns a 403 response when the number of objects indexed reaches the indexing limit', () => {
+      it('returns a 403 response when the number of objects indexed reaches the limit', () => {
         return specRequest({
           url: `/indexes/${testIndexName1}`,
           method: 'post',
@@ -80,6 +80,35 @@ describe('indexing record limits', () => {
         .then(response => {
           expect(response.statusCode).to.equal(403);
           expect(response.result.message).to.equal('Maximum number of records reached');
+        });
+      });
+    });
+  });
+
+  describe('/indexes/{name}/{objectID}', () => {
+    describe('put', () => {
+      it('returns a 403 response when number of objects indexed reaches the limit and a new object would be created', () => {
+        return specRequest({
+          url: `/indexes/${testIndexName1}/1`,
+          method: 'put',
+          payload: {name: 'new'},
+          headers: {Authorization: 'Bearer jQeaXOmEYpVTsb3'}
+        })
+        .then(response => {
+          expect(response.statusCode).to.equal(403);
+          expect(response.result.message).to.equal('Maximum number of records reached');
+        });
+      });
+
+      it('allows objects to be updated when the maximum record limit is reached', () => {
+        return specRequest({
+          url: `/indexes/${testIndexName3}/5`,
+          method: 'put',
+          payload: {name: 'new'},
+          headers: {Authorization: 'Bearer jQeaXOmEYpVTsb3'}
+        })
+        .then(response => {
+          expect(response.statusCode).to.equal(200);
         });
       });
     });
