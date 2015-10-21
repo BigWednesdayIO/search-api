@@ -31,6 +31,12 @@
                         "schema": {
                             "type": "object"
                         }
+                    },
+                    "413": {
+                        "description": "The size of the object being indexed exceeds the size limit.",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             },
@@ -101,6 +107,12 @@
                     },
                     "403": {
                         "description": "A valid authentication token was supplied but does not allow access for this operation",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "413": {
+                        "description": "The size of an object being indexed exceeds the size limit.",
                         "schema": {
                             "type": "object"
                         }
@@ -344,6 +356,12 @@
                     },
                     "403": {
                         "description": "A valid authentication token was supplied but does not allow access for this operation",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "413": {
+                        "description": "The size of the object being indexed exceeds the size limit.",
                         "schema": {
                             "type": "object"
                         }
