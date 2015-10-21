@@ -79,8 +79,8 @@ describe('Search Index', () => {
         it(`sets the index name as an alias when ${test.functionName} is called`, () => {
           return index[test.functionName].apply(index, test.arguments)
             .then(() => {
-              sinon.assert.calledOnce(createIndexStub);
-              sinon.assert.calledWith(createIndexStub, sinon.match({index: expectedUniqueIndexName}));
+              sinon.assert.calledOnce(putAliasStub);
+              sinon.assert.calledWith(putAliasStub, sinon.match({index: expectedUniqueIndexName, name: newIndexName}));
             });
         });
       });
