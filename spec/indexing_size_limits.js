@@ -28,7 +28,7 @@ describe('indexing size limits', () => {
 
   describe('/indexes/{name}', () => {
     describe('post', () => {
-      it('returns a 400 response when the object size exceeds the 10kb limit', () => {
+      it('returns a 413 response when the object size exceeds the 10kb limit', () => {
         return specRequest({
           url: `/indexes/${testIndexName}`,
           method: 'post',
@@ -45,7 +45,7 @@ describe('indexing size limits', () => {
 
   describe('/indexes/{name}/{objectID}', () => {
     describe('put', () => {
-      it('returns a 400 response when the object size exceeds the 10kb limit', () => {
+      it('returns a 413 response when the object size exceeds the 10kb limit', () => {
         return specRequest({
           url: `/indexes/${testIndexName}/1`,
           method: 'put',
@@ -62,7 +62,7 @@ describe('indexing size limits', () => {
 
   describe('/indexes/{name}/batch', () => {
     describe('post', () => {
-      it('returns a 400 response when a create object size exceeds the 10kb limit', () => {
+      it('returns a 413 response when a create object size exceeds the 10kb limit', () => {
         const payload = {
           requests: [
             {action: 'create', body: {name: 'ok'}},
@@ -85,7 +85,7 @@ describe('indexing size limits', () => {
         });
       });
 
-      it('returns a 400 response when an upsert object size exceeds the 10kb limit', () => {
+      it('returns a 413 response when an upsert object size exceeds the 10kb limit', () => {
         const payload = {
           requests: [
             {action: 'create', body: {name: 'ok'}},
