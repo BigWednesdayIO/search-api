@@ -82,6 +82,18 @@
         }
       }
     },
+    "enjoi": {
+      "version": "1.0.1",
+      "from": "enjoi@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/enjoi/-/enjoi-1.0.1.tgz",
+      "dependencies": {
+        "core-util-is": {
+          "version": "1.0.1",
+          "from": "core-util-is@>=1.0.1 <2.0.0",
+          "resolved": "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.1.tgz"
+        }
+      }
+    },
     "hapi": {
       "version": "10.5.0",
       "from": "hapi@>=10.4.1 <11.0.0",
@@ -234,7 +246,7 @@
         },
         "topo": {
           "version": "1.1.0",
-          "from": "topo@1.1.0",
+          "from": "topo@>=1.0.0 <2.0.0",
           "resolved": "https://registry.npmjs.org/topo/-/topo-1.1.0.tgz"
         }
       }
