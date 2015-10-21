@@ -4,25 +4,48 @@ const expect = require('chai').expect;
 const specRequest = require('./spec_request');
 
 describe('endpoint authentication', () => {
-  const tests = [
-    {routeName: '/indexes/{name}', method: 'POST', url: '/indexes/some-index'},
-    {routeName: '/indexes/{name}', method: 'DELETE', url: '/indexes/some-index'},
-    {routeName: '/indexes/{name}/settings', method: 'PUT', url: '/indexes/some-index/settings'},
-    {routeName: '/indexes/{name}/settings', method: 'GET', url: '/indexes/some-index/settings'},
-    {routeName: '/indexes/{name}/{objectID}', method: 'GET', url: '/indexes/some-index/1'},
-    {routeName: '/indexes/{name}/{objectID}', method: 'DELETE', url: '/indexes/some-index/1}'},
-    {routeName: '/indexes/{name}/{objectID}', method: 'PUT', url: '/indexes/some-index/1'},
-    {routeName: '/indexes/{name}/batch', method: 'POST', url: '/indexes/some-index/batch'},
-    {routeName: '/indexes/{name}/query', method: 'POST', url: '/indexes/some-index/query'},
-    {routeName: '/indexes/{name}/move', method: 'POST', url: '/indexes/some-index/move'}
-  ];
+  it('accepts token in header', () => {
+    return specRequest({
+      url: '/indexes/some-index/some-id',
+      method: 'GET',
+      headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
+    })
+    .then(result => {
+      expect(result.statusCode).to.equal(404);
+    });
+  });
 
-  tests.forEach(test => {
-    it(`requires api key for ${test.method} on ${test.routeName}`, () => {
-      return specRequest({url: test.url, method: test.method})
-        .then(result => {
-          expect(result.statusCode).to.equal(401);
-        });
+  it('accepts token in query string', () => {
+    return specRequest({
+      url: '/indexes/some-index/some-id?authorization=8N*b3i[EX[s*zQ%',
+      method: 'GET'
+    })
+    .then(result => {
+      expect(result.statusCode).to.equal(404);
+    });
+  });
+
+  describe('search scope', () => {
+    const tests = [
+      {routeName: '/indexes/{name}', method: 'POST', url: '/indexes/some-index'},
+      {routeName: '/indexes/{name}', method: 'DELETE', url: '/indexes/some-index'},
+      {routeName: '/indexes/{name}/settings', method: 'PUT', url: '/indexes/some-index/settings'},
+      {routeName: '/indexes/{name}/settings', method: 'GET', url: '/indexes/some-index/settings'},
+      {routeName: '/indexes/{name}/{objectID}', method: 'GET', url: '/indexes/some-index/1'},
+      {routeName: '/indexes/{name}/{objectID}', method: 'DELETE', url: '/indexes/some-index/1}'},
+      {routeName: '/indexes/{name}/{objectID}', method: 'PUT', url: '/indexes/some-index/1'},
+      {routeName: '/indexes/{name}/batch', method: 'POST', url: '/indexes/some-index/batch'},
+      {routeName: '/indexes/{name}/query', method: 'POST', url: '/indexes/some-index/query'},
+      {routeName: '/indexes/{name}/move', method: 'POST', url: '/indexes/some-index/move'}
+    ];
+
+    tests.forEach(test => {
+      it(`requires api key for ${test.method} on ${test.routeName}`, () => {
+        return specRequest({url: test.url, method: test.method})
+          .then(result => {
+            expect(result.statusCode).to.equal(401);
+          });
+      });
     });
   });
 

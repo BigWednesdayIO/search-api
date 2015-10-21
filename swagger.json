@@ -486,6 +486,10 @@
                                             }
                                         }
                                     }
+                                },
+                                "params": {
+                                    "type": "string",
+                                    "description": "Search parameters encoded as URI compments e.g. `query=shoes&hitsPerPage=5`. Array parameters should be stringified to JSON before encoding. If specified must be the only field in the request body. When using this format the request may optionally supply a 'content-type' header with a value of 'application/x-www-form-urlencoded' to avoid a CORS pre-flight request."
                                 }
                             }
                         }
