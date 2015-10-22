@@ -108,6 +108,7 @@ describe('Search Index', () => {
         it(`applies default index mappings when ${test.functionName} is called`, () => {
           const defaultMappings = {
             object: {
+              _all: {enabled: false},
               dynamic_templates: [
                 {
                   'default': {
