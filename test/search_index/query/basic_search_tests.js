@@ -89,7 +89,7 @@ describe('Search Index', () => {
 
     it('builds a fuzzy keyword query', () => {
       const expectedQuery = {
-        query: {filtered: {query: {simple_query_string: {query: 'some-keyword~1'}}}},
+        query: {filtered: {query: {simple_query_string: {query: 'some-keyword~1', default_operator: 'and'}}}},
         size: 10
       };
 
@@ -99,7 +99,7 @@ describe('Search Index', () => {
 
     it('builds a fuzzy multi keyword query', () => {
       const expectedQuery = {
-        query: {filtered: {query: {simple_query_string: {query: 'keyword1~1 keyword2~1'}}}},
+        query: {filtered: {query: {simple_query_string: {query: 'keyword1~1 keyword2~1', default_operator: 'and'}}}},
         size: 10
       };
 

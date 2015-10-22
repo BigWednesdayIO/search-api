@@ -41,7 +41,8 @@ describe('Search Index', () => {
             query: {
               simple_query_string: {
                 query: 'some-keyword~1',
-                fields: ['l', 'k^1.1', 'j^1.2', 'i^1.3', 'h^1.4', 'g^1.5', 'f^1.6', 'e^1.7', 'd^1.8', 'c^1.9', 'b^2', 'a^2.1']
+                fields: ['l', 'k^1.1', 'j^1.2', 'i^1.3', 'h^1.4', 'g^1.5', 'f^1.6', 'e^1.7', 'd^1.8', 'c^1.9', 'b^2', 'a^2.1'],
+                default_operator: 'and'
               }
             }
           }
