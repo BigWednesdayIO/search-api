@@ -400,4 +400,3 @@ describe('/indexes/{name}/query - basic search', () => {
     });
   });
 });
-
