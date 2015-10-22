@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const sinon = require('sinon');
 
 const elasticsearchClient = require('../../../lib/elasticsearchClient');
@@ -73,6 +74,60 @@ describe('Search Index', () => {
             .then(() => {
               sinon.assert.calledOnce(createIndexStub);
               sinon.assert.calledWithMatch(createIndexStub, sinon.match({index: expectedUniqueIndexName}));
+            });
+        });
+
+        it(`applies default index settings when ${test.functionName} is called`, () => {
+          const defaultSettings = {
+            analysis: {
+              filter: {
+                instant_search_filter: {
+                  type: 'edge_nGram',
+                  min_gram: 1,
+                  max_gram: 20
+                }
+              },
+              analyzer: {
+                instant_search: {
+                  type: 'custom',
+                  tokenizer: 'standard',
+                  filter: ['lowercase', 'instant_search_filter']
+                }
+              }
+            }
+          };
+
+          return index[test.functionName].apply(index, test.arguments)
+            .then(() => {
+              sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
+                return _.eq(value.body.settings, defaultSettings);
+              }, 'default settings'));
+            });
+        });
+
+        it(`applies default index mappings when ${test.functionName} is called`, () => {
+          const defaultMappings = {
+            object: {
+              dynamic_templates: [
+                {
+                  'default': {
+                    match: '*',
+                    match_mapping_type: 'string',
+                    mapping: {
+                      search_analyzer: 'standard',
+                      index_analyzer: 'instant_search'
+                    }
+                  }
+                }
+              ]
+            }
+          };
+
+          return index[test.functionName].apply(index, test.arguments)
+            .then(() => {
+              sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
+                return _.eq(value.body.mappings, defaultMappings);
+              }, 'default mappings'));
             });
         });
 
