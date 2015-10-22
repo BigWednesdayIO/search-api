@@ -30,7 +30,27 @@ describe('Search Index', () => {
         });
       });
 
-      getMappingStub = sinon.stub(elasticsearchClient.indices, 'getMapping', () => {
+      getMappingStub = sinon.stub(elasticsearchClient.indices, 'getMapping', args => {
+        if (args.index === 'nomapping') {
+          return Promise.resolve({
+            testIndex: {
+              mappings: {}
+            }
+          });
+        }
+
+        if (args.index === 'nosettings') {
+          return Promise.resolve({
+            testIndex: {
+              mappings: {
+                object: {
+                  properties: {one: {}}
+                }
+              }
+            }
+          });
+        }
+
         const mapping = {
           testIndex: {
             mappings: {
@@ -70,6 +90,15 @@ describe('Search Index', () => {
         });
     });
 
+    it('does not execute a search against an index containing no mapping', () => {
+      // when index exists but there is no mapping - should never actually happen
+      return new SearchIndex('nomapping').query({})
+        .then(result => {
+          sinon.assert.notCalled(searchStub);
+          expect(result.hits).to.have.length(0);
+        });
+    });
+
     it('queries requested index', () => {
       return searchIndex.query({})
         .then(() => expect(searchArgs.index).to.equal(indexName));
@@ -94,6 +123,17 @@ describe('Search Index', () => {
       };
 
       return searchIndex.query({query: 'abc'})
+        .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
+    });
+
+    it('builds a query for every field in the index when no settings are present', () => {
+      // when index is created and contains data but no settings
+      const expectedQuery = {
+        query: {filtered: {query: {simple_query_string: {query: 'abc', default_operator: 'and', fields: ['one']}}}},
+        size: 10
+      };
+
+      return new SearchIndex('nosettings').query({query: 'abc'})
         .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
     });
 
