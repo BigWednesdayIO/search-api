@@ -35,7 +35,7 @@ describe('Search Index', () => {
           testIndex: {
             mappings: {
               object: {
-                _meta: {indexSettings: {}}
+                _meta: {indexSettings: {searchable_fields: ['test']}}
               }
             }
           }
@@ -89,7 +89,7 @@ describe('Search Index', () => {
 
     it('builds a non-fuzzy keyword for a query shorter than 4 characters', () => {
       const expectedQuery = {
-        query: {filtered: {query: {simple_query_string: {query: 'abc', default_operator: 'and'}}}},
+        query: {filtered: {query: {simple_query_string: {query: 'abc', default_operator: 'and', fields: ['test']}}}},
         size: 10
       };
 
@@ -99,7 +99,7 @@ describe('Search Index', () => {
 
     it('builds a distance 1 fuzzy keyword query for a query at least 4 characters long', () => {
       const expectedQuery = {
-        query: {filtered: {query: {simple_query_string: {query: 'abcd~1', default_operator: 'and'}}}},
+        query: {filtered: {query: {simple_query_string: {query: 'abcd~1', default_operator: 'and', fields: ['test']}}}},
         size: 10
       };
 
@@ -109,7 +109,7 @@ describe('Search Index', () => {
 
     it('builds a distance 2 fuzzy keyword query for a query at least 8 characters long', () => {
       const expectedQuery = {
-        query: {filtered: {query: {simple_query_string: {query: 'abcdefgh~2', default_operator: 'and'}}}},
+        query: {filtered: {query: {simple_query_string: {query: 'abcdefgh~2', default_operator: 'and', fields: ['test']}}}},
         size: 10
       };
 
@@ -119,7 +119,7 @@ describe('Search Index', () => {
 
     it('builds a fuzzy multi keyword query', () => {
       const expectedQuery = {
-        query: {filtered: {query: {simple_query_string: {query: 'keyword1~2 keyword2~2', default_operator: 'and'}}}},
+        query: {filtered: {query: {simple_query_string: {query: 'keyword1~2 keyword2~2', default_operator: 'and', fields: ['test']}}}},
         size: 10
       };
 
