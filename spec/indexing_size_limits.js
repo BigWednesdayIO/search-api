@@ -79,7 +79,6 @@ describe('indexing size limits', () => {
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
         })
         .then(response => {
-          console.log(response.result);
           expect(response.statusCode).to.equal(413);
           expect(response.result.message).to.equal('Object exceeds 10k size limit - at position 2');
         });
@@ -102,7 +101,6 @@ describe('indexing size limits', () => {
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
         })
         .then(response => {
-          console.log(response.result);
           expect(response.statusCode).to.equal(413);
           expect(response.result.message).to.equal('Object exceeds 10k size limit - at position 1');
         });

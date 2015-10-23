@@ -40,8 +40,9 @@ describe('Search Index', () => {
           filtered: {
             query: {
               simple_query_string: {
-                query: 'some-keyword~1',
-                fields: ['l', 'k^1.1', 'j^1.2', 'i^1.3', 'h^1.4', 'g^1.5', 'f^1.6', 'e^1.7', 'd^1.8', 'c^1.9', 'b^2', 'a^2.1']
+                query: 'abc',
+                fields: ['l', 'k^1.1', 'j^1.2', 'i^1.3', 'h^1.4', 'g^1.5', 'f^1.6', 'e^1.7', 'd^1.8', 'c^1.9', 'b^2', 'a^2.1'],
+                default_operator: 'and'
               }
             }
           }
@@ -49,7 +50,7 @@ describe('Search Index', () => {
         size: 10
       };
 
-      return new SearchIndex('index').query({query: 'some-keyword'})
+      return new SearchIndex('index').query({query: 'abc'})
         .then(() => {
           sinon.assert.calledWith(searchStub, sinon.match(value => {
             return _.eq(value.body, expectedQuery);

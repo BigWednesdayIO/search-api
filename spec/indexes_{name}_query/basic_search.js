@@ -138,8 +138,23 @@ describe('/indexes/{name}/query - basic search', () => {
 
     [jsonPayload, uriEncodedPayload].forEach(testSuite => {
       describe(testSuite.name, () => {
-        it('queries by keyword', () => {
+        it('returns results with a full keyword match', () => {
           const payload = testSuite.payloadBuilder({query: '12345'});
+
+          return specRequest({
+            url: `/indexes/${testIndexName}/query`,
+            method: 'post',
+            headers: testSuite.headers,
+            payload
+          })
+            .then(response => {
+              expect(response.result.hits).to.be.deep.equal([document1]);
+              expect(response.statusCode).to.equal(200);
+            });
+        });
+
+        it('returns results with a partial keyword match', () => {
+          const payload = testSuite.payloadBuilder({query: '1234'});
 
           return specRequest({
             url: `/indexes/${testIndexName}/query`,
@@ -400,4 +415,3 @@ describe('/indexes/{name}/query - basic search', () => {
     });
   });
 });
-
