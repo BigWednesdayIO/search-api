@@ -82,7 +82,7 @@ describe('Search Index', () => {
             analysis: {
               filter: {
                 instant_search_filter: {
-                  type: 'edge_nGram',
+                  type: 'edgeNGram',
                   min_gram: 1,
                   max_gram: 20
                 }
@@ -116,7 +116,7 @@ describe('Search Index', () => {
                     match_mapping_type: 'string',
                     mapping: {
                       search_analyzer: 'standard',
-                      index_analyzer: 'instant_search'
+                      analyzer: 'instant_search'
                     }
                   }
                 }
