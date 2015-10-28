@@ -20,10 +20,10 @@ dependencies:
     - sudo pip install -U docker-compose
     - if [[ -e ~/docker/elastic.tar ]]; then docker load -i ~/docker/elastic.tar; fi
     - if [[ -e ~/docker/node.tar ]]; then docker load -i ~/docker/node.tar; fi
-    - docker pull elasticsearch:1.7.2
+    - docker pull elasticsearch:2.0.0
     - docker pull node:4.2.1
     - mkdir -p ~/docker
-    - docker save elasticsearch:1.7.2 > ~/docker/elastic.tar
+    - docker save elasticsearch:2.0.0 > ~/docker/elastic.tar
     - docker save node:4.2.1 > ~/docker/node.tar
 
 test:
