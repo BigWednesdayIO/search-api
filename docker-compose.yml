@@ -1,6 +1,6 @@
 elasticsearch:
   image: elasticsearch:2.0.0
-  command: elasticsearch -Des.index.number_of_shards="1" -Des.index.number_of_replicas="0"
+  command: elasticsearch -Des.index.number_of_shards="1" -Des.index.number_of_replicas="0" -Des.network.host="0.0.0.0"
 api:
   build: .
   ports:
