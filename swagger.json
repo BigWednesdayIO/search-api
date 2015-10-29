@@ -406,7 +406,10 @@
                                     }
                                 },
                                 "facets": {
-                                    "$ref": "#/definitions/Facet"
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Facet"
+                                    }
                                 }
                             }
                         }
@@ -587,7 +590,15 @@
                 "values": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "object",
+                        "properties": {
+                            "value": {
+                                "type": "string"
+                            },
+                            "count": {
+                                "type": "integer"
+                            }
+                        }
                     }
                 }
             }
