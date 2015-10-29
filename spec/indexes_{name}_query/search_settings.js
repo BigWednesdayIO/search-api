@@ -9,9 +9,9 @@ const specRequest = require('../spec_request');
 describe('/indexes/{name}/query - search settings', () => {
   describe('post', () => {
     const testIndexName = `test_index_${cuid()}`;
-    const document1 = {field1: 'blue', field2: 'red'};
-    const document2 = {field1: 'red', field2: 'blue'};
-    const document3 = {field1: 'turquoise', field2: 'turquoise', field3: 'blue'};
+    const document1 = {field1: 'blue', field2: 'red', rating: 1};
+    const document2 = {field1: 'red', field2: 'blue', rating: 1};
+    const document3 = {field1: 'turquoise', field2: 'turquoise', field3: 'blue', rating: 10};
 
     const reindexTestDocuments = () => {
       const batch = {
@@ -99,7 +99,7 @@ describe('/indexes/{name}/query - search settings', () => {
           url: `/indexes/${testIndexName}/settings`,
           method: 'put',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
-          payload: {searchable_fields: ['field1', 'field2'], facet_fields: ['field2', 'field3']}
+          payload: {searchable_fields: ['field1', 'field2'], facet_fields: ['field2', 'field3', 'rating']}
         })
         .then(reindexTestDocuments);
       });
@@ -114,7 +114,8 @@ describe('/indexes/{name}/query - search settings', () => {
         .then(response => {
           expect(response.result.facets).to.be.deep.equal([
             {key: 'field2', values: [{value: 'blue', count: 1}, {value: 'red', count: 1}]},
-            {key: 'field3', values: []}
+            {key: 'field3', values: []},
+            {key: 'rating', values: [{value: 1, count: 2}, {value: 10, count: 1}]}
           ]);
 
           expect(response.statusCode).to.equal(200);
