@@ -8,7 +8,7 @@ const elasticsearchClient = require('../../../lib/elasticsearchClient');
 const SearchIndex = require('../../../lib/search_index');
 
 describe('Search Index', () => {
-  describe('query', () => {
+  describe('query - facets', () => {
     let searchStub;
     let getMappingStub;
     let returnedFacets;
@@ -22,6 +22,9 @@ describe('Search Index', () => {
           },
           facet1: {
             buckets: [{key: 'one', doc_count: 5}, {key: 'two', doc_count: 3}]
+          },
+          num: {
+            buckets: [{key: 1, doc_count: 1}]
           }
         }
       };
@@ -33,11 +36,17 @@ describe('Search Index', () => {
           testIndex: {
             mappings: {
               object: {
-                _meta: {indexSettings: {searchable_fields: ['a'], facet_fields: ['facet1', 'facet2']}}
-              },
-              properties: {
-                str: {
-                  type: 'string'
+                _meta: {indexSettings: {searchable_fields: ['a'], facet_fields: ['facet1', 'facet2', 'num']}},
+                properties: {
+                  facet1: {
+                    type: 'string'
+                  },
+                  facet2: {
+                    type: 'string'
+                  },
+                  num: {
+                    type: 'double'
+                  }
                 }
               }
             }
@@ -71,16 +80,32 @@ describe('Search Index', () => {
       }, 'string aggregation'));
     });
 
+    it('retrieves non-string facets from default field', () => {
+      const expectedAggregation = {
+        terms: {
+          field: 'num',
+          size: 0
+        }
+      };
+
+      sinon.assert.calledWith(searchStub, sinon.match(value => {
+        return _.eq(value.body.aggregations.num, expectedAggregation);
+      }, 'non-string aggregation'));
+    });
+
     it('return aggregations as facets', () => {
       const facet1 = _.find(returnedFacets, {key: 'facet1'});
       expect(facet1).to.deep.eql({key: 'facet1', values: [{value: 'one', count: 5}, {value: 'two', count: 3}]});
 
       const facet2 = _.find(returnedFacets, {key: 'facet2'});
       expect(facet2).to.deep.eql({key: 'facet2', values: [{value: 'a', count: 9}, {value: 'b', count: 1}]});
+
+      const num = _.find(returnedFacets, {key: 'num'});
+      expect(num).to.deep.eql({key: 'num', values: [{value: 1, count: 1}]});
     });
 
     it('returns facets in their configured order', () => {
-      expect(_.map(returnedFacets, 'key')).to.deep.equal(['facet1', 'facet2']);
+      expect(_.map(returnedFacets, 'key')).to.deep.equal(['facet1', 'facet2', 'num']);
     });
   });
 });

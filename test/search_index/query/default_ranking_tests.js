@@ -7,7 +7,7 @@ const elasticsearchClient = require('../../../lib/elasticsearchClient');
 const SearchIndex = require('../../../lib/search_index');
 
 describe('Search Index', () => {
-  describe('query', () => {
+  describe('query - default ranking', () => {
     let searchStub;
     let getMappingStub;
 
