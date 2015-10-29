@@ -119,14 +119,14 @@ describe('Search Index', () => {
             return index[test.functionName].apply(index, test.arguments)
               .then(() => {
                 sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
-                  const template = value.body.mappings.object.dynamic_templates[0].instant_search;
+                  const template = value.body.mappings.object.dynamic_templates[0].string_fields;
 
                   return template.match === '*' &&
                     template.match_mapping_type === 'string' &&
                     template.mapping.fields['{name}'].type === 'string' &&
                     template.mapping.fields['{name}'].search_analyzer === 'standard' &&
                     template.mapping.fields['{name}'].analyzer === 'instant_search';
-                }, 'instant search template'));
+                }, 'string field instant search'));
               });
           });
 
@@ -134,7 +134,7 @@ describe('Search Index', () => {
             return index[test.functionName].apply(index, test.arguments)
               .then(() => {
                 sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
-                  const template = value.body.mappings.object.dynamic_templates[0].instant_search;
+                  const template = value.body.mappings.object.dynamic_templates[0].string_fields;
 
                   return template.mapping.fields.raw.index === 'not_analyzed' &&
                     template.mapping.fields.raw.type === 'string';
