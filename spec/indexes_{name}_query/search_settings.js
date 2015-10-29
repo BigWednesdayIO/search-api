@@ -47,7 +47,7 @@ describe('/indexes/{name}/query - search settings', () => {
           url: `/indexes/${testIndexName}/settings`,
           method: 'put',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
-          payload: {searchable_fields: ['field1', 'field2']}
+          payload: {searchable_fields: ['field1', 'field2'], facet_fields: []}
         })
         .then(reindexTestDocuments);
       });
@@ -74,7 +74,7 @@ describe('/indexes/{name}/query - search settings', () => {
           url: `/indexes/${testIndexName}/settings`,
           method: 'put',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
-          payload: {searchable_fields: ['field2', 'field1']}
+          payload: {searchable_fields: ['field2', 'field1'], facet_fields: []}
         })
         .then(reindexTestDocuments);
       });

@@ -22,12 +22,12 @@ describe('/indexes/{name}/settings', () => {
       return specRequest({
         url: `/indexes/${testIndexName}/settings`,
         method: 'put',
-        payload: {searchable_fields: ['one', 'two', 'three']},
+        payload: {searchable_fields: ['one', 'two', 'three'], facet_fields: ['one', 'two']},
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(200);
-          expect(response.result).to.deep.equal({searchable_fields: ['one', 'two', 'three']});
+          expect(response.result).to.deep.equal({searchable_fields: ['one', 'two', 'three'], facet_fields: ['one', 'two']});
         });
     });
   });
@@ -37,7 +37,7 @@ describe('/indexes/{name}/settings', () => {
       return specRequest({
         url: `/indexes/${testIndexName}/settings`,
         method: 'put',
-        payload: {searchable_fields: ['one', 'two', 'three', 'four']},
+        payload: {searchable_fields: ['one', 'two', 'three', 'four'], facet_fields: ['a', 'b']},
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       });
     });
@@ -49,7 +49,7 @@ describe('/indexes/{name}/settings', () => {
       })
         .then(response => {
           expect(response.statusCode).to.equal(200);
-          expect(response.result).to.deep.equal({searchable_fields: ['one', 'two', 'three', 'four']});
+          expect(response.result).to.deep.equal({searchable_fields: ['one', 'two', 'three', 'four'], facet_fields: ['a', 'b']});
         });
     });
 

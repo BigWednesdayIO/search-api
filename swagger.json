@@ -577,9 +577,15 @@
     "definitions": {
         "IndexSettings": {
             "type": "object",
-            "required": ["searchable_fields"],
+            "required": ["searchable_fields", "facet_fields"],
             "properties": {
                 "searchable_fields": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "facet_fields": {
                     "type": "array",
                     "items": {
                         "type": "string"
