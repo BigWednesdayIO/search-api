@@ -591,14 +591,7 @@
                     "type": "array",
                     "items": {
                         "type": "object",
-                        "properties": {
-                            "value": {
-                                "type": "string"
-                            },
-                            "count": {
-                                "type": "integer"
-                            }
-                        }
+                        "description": "An object containing the facet `value` and `count`. Value can be any primative type."
                     }
                 }
             }
