@@ -105,30 +105,26 @@ describe('Search Index', () => {
             });
         });
 
-        it(`applies default index mappings when ${test.functionName} is called`, () => {
-          const defaultMappings = {
-            object: {
-              _all: {enabled: false},
-              dynamic_templates: [
-                {
-                  'default': {
-                    match: '*',
-                    match_mapping_type: 'string',
-                    mapping: {
-                      search_analyzer: 'standard',
-                      analyzer: 'instant_search'
-                    }
-                  }
-                }
-              ]
-            }
-          };
-
+        it(`disables the _all field when ${test.functionName} is called`, () => {
           return index[test.functionName].apply(index, test.arguments)
             .then(() => {
               sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
-                return _.eq(value.body.mappings, defaultMappings);
-              }, 'default mappings'));
+                return _.eq(value.body.mappings.object._all, {enabled: false});
+              }, '_all disabled'));
+            });
+        });
+
+        it(`sets the instant search template for string fields when ${test.functionName} is called`, () => {
+          return index[test.functionName].apply(index, test.arguments)
+            .then(() => {
+              sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
+                const template = value.body.mappings.object.dynamic_templates[0].default;
+
+                return template.match === '*' &&
+                  template.match_mapping_type === 'string' &&
+                  template.mapping.search_analyzer === 'standard' &&
+                  template.mapping.analyzer === 'instant_search';
+              }, 'instant search template'));
             });
         });
 
