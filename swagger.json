@@ -404,6 +404,9 @@
                                     "items": {
                                         "type": "object"
                                     }
+                                },
+                                "facets": {
+                                    "$ref": "#/definitions/Facet"
                                 }
                             }
                         }
@@ -575,6 +578,20 @@
         }
     },
     "definitions": {
+        "Facet": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "IndexSettings": {
             "type": "object",
             "required": ["searchable_fields", "facet_fields"],

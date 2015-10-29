@@ -92,5 +92,34 @@ describe('/indexes/{name}/query - search settings', () => {
         });
       });
     });
+
+    describe('facets', () => {
+      before(() => {
+        return specRequest({
+          url: `/indexes/${testIndexName}/settings`,
+          method: 'put',
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
+          payload: {searchable_fields: ['field1', 'field2'], facet_fields: ['field2', 'field3']}
+        })
+        .then(reindexTestDocuments);
+      });
+
+      it('returns configured facets', () => {
+        return specRequest({
+          url: `/indexes/${testIndexName}/query`,
+          method: 'post',
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
+          payload: {query: 'blue'}
+        })
+        .then(response => {
+          expect(response.result.facets).to.be.deep.equal([
+            {key: 'field2', values: ['blue', 'red', 'turquoise']},
+            {key: 'field3', values: ['blue']}
+          ]);
+
+          expect(response.statusCode).to.equal(200);
+        });
+      });
+    });
   });
 });
