@@ -119,7 +119,7 @@ describe('Search Index', () => {
             return index[test.functionName].apply(index, test.arguments)
               .then(() => {
                 sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
-                  const template = value.body.mappings.object.dynamic_templates[0].default;
+                  const template = value.body.mappings.object.dynamic_templates[0].instant_search;
 
                   return template.match === '*' &&
                     template.match_mapping_type === 'string' &&
