@@ -94,18 +94,18 @@ describe('Search Index', () => {
     });
 
     it('return aggregations as facets', () => {
-      const facet1 = _.find(returnedFacets, {key: 'facet1'});
-      expect(facet1).to.deep.eql({key: 'facet1', values: [{value: 'one', count: 5}, {value: 'two', count: 3}]});
+      const facet1 = _.find(returnedFacets, {field: 'facet1'});
+      expect(facet1).to.deep.eql({field: 'facet1', values: [{value: 'one', count: 5}, {value: 'two', count: 3}]});
 
-      const facet2 = _.find(returnedFacets, {key: 'facet2'});
-      expect(facet2).to.deep.eql({key: 'facet2', values: [{value: 'a', count: 9}, {value: 'b', count: 1}]});
+      const facet2 = _.find(returnedFacets, {field: 'facet2'});
+      expect(facet2).to.deep.eql({field: 'facet2', values: [{value: 'a', count: 9}, {value: 'b', count: 1}]});
 
-      const num = _.find(returnedFacets, {key: 'num'});
-      expect(num).to.deep.eql({key: 'num', values: [{value: 1, count: 1}]});
+      const num = _.find(returnedFacets, {field: 'num'});
+      expect(num).to.deep.eql({field: 'num', values: [{value: 1, count: 1}]});
     });
 
     it('returns facets in their configured order', () => {
-      expect(_.map(returnedFacets, 'key')).to.deep.equal(['facet1', 'facet2', 'num']);
+      expect(_.map(returnedFacets, 'field')).to.deep.equal(['facet1', 'facet2', 'num']);
     });
   });
 });

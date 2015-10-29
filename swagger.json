@@ -584,7 +584,7 @@
         "Facet": {
             "type": "object",
             "properties": {
-                "key": {
+                "field": {
                     "type": "string"
                 },
                 "values": {

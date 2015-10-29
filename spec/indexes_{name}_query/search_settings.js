@@ -113,9 +113,9 @@ describe('/indexes/{name}/query - search settings', () => {
         })
         .then(response => {
           expect(response.result.facets).to.be.deep.equal([
-            {key: 'field2', values: [{value: 'blue', count: 1}, {value: 'red', count: 1}]},
-            {key: 'field3', values: []},
-            {key: 'rating', values: [{value: 1, count: 2}]}
+            {field: 'field2', values: [{value: 'blue', count: 1}, {value: 'red', count: 1}]},
+            {field: 'field3', values: []},
+            {field: 'rating', values: [{value: 1, count: 2}]}
           ]);
 
           expect(response.statusCode).to.equal(200);
