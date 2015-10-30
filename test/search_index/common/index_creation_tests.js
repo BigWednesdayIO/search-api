@@ -69,88 +69,101 @@ describe('Search Index', () => {
       });
 
       tests.forEach(test => {
-        it(`creates an index with a unique name when ${test.functionName} is called`, () => {
-          return index[test.functionName].apply(index, test.arguments)
-            .then(() => {
-              sinon.assert.calledOnce(createIndexStub);
-              sinon.assert.calledWithMatch(createIndexStub, sinon.match({index: expectedUniqueIndexName}));
-            });
-        });
+        describe(`and ${test.functionName} is called`, () => {
+          it('creates an index with a unique name', () => {
+            return index[test.functionName].apply(index, test.arguments)
+              .then(() => {
+                sinon.assert.calledOnce(createIndexStub);
+                sinon.assert.calledWithMatch(createIndexStub, sinon.match({index: expectedUniqueIndexName}));
+              });
+          });
 
-        it(`applies default index settings when ${test.functionName} is called`, () => {
-          const defaultSettings = {
-            analysis: {
-              filter: {
-                instant_search_filter: {
-                  type: 'edgeNGram',
-                  min_gram: 1,
-                  max_gram: 20
-                }
-              },
-              analyzer: {
-                instant_search: {
-                  type: 'custom',
-                  tokenizer: 'standard',
-                  filter: ['lowercase', 'instant_search_filter']
-                }
-              }
-            }
-          };
-
-          return index[test.functionName].apply(index, test.arguments)
-            .then(() => {
-              sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
-                return _.eq(value.body.settings, defaultSettings);
-              }, 'default settings'));
-            });
-        });
-
-        it(`applies default index mappings when ${test.functionName} is called`, () => {
-          const defaultMappings = {
-            object: {
-              _all: {enabled: false},
-              dynamic_templates: [
-                {
-                  'default': {
-                    match: '*',
-                    match_mapping_type: 'string',
-                    mapping: {
-                      search_analyzer: 'standard',
-                      analyzer: 'instant_search'
-                    }
+          it('applies default index settings', () => {
+            const defaultSettings = {
+              analysis: {
+                filter: {
+                  instant_search_filter: {
+                    type: 'edgeNGram',
+                    min_gram: 1,
+                    max_gram: 20
+                  }
+                },
+                analyzer: {
+                  instant_search: {
+                    type: 'custom',
+                    tokenizer: 'standard',
+                    filter: ['lowercase', 'instant_search_filter']
                   }
                 }
-              ]
-            }
-          };
+              }
+            };
 
-          return index[test.functionName].apply(index, test.arguments)
-            .then(() => {
-              sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
-                return _.eq(value.body.mappings, defaultMappings);
-              }, 'default mappings'));
-            });
-        });
+            return index[test.functionName].apply(index, test.arguments)
+              .then(() => {
+                sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
+                  return _.eq(value.body.settings, defaultSettings);
+                }, 'default settings'));
+              });
+          });
 
-        it(`sets the index name as an alias when ${test.functionName} is called`, () => {
-          return index[test.functionName].apply(index, test.arguments)
-            .then(() => {
-              sinon.assert.calledOnce(createIndexStub);
-              sinon.assert.calledWith(createIndexStub, sinon.match({index: expectedUniqueIndexName}));
-            });
+          it('disables the _all field', () => {
+            return index[test.functionName].apply(index, test.arguments)
+              .then(() => {
+                sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
+                  return _.eq(value.body.mappings.object._all, {enabled: false});
+                }, '_all disabled'));
+              });
+          });
+
+          it('sets the instant search template for string fields', () => {
+            return index[test.functionName].apply(index, test.arguments)
+              .then(() => {
+                sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
+                  const template = value.body.mappings.object.dynamic_templates[0].string_fields;
+
+                  return template.match === '*' &&
+                    template.match_mapping_type === 'string' &&
+                    template.mapping.fields['{name}'].type === 'string' &&
+                    template.mapping.fields['{name}'].search_analyzer === 'standard' &&
+                    template.mapping.fields['{name}'].analyzer === 'instant_search';
+                }, 'string field instant search'));
+              });
+          });
+
+          it('configures a raw string field for facetting and sorting', () => {
+            return index[test.functionName].apply(index, test.arguments)
+              .then(() => {
+                sinon.assert.calledWithMatch(createIndexStub, sinon.match(value => {
+                  const template = value.body.mappings.object.dynamic_templates[0].string_fields;
+
+                  return template.mapping.fields.raw.index === 'not_analyzed' &&
+                    template.mapping.fields.raw.type === 'string';
+                }, 'raw string field'));
+              });
+          });
+
+          it('sets the index name as an alias', () => {
+            return index[test.functionName].apply(index, test.arguments)
+              .then(() => {
+                sinon.assert.calledOnce(putAliasStub);
+                sinon.assert.calledWith(putAliasStub, sinon.match({index: expectedUniqueIndexName, name: newIndexName}));
+              });
+          });
         });
       });
     });
 
     describe('when the index already exists', () => {
       tests.forEach(test => {
-        it(`a new index is not created when ${test.functionName} is called`, () => {
-          const index = new SearchIndex(existingIndexName);
-          return index[test.functionName].apply(index, test.arguments)
-            .then(() => {
-              sinon.assert.notCalled(createIndexStub);
-              sinon.assert.notCalled(putAliasStub);
-            });
+        describe(`and ${test.functionName} is called`, () => {
+          it('a new index is not created', () => {
+            const index = new SearchIndex(existingIndexName);
+            return index[test.functionName].apply(index, test.arguments)
+              .then(() => {
+                sinon.assert.notCalled(createIndexStub);
+                sinon.assert.notCalled(putAliasStub);
+              });
+          });
         });
       });
     });

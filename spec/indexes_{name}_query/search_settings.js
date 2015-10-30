@@ -9,9 +9,9 @@ const specRequest = require('../spec_request');
 describe('/indexes/{name}/query - search settings', () => {
   describe('post', () => {
     const testIndexName = `test_index_${cuid()}`;
-    const document1 = {field1: 'blue', field2: 'red'};
-    const document2 = {field1: 'red', field2: 'blue'};
-    const document3 = {field1: 'turquoise', field2: 'turquoise', field3: 'blue'};
+    const document1 = {field1: 'blue', field2: 'red', rating: 1};
+    const document2 = {field1: 'red', field2: 'blue', rating: 1};
+    const document3 = {field1: 'turquoise', field2: 'turquoise', field3: 'blue', rating: 10};
 
     const reindexTestDocuments = () => {
       const batch = {
@@ -47,7 +47,7 @@ describe('/indexes/{name}/query - search settings', () => {
           url: `/indexes/${testIndexName}/settings`,
           method: 'put',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
-          payload: {searchable_fields: ['field1', 'field2']}
+          payload: {searchable_fields: ['field1', 'field2'], facet_fields: []}
         })
         .then(reindexTestDocuments);
       });
@@ -74,7 +74,7 @@ describe('/indexes/{name}/query - search settings', () => {
           url: `/indexes/${testIndexName}/settings`,
           method: 'put',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
-          payload: {searchable_fields: ['field2', 'field1']}
+          payload: {searchable_fields: ['field2', 'field1'], facet_fields: []}
         })
         .then(reindexTestDocuments);
       });
@@ -88,6 +88,36 @@ describe('/indexes/{name}/query - search settings', () => {
         })
         .then(response => {
           expect(response.result.hits).to.be.deep.equal([document2, document1]);
+          expect(response.statusCode).to.equal(200);
+        });
+      });
+    });
+
+    describe('facets', () => {
+      before(() => {
+        return specRequest({
+          url: `/indexes/${testIndexName}/settings`,
+          method: 'put',
+          headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
+          payload: {searchable_fields: ['field1', 'field2'], facet_fields: ['field2', 'field3', 'rating']}
+        })
+        .then(reindexTestDocuments);
+      });
+
+      it('returns configured facets', () => {
+        return specRequest({
+          url: `/indexes/${testIndexName}/query`,
+          method: 'post',
+          headers: {Authorization: 'Bearer NG0TuV~u2ni#BP|'},
+          payload: {query: 'blue'}
+        })
+        .then(response => {
+          expect(response.result.facets).to.be.deep.equal([
+            {field: 'field2', values: [{value: 'blue', count: 1}, {value: 'red', count: 1}]},
+            {field: 'field3', values: []},
+            {field: 'rating', values: [{value: 1, count: 2}]}
+          ]);
+
           expect(response.statusCode).to.equal(200);
         });
       });

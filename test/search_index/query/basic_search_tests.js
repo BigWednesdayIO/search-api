@@ -55,7 +55,15 @@ describe('Search Index', () => {
           testIndex: {
             mappings: {
               object: {
-                _meta: {indexSettings: {searchable_fields: ['test']}}
+                _meta: {indexSettings: {searchable_fields: ['test']}},
+                properties: {
+                  field1: {
+                    type: 'double'
+                  },
+                  str: {
+                    type: 'string'
+                  }
+                }
               }
             }
           }
@@ -278,7 +286,18 @@ describe('Search Index', () => {
         .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
     });
 
-    it('builds sorted query with default order', () => {
+    it('builds sorted query on raw string field', () => {
+      const expectedQuery = {
+        query: {bool: {}},
+        size: 10,
+        sort: ['str.raw']
+      };
+
+      return searchIndex.query({sort: [{field: 'str'}]})
+        .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
+    });
+
+    it('builds sorted query on non-string field', () => {
       const expectedQuery = {
         query: {bool: {}},
         size: 10,

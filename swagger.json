@@ -404,6 +404,12 @@
                                     "items": {
                                         "type": "object"
                                     }
+                                },
+                                "facets": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Facet"
+                                    }
                                 }
                             }
                         }
@@ -575,11 +581,32 @@
         }
     },
     "definitions": {
+        "Facet": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "type": "string"
+                },
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "description": "An object containing the facet `value` and `count`. Value can be any primative type."
+                    }
+                }
+            }
+        },
         "IndexSettings": {
             "type": "object",
-            "required": ["searchable_fields"],
+            "required": ["searchable_fields", "facet_fields"],
             "properties": {
                 "searchable_fields": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "facet_fields": {
                     "type": "array",
                     "items": {
                         "type": "string"
