@@ -123,9 +123,9 @@ describe('Search Index', () => {
 
                   return template.match === '*' &&
                     template.match_mapping_type === 'string' &&
-                    template.mapping.fields['{name}'].type === 'string' &&
-                    template.mapping.fields['{name}'].search_analyzer === 'standard' &&
-                    template.mapping.fields['{name}'].analyzer === 'instant_search';
+                    template.mapping.type === 'string' &&
+                    template.mapping.search_analyzer === 'standard' &&
+                    template.mapping.analyzer === 'instant_search';
                 }, 'string field instant search'));
               });
           });

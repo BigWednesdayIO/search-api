@@ -60,7 +60,10 @@ describe('Search Index', () => {
                   field1: {
                     type: 'double'
                   },
-                  str: {
+                  str1: {
+                    type: 'string'
+                  },
+                  str2: {
                     type: 'string'
                   }
                 }
@@ -126,7 +129,7 @@ describe('Search Index', () => {
 
     it('builds a non-fuzzy keyword for a query shorter than 4 characters', () => {
       const expectedQuery = {
-        query: {bool: {must: {simple_query_string: {query: 'abc', default_operator: 'and', fields: ['test']}}}},
+        query: {bool: {must: {simple_query_string: {query: 'abc', default_operator: 'and', fields: ['test'], lenient: true}}}},
         size: 10
       };
 
@@ -137,7 +140,7 @@ describe('Search Index', () => {
     it('builds a query for every field in the index when no settings are present', () => {
       // when index is created and contains data but no settings
       const expectedQuery = {
-        query: {bool: {must: {simple_query_string: {query: 'abc', default_operator: 'and', fields: ['one']}}}},
+        query: {bool: {must: {simple_query_string: {query: 'abc', default_operator: 'and', fields: ['one'], lenient: true}}}},
         size: 10
       };
 
@@ -147,7 +150,7 @@ describe('Search Index', () => {
 
     it('builds a distance 1 fuzzy keyword query for a query at least 4 characters long', () => {
       const expectedQuery = {
-        query: {bool: {must: {simple_query_string: {query: 'abcd~1', default_operator: 'and', fields: ['test']}}}},
+        query: {bool: {must: {simple_query_string: {query: 'abcd~1', default_operator: 'and', fields: ['test'], lenient: true}}}},
         size: 10
       };
 
@@ -157,7 +160,7 @@ describe('Search Index', () => {
 
     it('builds a distance 2 fuzzy keyword query for a query at least 8 characters long', () => {
       const expectedQuery = {
-        query: {bool: {must: {simple_query_string: {query: 'abcdefgh~2', default_operator: 'and', fields: ['test']}}}},
+        query: {bool: {must: {simple_query_string: {query: 'abcdefgh~2', default_operator: 'and', fields: ['test'], lenient: true}}}},
         size: 10
       };
 
@@ -167,7 +170,7 @@ describe('Search Index', () => {
 
     it('builds a fuzzy multi keyword query', () => {
       const expectedQuery = {
-        query: {bool: {must: {simple_query_string: {query: 'keyword1~2 keyword2~2', default_operator: 'and', fields: ['test']}}}},
+        query: {bool: {must: {simple_query_string: {query: 'keyword1~2 keyword2~2', default_operator: 'and', fields: ['test'], lenient: true}}}},
         size: 10
       };
 
@@ -175,18 +178,34 @@ describe('Search Index', () => {
         .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
     });
 
-    it('builds a term filtered query', () => {
+    it('builds a term filtered query on raw string fields', () => {
       const expectedQuery = {
         query: {
           bool: {
-            filter: [{term: {field1: 'term1'}}, {term: {field2: 'term2'}}]
+            filter: [{term: {'str1.raw': 'term1'}}, {term: {'str2.raw': 'term2'}}]
           }
         },
         size: 10
       };
 
       return searchIndex.query({
-        filters: [{field: 'field1', term: 'term1'}, {field: 'field2', term: 'term2'}]
+        filters: [{field: 'str1', term: 'term1'}, {field: 'str2', term: 'term2'}]
+      })
+      .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
+    });
+
+    it('builds a term filtered query on non-string fields', () => {
+      const expectedQuery = {
+        query: {
+          bool: {
+            filter: [{term: {'str1.raw': 'term1'}}, {term: {field1: 123}}]
+          }
+        },
+        size: 10
+      };
+
+      return searchIndex.query({
+        filters: [{field: 'str1', term: 'term1'}, {field: 'field1', term: 123}]
       })
       .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
     });
@@ -290,10 +309,10 @@ describe('Search Index', () => {
       const expectedQuery = {
         query: {bool: {}},
         size: 10,
-        sort: ['str.raw']
+        sort: ['str1.raw']
       };
 
-      return searchIndex.query({sort: [{field: 'str'}]})
+      return searchIndex.query({sort: [{field: 'str1'}]})
         .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
     });
 

@@ -8,8 +8,8 @@ const specRequest = require('../spec_request');
 
 describe('/indexes/{name}/query - basic search', () => {
   const testIndexName = `test_index_${cuid()}`;
-  const document1 = {sku: '12345', price: 1};
-  const document2 = {sku: '98765', price: 5};
+  const document1 = {sku: 'ABCDEF', price: 1, quantity: 1};
+  const document2 = {sku: 'GHIJKL', price: 5, quantity: 8};
 
   const reindexTestDocuments = () => {
     const batch = {
@@ -139,7 +139,7 @@ describe('/indexes/{name}/query - basic search', () => {
     [jsonPayload, uriEncodedPayload].forEach(testSuite => {
       describe(testSuite.name, () => {
         it('returns results with a full keyword match', () => {
-          const payload = testSuite.payloadBuilder({query: '12345'});
+          const payload = testSuite.payloadBuilder({query: 'ABCDEF'});
 
           return specRequest({
             url: `/indexes/${testIndexName}/query`,
@@ -154,7 +154,7 @@ describe('/indexes/{name}/query - basic search', () => {
         });
 
         it('returns results with a partial keyword match', () => {
-          const payload = testSuite.payloadBuilder({query: '1234'});
+          const payload = testSuite.payloadBuilder({query: 'AB'});
 
           return specRequest({
             url: `/indexes/${testIndexName}/query`,
@@ -169,7 +169,7 @@ describe('/indexes/{name}/query - basic search', () => {
         });
 
         it('filters results by terms', () => {
-          const payload = testSuite.payloadBuilder({filters: [{field: 'sku', term: '12345'}]});
+          const payload = testSuite.payloadBuilder({filters: [{field: 'sku', term: 'ABCDEF'}]});
 
           return specRequest({
             url: `/indexes/${testIndexName}/query`,
@@ -184,7 +184,7 @@ describe('/indexes/{name}/query - basic search', () => {
         });
 
         it('filters results by ranges', () => {
-          const payload = testSuite.payloadBuilder({filters: [{field: 'sku', range: {from: 2}}]});
+          const payload = testSuite.payloadBuilder({filters: [{field: 'quantity', range: {from: 2}}]});
 
           return specRequest({
             url: `/indexes/${testIndexName}/query`,
