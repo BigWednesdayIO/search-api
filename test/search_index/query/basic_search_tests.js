@@ -60,7 +60,10 @@ describe('Search Index', () => {
                   field1: {
                     type: 'double'
                   },
-                  str: {
+                  str1: {
+                    type: 'string'
+                  },
+                  str2: {
                     type: 'string'
                   }
                 }
@@ -175,18 +178,34 @@ describe('Search Index', () => {
         .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
     });
 
-    it('builds a term filtered query', () => {
+    it('builds a term filtered query on raw string fields', () => {
       const expectedQuery = {
         query: {
           bool: {
-            filter: [{term: {field1: 'term1'}}, {term: {field2: 'term2'}}]
+            filter: [{term: {'str1.raw': 'term1'}}, {term: {'str2.raw': 'term2'}}]
           }
         },
         size: 10
       };
 
       return searchIndex.query({
-        filters: [{field: 'field1', term: 'term1'}, {field: 'field2', term: 'term2'}]
+        filters: [{field: 'str1', term: 'term1'}, {field: 'str2', term: 'term2'}]
+      })
+      .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
+    });
+
+    it('builds a term filtered query on non-string fields', () => {
+      const expectedQuery = {
+        query: {
+          bool: {
+            filter: [{term: {'str1.raw': 'term1'}}, {term: {field1: 123}}]
+          }
+        },
+        size: 10
+      };
+
+      return searchIndex.query({
+        filters: [{field: 'str1', term: 'term1'}, {field: 'field1', term: 123}]
       })
       .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
     });
@@ -290,10 +309,10 @@ describe('Search Index', () => {
       const expectedQuery = {
         query: {bool: {}},
         size: 10,
-        sort: ['str.raw']
+        sort: ['str1.raw']
       };
 
-      return searchIndex.query({sort: [{field: 'str'}]})
+      return searchIndex.query({sort: [{field: 'str1'}]})
         .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
     });
 
