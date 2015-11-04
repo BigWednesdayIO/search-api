@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const cuid = require('cuid');
 const expect = require('chai').expect;
 
@@ -148,7 +149,10 @@ describe('/indexes/{name}/query - basic search', () => {
             payload
           })
             .then(response => {
-              expect(response.result.hits).to.be.deep.equal([document1]);
+              const expectedHit = {objectID: '1'};
+              _.assign(expectedHit, document1);
+
+              expect(response.result.hits).to.be.deep.equal([expectedHit]);
               expect(response.statusCode).to.equal(200);
             });
         });
@@ -163,7 +167,10 @@ describe('/indexes/{name}/query - basic search', () => {
             payload
           })
             .then(response => {
-              expect(response.result.hits).to.be.deep.equal([document1]);
+              const expectedHit = {objectID: '1'};
+              _.assign(expectedHit, document1);
+
+              expect(response.result.hits).to.be.deep.equal([expectedHit]);
               expect(response.statusCode).to.equal(200);
             });
         });
@@ -178,7 +185,10 @@ describe('/indexes/{name}/query - basic search', () => {
             payload
           })
             .then(response => {
-              expect(response.result.hits).to.be.deep.equal([document1]);
+              const expectedHit = {objectID: '1'};
+              _.assign(expectedHit, document1);
+
+              expect(response.result.hits).to.be.deep.equal([expectedHit]);
               expect(response.statusCode).to.equal(200);
             });
         });
@@ -193,7 +203,10 @@ describe('/indexes/{name}/query - basic search', () => {
             payload
           })
             .then(response => {
-              expect(response.result.hits).to.be.deep.equal([document2]);
+              const expectedHit = {objectID: '2'};
+              _.assign(expectedHit, document2);
+
+              expect(response.result.hits).to.be.deep.equal([expectedHit]);
               expect(response.statusCode).to.equal(200);
             });
         });
