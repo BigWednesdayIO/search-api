@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const cuid = require('cuid');
 const expect = require('chai').expect;
 
@@ -60,7 +61,11 @@ describe('/indexes/{name}/query - search settings', () => {
           payload: {query: 'blue'}
         })
         .then(response => {
-          expect(response.result.hits).to.be.deep.equal([document1, document2]);
+          const expectedHits = [{objectID: '1'}, {objectID: '2'}];
+          _.assign(expectedHits[0], document1);
+          _.assign(expectedHits[1], document2);
+
+          expect(response.result.hits).to.be.deep.equal(expectedHits);
           expect(response.statusCode).to.equal(200);
         });
       });
@@ -87,7 +92,11 @@ describe('/indexes/{name}/query - search settings', () => {
           payload: {query: 'blue'}
         })
         .then(response => {
-          expect(response.result.hits).to.be.deep.equal([document2, document1]);
+          const expectedHits = [{objectID: '2'}, {objectID: '1'}];
+          _.assign(expectedHits[0], document2);
+          _.assign(expectedHits[1], document1);
+
+          expect(response.result.hits).to.be.deep.equal(expectedHits);
           expect(response.statusCode).to.equal(200);
         });
       });
