@@ -48,7 +48,7 @@ describe('/indexes/{name}/query - search settings', () => {
           url: `/indexes/${testIndexName}/settings`,
           method: 'put',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
-          payload: {searchable_fields: ['field1', 'field2'], facet_fields: []}
+          payload: {searchable_fields: ['field1', 'field2'], facets: []}
         })
         .then(reindexTestDocuments);
       });
@@ -79,7 +79,7 @@ describe('/indexes/{name}/query - search settings', () => {
           url: `/indexes/${testIndexName}/settings`,
           method: 'put',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
-          payload: {searchable_fields: ['field2', 'field1'], facet_fields: []}
+          payload: {searchable_fields: ['field2', 'field1'], facets: []}
         })
         .then(reindexTestDocuments);
       });
@@ -108,7 +108,7 @@ describe('/indexes/{name}/query - search settings', () => {
           url: `/indexes/${testIndexName}/settings`,
           method: 'put',
           headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'},
-          payload: {searchable_fields: ['field1', 'field2'], facet_fields: ['field2', 'field3', 'rating']}
+          payload: {searchable_fields: ['field1', 'field2'], facets: [{field: 'field2', order: 'valueDESC'}, {field: 'field3', order: 'count'}, {field: 'rating', order: 'count'}]}
         })
         .then(reindexTestDocuments);
       });
@@ -122,7 +122,7 @@ describe('/indexes/{name}/query - search settings', () => {
         })
         .then(response => {
           expect(response.result.facets).to.be.deep.equal([
-            {field: 'field2', values: [{value: 'blue', count: 1}, {value: 'red', count: 1}]},
+            {field: 'field2', values: [{value: 'red', count: 1}, {value: 'blue', count: 1}]},
             {field: 'field3', values: []},
             {field: 'rating', values: [{value: 1, count: 2}]}
           ]);
