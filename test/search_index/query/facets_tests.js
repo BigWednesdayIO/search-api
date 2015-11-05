@@ -71,7 +71,8 @@ describe('Search Index', () => {
       const expectedAggregation = {
         terms: {
           field: 'facet1.raw',
-          size: 0
+          size: 0,
+          order: {_count: 'asc'}
         }
       };
 
@@ -84,7 +85,8 @@ describe('Search Index', () => {
       const expectedAggregation = {
         terms: {
           field: 'num',
-          size: 0
+          size: 0,
+          order: {_count: 'asc'}
         }
       };
 
