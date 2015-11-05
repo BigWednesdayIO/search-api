@@ -36,7 +36,7 @@ describe('Search Index', () => {
           testIndex: {
             mappings: {
               object: {
-                _meta: {indexSettings: {searchable_fields: ['a'], facet_fields: ['facet1', 'facet2', 'num']}},
+                _meta: {indexSettings: {searchable_fields: ['a'], facets: [{field: 'facet1', order: 'count'}, {field: 'facet2', order: 'count'}, {field: 'num', order: 'count'}]}},
                 properties: {
                   facet1: {
                     type: 'string'

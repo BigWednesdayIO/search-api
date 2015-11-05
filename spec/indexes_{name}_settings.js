@@ -19,15 +19,17 @@ describe('/indexes/{name}/settings', () => {
 
   describe('put', () => {
     it('accepts settings', () => {
+      const settings = {searchable_fields: ['one', 'two', 'three'], facets: [{field: 'one', order: 'count'}, {field: 'two', order: 'count'}]};
+
       return specRequest({
         url: `/indexes/${testIndexName}/settings`,
         method: 'put',
-        payload: {searchable_fields: ['one', 'two', 'three'], facet_fields: ['one', 'two']},
+        payload: settings,
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       })
         .then(response => {
           expect(response.statusCode).to.equal(200);
-          expect(response.result).to.deep.equal({searchable_fields: ['one', 'two', 'three'], facet_fields: ['one', 'two']});
+          expect(response.result).to.deep.equal(settings);
         });
     });
   });
@@ -37,7 +39,7 @@ describe('/indexes/{name}/settings', () => {
       return specRequest({
         url: `/indexes/${testIndexName}/settings`,
         method: 'put',
-        payload: {searchable_fields: ['one', 'two', 'three', 'four'], facet_fields: ['a', 'b']},
+        payload: {searchable_fields: ['one', 'two', 'three', 'four'], facets: [{field: 'a', order: 'count'}, {field: 'b', order: 'count'}]},
         headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}
       });
     });
@@ -49,7 +51,7 @@ describe('/indexes/{name}/settings', () => {
       })
         .then(response => {
           expect(response.statusCode).to.equal(200);
-          expect(response.result).to.deep.equal({searchable_fields: ['one', 'two', 'three', 'four'], facet_fields: ['a', 'b']});
+          expect(response.result).to.deep.equal({searchable_fields: ['one', 'two', 'three', 'four'], facets: [{field: 'a', order: 'count'}, {field: 'b', order: 'count'}]});
         });
     });
 

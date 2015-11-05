@@ -54,7 +54,7 @@ describe('endpoint authentication', () => {
     const tests = [
       {routeName: '/indexes/{name}', method: 'POST', url: '/indexes/some-index', payload: {}},
       {routeName: '/indexes/{name}', method: 'DELETE', url: '/indexes/some-index', payload: {}},
-      {routeName: '/indexes/{name}/settings', method: 'PUT', url: '/indexes/some-index/settings', payload: {searchable_fields: [], facet_fields: []}},
+      {routeName: '/indexes/{name}/settings', method: 'PUT', url: '/indexes/some-index/settings', payload: {searchable_fields: [], facets: []}},
       {routeName: '/indexes/{name}/settings', method: 'GET', url: '/indexes/some-index/settings', payload: {}},
       {routeName: '/indexes/{name}/{objectID}', method: 'DELETE', url: '/indexes/some-index/1', payload: {}},
       {routeName: '/indexes/{name}/{objectID}', method: 'PUT', url: '/indexes/some-index/1', payload: {}},

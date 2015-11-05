@@ -598,7 +598,7 @@
         },
         "IndexSettings": {
             "type": "object",
-            "required": ["searchable_fields", "facet_fields"],
+            "required": ["searchable_fields", "facets"],
             "properties": {
                 "searchable_fields": {
                     "type": "array",
@@ -606,10 +606,21 @@
                         "type": "string"
                     }
                 },
-                "facet_fields": {
+                "facets": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "object",
+                        "properties": {
+                            "field": {
+                                "type": "string",
+                                "description": "The field name to return as a facet"
+                            },
+                            "order": {
+                                "type": "string",
+                                "enum": ["value", "count"],
+                                "description": "The order of facet values"
+                            }
+                        }
                     }
                 }
             }
