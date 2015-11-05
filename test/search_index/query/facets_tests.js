@@ -36,7 +36,19 @@ describe('Search Index', () => {
           testIndex: {
             mappings: {
               object: {
-                _meta: {indexSettings: {searchable_fields: ['a'], facets: [{field: 'facet1', order: 'count'}, {field: 'facet2', order: 'count'}, {field: 'num', order: 'count'}]}},
+                _meta: {
+                  indexSettings: {
+                    searchable_fields: ['a'],
+                    facets: [
+                      {field: 'facet1', order: 'count'},
+                      {field: 'facet2', order: 'count'},
+                      {field: 'num', order: 'count'},
+                      {field: 'count_desc', order: 'countDESC'},
+                      {field: 'value_asc', order: 'value'},
+                      {field: 'value_desc', order: 'valueDESC'}
+                    ]
+                  }
+                },
                 properties: {
                   facet1: {
                     type: 'string'
@@ -45,6 +57,15 @@ describe('Search Index', () => {
                     type: 'string'
                   },
                   num: {
+                    type: 'double'
+                  },
+                  count_desc: {
+                    type: 'double'
+                  },
+                  value_asc: {
+                    type: 'double'
+                  },
+                  value_desc: {
                     type: 'double'
                   }
                 }
@@ -93,6 +114,48 @@ describe('Search Index', () => {
       sinon.assert.calledWith(searchStub, sinon.match(value => {
         return _.eq(value.body.aggregations.num, expectedAggregation);
       }, 'non-string aggregation'));
+    });
+
+    it('retrieves facets in count DESC order', () => {
+      const expectedAggregation = {
+        terms: {
+          field: 'count_desc',
+          size: 0,
+          order: {_count: 'desc'}
+        }
+      };
+
+      sinon.assert.calledWith(searchStub, sinon.match(value => {
+        return _.eq(value.body.aggregations.count_desc, expectedAggregation);
+      }, 'count DESC order aggregation'));
+    });
+
+    it('retrieves facets in value order', () => {
+      const expectedAggregation = {
+        terms: {
+          field: 'value_asc',
+          size: 0,
+          order: {_term: 'asc'}
+        }
+      };
+
+      sinon.assert.calledWith(searchStub, sinon.match(value => {
+        return _.eq(value.body.aggregations.value_asc, expectedAggregation);
+      }, 'value order aggregation'));
+    });
+
+    it('retrieves facets in value DESC order', () => {
+      const expectedAggregation = {
+        terms: {
+          field: 'value_desc',
+          size: 0,
+          order: {_term: 'desc'}
+        }
+      };
+
+      sinon.assert.calledWith(searchStub, sinon.match(value => {
+        return _.eq(value.body.aggregations.value_desc, expectedAggregation);
+      }, 'value DESC order aggregation'));
     });
 
     it('return aggregations as facets', () => {

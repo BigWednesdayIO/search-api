@@ -617,7 +617,7 @@
                             },
                             "order": {
                                 "type": "string",
-                                "enum": ["value", "count"],
+                                "enum": ["value", "valueDESC", "count", "countDESC"],
                                 "description": "The order of facet values"
                             }
                         }
