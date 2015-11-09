@@ -11,12 +11,14 @@ describe('/indexes/{name}/query - basic search', () => {
   const testIndexName = `test_index_${cuid()}`;
   const document1 = {sku: 'ABCDEF', price: 1, quantity: 1};
   const document2 = {sku: 'GHIJKL', price: 5, quantity: 8};
+  const document3 = {sku: 'MNGOPQ', price: 2, quantity: 1};
 
   const reindexTestDocuments = () => {
     const batch = {
       requests: [
         {action: 'upsert', body: document1, objectID: '1'},
-        {action: 'upsert', body: document2, objectID: '2'}
+        {action: 'upsert', body: document2, objectID: '2'},
+        {action: 'upsert', body: document3, objectID: '3'}
       ]
     };
 
@@ -175,7 +177,7 @@ describe('/indexes/{name}/query - basic search', () => {
             });
         });
 
-        it('filters results by terms', () => {
+        it('filters results by term', () => {
           const payload = testSuite.payloadBuilder({filters: [{field: 'sku', term: 'ABCDEF'}]});
 
           return specRequest({
@@ -189,6 +191,26 @@ describe('/indexes/{name}/query - basic search', () => {
               _.assign(expectedHit, document1);
 
               expect(response.result.hits).to.be.deep.equal([expectedHit]);
+              expect(response.statusCode).to.equal(200);
+            });
+        });
+
+        it('filters results by multiple terms', () => {
+          const payload = testSuite.payloadBuilder({filters: [{field: 'sku', terms: ['ABCDEF', 'MNGOPQ']}]});
+
+          return specRequest({
+            url: `/indexes/${testIndexName}/query`,
+            method: 'post',
+            headers: testSuite.headers,
+            payload
+          })
+            .then(response => {
+              const expectedHits = [
+                _.assign({objectID: '1'}, document1),
+                _.assign({objectID: '3'}, document3)
+              ];
+
+              expect(response.result.hits).to.be.deep.have.members(expectedHits);
               expect(response.statusCode).to.equal(200);
             });
         });
@@ -237,7 +259,8 @@ describe('/indexes/{name}/query - basic search', () => {
           })
             .then(response => {
               expect(response.result.hits[0].price).to.equal(1);
-              expect(response.result.hits[1].price).to.equal(5);
+              expect(response.result.hits[1].price).to.equal(2);
+              expect(response.result.hits[2].price).to.equal(5);
               expect(response.statusCode).to.equal(200);
             });
         });
@@ -253,7 +276,8 @@ describe('/indexes/{name}/query - basic search', () => {
           })
             .then(response => {
               expect(response.result.hits[0].price).to.equal(5);
-              expect(response.result.hits[1].price).to.equal(1);
+              expect(response.result.hits[1].price).to.equal(2);
+              expect(response.result.hits[2].price).to.equal(1);
               expect(response.statusCode).to.equal(200);
             });
         });
@@ -304,7 +328,22 @@ describe('/indexes/{name}/query - basic search', () => {
               });
           });
 
-          it('ensures filter has term or range', () => {
+          it('ensures terms filter is array', () => {
+            const payload = testSuite.payloadBuilder({filters: [{field: 'sku', terms: '12345'}]});
+
+            return specRequest({
+              url: '/indexes/test-index/query',
+              method: 'post',
+              headers: testSuite.headers,
+              payload
+            })
+              .then(response => {
+                expect(response.result.message).to.match(/"terms" must be an array/);
+                expect(response.statusCode).to.equal(400);
+              });
+          });
+
+          it('ensures filter has value specifier', () => {
             const payload = testSuite.payloadBuilder({filters: [{field: 'sku'}]});
 
             return specRequest({
@@ -319,8 +358,8 @@ describe('/indexes/{name}/query - basic search', () => {
               });
           });
 
-          it('ensures filter has only 1 of term or range', () => {
-            const payload = testSuite.payloadBuilder({filters: [{field: 'sku', term: '12345', range: {from: 1}}]});
+          it('ensures filter has only 1 value specifier', () => {
+            const payload = testSuite.payloadBuilder({filters: [{field: 'sku', term: '12345', terms: ['12345'], range: {from: 1}}]});
 
             return specRequest({
               url: '/indexes/test-index/query',

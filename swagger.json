@@ -460,6 +460,14 @@
                                                 "type": "string",
                                                 "description": "The filter term"
                                             },
+                                            "terms": {
+                                                "type": "array",
+                                                "description": "The filter terms (combined with OR)",
+                                                "items": {
+                                                    "type": "string",
+                                                    "description": "Filter term"
+                                                }
+                                            },
                                             "range": {
                                                 "type": "object",
                                                 "description": "The filter range",
