@@ -210,6 +210,38 @@ describe('Search Index', () => {
       .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
     });
 
+    it('builds a terms filtered query on raw string fields', () => {
+      const expectedQuery = {
+        query: {
+          bool: {
+            filter: [{terms: {'str1.raw': ['term1', 'term2']}}]
+          }
+        },
+        size: 10
+      };
+
+      return searchIndex.query({
+        filters: [{field: 'str1', terms: ['term1', 'term2']}]
+      })
+      .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
+    });
+
+    it('builds a terms filtered query on non-string fields', () => {
+      const expectedQuery = {
+        query: {
+          bool: {
+            filter: [{terms: {field1: [123, 456]}}]
+          }
+        },
+        size: 10
+      };
+
+      return searchIndex.query({
+        filters: [{field: 'field1', terms: [123, 456]}]
+      })
+      .then(() => expect(searchArgs.body).to.deep.equal(expectedQuery));
+    });
+
     it('builds a range filtered query', () => {
       const expectedQuery = {
         query: {
