@@ -1,6 +1,6 @@
 {
   "name": "search-api",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "dependencies": {
     "boom": {
       "version": "2.9.0",
