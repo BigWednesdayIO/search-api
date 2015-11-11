@@ -282,6 +282,20 @@ describe('/indexes/{name}/query - basic search', () => {
             });
         });
 
+        it('returns total hits', () => {
+          const payload = testSuite.payloadBuilder({query: 'ABCDEF'});
+
+          return specRequest({
+            url: `/indexes/${testIndexName}/query`,
+            method: 'post',
+            headers: testSuite.headers,
+            payload
+          })
+            .then(response => {
+              expect(response.result.totalHits).to.equal(1);
+            });
+        });
+
         describe('validation', () => {
           it('ensures query is a string', () => {
             const payload = testSuite.payloadBuilder({query: {}});
