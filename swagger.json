@@ -410,6 +410,10 @@
                                     "items": {
                                         "$ref": "#/definitions/Facet"
                                     }
+                                },
+                                "totalHits": {
+                                    "type": "integer",
+                                    "description": "Total number of available results"
                                 }
                             }
                         }

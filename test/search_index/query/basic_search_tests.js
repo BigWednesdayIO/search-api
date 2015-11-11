@@ -26,7 +26,7 @@ describe('Search Index', () => {
         }
 
         return Promise.resolve({
-          hits: {hits: [{_id: 'abc', _source: testDocument}]}
+          hits: {total: 1, hits: [{_id: 'abc', _source: testDocument}]}
         });
       });
 
@@ -378,6 +378,11 @@ describe('Search Index', () => {
     it('returns objectID', () => {
       return searchIndex.query({query: 'some-keyword'})
         .then(results => expect(results.hits[0].objectID).to.equal('abc'));
+    });
+
+    it('returns total hits', () => {
+      return searchIndex.query({query: 'some-keyword'})
+        .then(results => expect(results.totalHits).to.equal(1));
     });
   });
 });
