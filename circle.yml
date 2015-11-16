@@ -31,12 +31,11 @@ dependencies:
 
 test:
   override:
-    - echo
-    # - docker-compose run api npm run ci
+    - docker-compose run api npm run ci
 
 deployment:
   dev:
-    branch: feature/kube_svc_and_rc_deploy
+    branch: master
     commands:
       - echo "production = true" > .npmrc
       - scripts/rolling_deploy.sh search-api app=search-api development ${PWD} ${PWD}/kubernetes/rc.json ${PWD}/kubernetes/service.json
