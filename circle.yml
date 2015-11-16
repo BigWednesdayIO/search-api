@@ -1,6 +1,8 @@
 machine:
   python:
     version: 2.7.3
+  node:
+    version: 4.1.0
   pre:
     - |
       sudo curl -L -o /usr/bin/docker 'http://s3-external-1.amazonaws.com/circle-downloads/docker-1.8.2-circleci'
@@ -18,6 +20,7 @@ dependencies:
   override:
     - scripts/ensure_glcoud_installed.sh
     - sudo pip install -U docker-compose
+    - npm install -g json
     - if [[ -e ~/docker/elastic.tar ]]; then docker load -i ~/docker/elastic.tar; fi
     - if [[ -e ~/docker/node.tar ]]; then docker load -i ~/docker/node.tar; fi
     - docker pull elasticsearch:2.0.0
@@ -28,7 +31,8 @@ dependencies:
 
 test:
   override:
-    - docker-compose run api npm run ci
+    - cat kubernetes/service.json | json metadata.name
+    # - docker-compose run api npm run ci
 
 deployment:
   dev:
