@@ -27,10 +27,6 @@
               {
                 "name": "ELASTICSEARCH_HOST",
                 "value": "{{ELASTICSEARCH_HOST}}"
-              },
-              {
-                "name": "OPS_INDEX_SUFFIX",
-                "value": "{{NAMESPACE}}"
               }
             ],
             "ports": [
