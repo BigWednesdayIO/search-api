@@ -1,11 +1,8 @@
 machine:
+  services:
+    - docker
   python:
     version: 2.7.3
-  pre:
-    - |
-      sudo curl -L -o /usr/bin/docker 'http://s3-external-1.amazonaws.com/circle-downloads/docker-1.8.2-circleci'
-      sudo chmod 0755 /usr/bin/docker
-      sudo service docker start
 
 checkout:
   post:
@@ -16,15 +13,15 @@ dependencies:
     - '~/docker'
     - ~/google-cloud-sdk
   override:
-    - scripts/install_deployment_tools.sh
+    - scripts/install_sdk.sh
     - sudo pip install -U docker-compose
     - if [[ -e ~/docker/elastic.tar ]]; then docker load -i ~/docker/elastic.tar; fi
     - if [[ -e ~/docker/node.tar ]]; then docker load -i ~/docker/node.tar; fi
     - docker pull elasticsearch:2.0.0
-    - docker pull node:4.2.1
+    - docker pull node:5.1.0
     - mkdir -p ~/docker
     - docker save elasticsearch:2.0.0 > ~/docker/elastic.tar
-    - docker save node:4.2.1 > ~/docker/node.tar
+    - docker save node:5.1.0 > ~/docker/node.tar
 
 test:
   override:
@@ -35,9 +32,10 @@ deployment:
     branch: master
     commands:
       - echo "production = true" > .npmrc
-      - scripts/rolling_deploy.sh search-api app=search-api development ${PWD} ${PWD}/kubernetes/rc.json ${PWD}/kubernetes/service.json
+      - export OVERRIDE_IMAGE_TAG=dev
+      - scripts/kubernetes_deploy.sh search-api app=search-api development ${PWD} ${PWD}/kubernetes/rc.json ${PWD}/kubernetes/service.json
   prod:
     branch: production
     commands:
       - echo "production = true" > .npmrc
-      - scripts/rolling_deploy.sh search-api app=search-api production ${PWD} ${PWD}/kubernetes/rc.json ${PWD}/kubernetes/service.json
+      - scripts/kubernetes_deploy.sh search-api app=search-api production ${PWD} ${PWD}/kubernetes/rc.json ${PWD}/kubernetes/service.json

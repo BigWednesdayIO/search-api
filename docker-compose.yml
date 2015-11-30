@@ -15,4 +15,4 @@ dev:
     - .:/src
   links:
     - elasticsearch
-  command: npm run watch
+  command: bash -c "npm install && npm run watch"
