@@ -81,6 +81,18 @@
                                 "type": "object"
                             }
                         }
+                    },
+                    "401": {
+                        "description": "A valid authentication token has not been supplied with the request",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "403": {
+                        "description": "A valid authentication token was supplied but does not allow access for this operation",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 },
                 "parameters": [
