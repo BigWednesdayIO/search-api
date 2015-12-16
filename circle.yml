@@ -14,7 +14,6 @@ dependencies:
     - ~/google-cloud-sdk
   override:
     - scripts/install_sdk.sh
-    - sudo pip install -U docker-compose
     - if [[ -e ~/docker/elastic.tar ]]; then docker load -i ~/docker/elastic.tar; fi
     - if [[ -e ~/docker/node.tar ]]; then docker load -i ~/docker/node.tar; fi
     - docker pull elasticsearch:2.1.0
