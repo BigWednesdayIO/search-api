@@ -82,7 +82,19 @@
                             }
                         }
                     }
-                }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Identifiers of the objects to get from the index",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ]
             },
             "parameters": [
                 {

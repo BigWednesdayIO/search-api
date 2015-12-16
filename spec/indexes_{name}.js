@@ -67,6 +67,22 @@ describe('/indexes/{name}', () => {
           expect(response.result.message).to.equal('Index nonexistantindex does not exist');
         });
     });
+
+    it('returns a 400 response when an ids filter is not provided', () => {
+      return specRequest({url: `/indexes/${testIndexName}`, method: 'GET', headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}})
+        .then(response => {
+          expect(response.statusCode).to.equal(400);
+          expect(response.result.message).to.equal('child "id" fails because ["id" is required]');
+        });
+    });
+
+    it('returns a 400 response when an ids filter is not an array', () => {
+      return specRequest({url: `/indexes/${testIndexName}?id=test`, method: 'GET', headers: {Authorization: 'Bearer 8N*b3i[EX[s*zQ%'}})
+        .then(response => {
+          expect(response.statusCode).to.equal(400);
+          expect(response.result.message).to.equal('child "id" fails because ["id" must be an array]');
+        });
+    });
   });
 
   describe('post', () => {
