@@ -33,7 +33,7 @@ deployment:
       - echo "production = true" > .npmrc
       - scripts/kubernetes_deploy.sh search-api app=search-api development ${PWD} ${PWD}/kubernetes/rc.json ${PWD}/kubernetes/service.json dev
   prod:
-    branch: production
+    tag: /v.*/
     commands:
       - echo "production = true" > .npmrc
       - scripts/kubernetes_deploy.sh search-api app=search-api production ${PWD} ${PWD}/kubernetes/rc.json ${PWD}/kubernetes/service.json
